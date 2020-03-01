@@ -1,0 +1,31 @@
+server:
+  port: 80
+  tomcat:
+    uri-encoding: utf-8
+
+spring:
+  profiles:
+    active: dev
+
+  thymeleaf:
+    cache: false
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  aop:
+    proxy-target-class: true
+
+mybatis-plus:
+  type-aliases-package: cc.mrbird.febs.*.entity
+  mapper-locations: classpath:mapper/*/*.xml
+  configuration:
+    jdbc-type-for-null: 'null'
+  global-config:
+    id-type: 1
+      # Sequence序列接口实现类配置
+    key-generator: com.baomidou.mybatisplus.extension.incrementer.OracleKeyGenerator
+    banner: false
+    db-config:
+      select-strategy: not_empty

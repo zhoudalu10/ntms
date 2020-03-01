@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.timetable.mapper.TimetableMapper">
+    <select id="findTimetableList" parameterType="timetable" resultType="timetable">
+        SELECT T.TIMETABLE_ID timetableId,
+        T.TIMETABLE_COURSE_ID timetableCourseId,
+        C.COURSE_NAME timetableCourseName,
+        T.TIMETABLE_WEEKDAY timetableWeekday,
+        T.TIMETABLE_INDEX timetableIndex,
+        T.TIMETABLE_CLASS_ID timetableClassId,
+        D.DEPT_NAME timetableClassName,
+        T.TIMETABLE_CLASSROOM_ID timetableClassroomId,
+        R.CLASSROOM_NAME timetableClassroomName,
+        R.BUILDING_NAME timetableBuildingName,
+        T.TIMETABLE_YEAR timetableYear,
+        T.TIMETABLE_TERM timetableTerm,
+        T.TIMETABLE_STATE timetableState,
+        T.CREATE_TIME createTime,
+        T.CREATE_USER_ID createUserId,
+        U.USERNAME createUserName,
+        C.COURSE_TEACHER_ID timetableCourseTeacherId,
+        U2.USERNAME timetableCourseTeacherName
+        FROM T_TIMETABLE T
+        LEFT JOIN T_COURSE C ON T.TIMETABLE_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_DEPT D ON T.TIMETABLE_CLASS_ID = D.DEPT_ID
+        LEFT JOIN T_CLASSROOM R ON T.TIMETABLE_CLASSROOM_ID = R.CLASSROOM_ID
+        LEFT JOIN T_USER U ON T.CREATE_USER_ID = U.USER_ID
+        LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+        WHERE 1 = 1
+        <if test="timetable.timetableCourseName != null and timetable.timetableCourseName != ''">
+            <bind name="bindTimetableCourseName" value="'%' + timetable.timetableCourseName + '%'"/>
+            and c.COURSE_NAME like #{bindTimetableCourseName}
+        </if>
+        <if test="timetable.timetableWeekday != null and timetable.timetableWeekday != ''">
+            and t.timetable_weekday = #{timetable.timetableWeekday}
+        </if>
+        <if test="timetable.timetableIndexList != null and timetable.timetableIndexList.size > 0">
+            and timetable_index in
+            <foreach collection="timetable.timetableIndexList" index="index" item="item" open="(" separator=","
+                     close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="timetable.timetableClassName != null and timetable.timetableClassName != ''">
+            <bind name="bindTimetableClassName" value="'%' + timetable.timetableClassName + '%'"/>
+            and D.DEPT_NAME like #{bindTimetableClassName}
+        </if>
+        <if test="timetable.timetableClassroomName != null and timetable.timetableClassroomName != ''">
+            <bind name="bindTimetableClassroomName" value="'%' + timetable.timetableClassroomName + '%'"/>
+            and R.CLASSROOM_NAME like #{bindTimetableClassroomName}
+        </if>
+        <if test="timetable.timetableYear != null and timetable.timetableYear != ''">
+            and T.TIMETABLE_YEAR = #{timetable.timetableYear}
+        </if>
+        <if test="timetable.timetableTerm != null and timetable.timetableTerm != ''">
+            and T.TIMETABLE_TERM = #{timetable.timetableTerm}
+        </if>
+        <if test="timetable.timetableState != null and timetable.timetableState != ''">
+            and T.TIMETABLE_STATE = #{timetable.timetableState}
+        </if>
+        <if test="timetable.timetableCourseTeacherName != null and timetable.timetableCourseTeacherName != ''">
+            <bind name="bindTimetableCourseTeacherName" value="'%' + timetable.timetableCourseTeacherName + '%'"/>
+            and U2.USERNAME like #{bindTimetableCourseTeacherName}
+        </if>
+    </select>
+    <select id="judgeSameClassSameTimeState" parameterType="timetable" resultType="timetable">
+        SELECT T.TIMETABLE_ID timetableId,
+        T.TIMETABLE_COURSE_ID timetableCourseId,
+        C.COURSE_NAME timetableCourseName,
+        T.TIMETABLE_WEEKDAY timetableWeekday,
+        T.TIMETABLE_INDEX timetableIndex,
+        T.TIMETABLE_CLASS_ID timetableClassId,
+        D.DEPT_NAME timetableClassName,
+        T.TIMETABLE_CLASSROOM_ID timetableClassroomId,
+        R.CLASSROOM_NAME timetableClassroomName,
+        R.BUILDING_NAME timetableBuildingName,
+        T.TIMETABLE_YEAR timetableYear,
+        T.TIMETABLE_TERM timetableTerm,
+        T.TIMETABLE_STATE timetableState,
+        T.CREATE_TIME createTime,
+        T.CREATE_USER_ID createUserId,
+        U.USERNAME createUserName,
+        C.COURSE_TEACHER_ID timetableCourseTeacherId,
+        U2.USERNAME timetableCourseTeacherName
+        FROM T_TIMETABLE T
+        LEFT JOIN T_COURSE C ON T.TIMETABLE_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_DEPT D ON T.TIMETABLE_CLASS_ID = D.DEPT_ID
+        LEFT JOIN T_CLASSROOM R ON T.TIMETABLE_CLASSROOM_ID = R.CLASSROOM_ID
+        LEFT JOIN T_USER U ON T.CREATE_USER_ID = U.USER_ID
+        LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+        WHERE T.TIMETABLE_YEAR = #{timetable.timetableYear}
+        AND T.TIMETABLE_TERM = #{timetable.timetableTerm}
+        AND T.TIMETABLE_INDEX IN
+        <foreach collection="timetable.timetableIndexList" index="index" item="item" open="(" separator=","
+                 close=")">
+            #{item}
+        </foreach>
+        AND T.TIMETABLE_WEEKDAY = #{timetable.timetableWeekday}
+        AND T.TIMETABLE_CLASS_ID = #{timetable.timetableClassId}
+    </select>
+    <select id="judgeSameClassSameTeacherState" parameterType="timetable" resultType="timetable">
+        SELECT T.TIMETABLE_ID timetableId,
+        T.TIMETABLE_COURSE_ID timetableCourseId,
+        C.COURSE_NAME timetableCourseName,
+        T.TIMETABLE_WEEKDAY timetableWeekday,
+        T.TIMETABLE_INDEX timetableIndex,
+        T.TIMETABLE_CLASS_ID timetableClassId,
+        D.DEPT_NAME timetableClassName,
+        T.TIMETABLE_CLASSROOM_ID timetableClassroomId,
+        R.CLASSROOM_NAME timetableClassroomName,
+        R.BUILDING_NAME timetableBuildingName,
+        T.TIMETABLE_YEAR timetableYear,
+        T.TIMETABLE_TERM timetableTerm,
+        T.TIMETABLE_STATE timetableState,
+        T.CREATE_TIME createTime,
+        T.CREATE_USER_ID createUserId,
+        U.USERNAME createUserName,
+        C.COURSE_TEACHER_ID timetableCourseTeacherId,
+        U2.USERNAME timetableCourseTeacherName
+        FROM T_TIMETABLE T
+        LEFT JOIN T_COURSE C ON T.TIMETABLE_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_DEPT D ON T.TIMETABLE_CLASS_ID = D.DEPT_ID
+        LEFT JOIN T_CLASSROOM R ON T.TIMETABLE_CLASSROOM_ID = R.CLASSROOM_ID
+        LEFT JOIN T_USER U ON T.CREATE_USER_ID = U.USER_ID
+        LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+        WHERE T.TIMETABLE_YEAR = #{timetable.timetableYear}
+        AND T.TIMETABLE_TERM = #{timetable.timetableTerm}
+        AND T.TIMETABLE_INDEX IN
+        <foreach collection="timetable.timetableIndexList" index="index" item="item" open="(" separator=","
+                 close=")">
+            #{item}
+        </foreach>
+        AND T.TIMETABLE_WEEKDAY = #{timetable.timetableWeekday}
+        AND (T.TIMETABLE_COURSE_ID &lt;&gt; #{timetable.timetableCourseId} OR T.TIMETABLE_CLASSROOM_ID &lt;&gt;
+        #{timetable.timetableClassroomId})
+        AND C.COURSE_TEACHER_ID = (SELECT COURSE_TEACHER_ID FROM T_COURSE WHERE COURSE_ID =
+        #{timetable.timetableCourseId})
+    </select>
+    <select id="selectClassroomPeopleAmount" parameterType="timetable" resultType="Integer">
+        SELECT C.CLASSROOM_STUDENT_AMOUNT
+FROM T_CLASSROOM C
+WHERE C.CLASSROOM_ID = #{timetable.timetableClassroomId}
+    </select>
+    <select id="selectClassroomPeopleAmountNow" parameterType="timetable" resultType="Integer">
+        SELECT COUNT(1)
+FROM T_USER
+WHERE DEPT_ID IN (
+    SELECT T.TIMETABLE_CLASS_ID timetableClassId
+    FROM T_TIMETABLE T
+             LEFT JOIN T_COURSE C ON T.TIMETABLE_COURSE_ID = C.COURSE_ID
+             LEFT JOIN T_DEPT D ON T.TIMETABLE_CLASS_ID = D.DEPT_ID
+             LEFT JOIN T_CLASSROOM R ON T.TIMETABLE_CLASSROOM_ID = R.CLASSROOM_ID
+             LEFT JOIN T_USER U ON T.CREATE_USER_ID = U.USER_ID
+             LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+    WHERE T.TIMETABLE_YEAR = #{timetable.timetableYear}
+      AND T.TIMETABLE_TERM = #{timetable.timetableTerm}
+      AND T.TIMETABLE_INDEX = #{timetable.timetableIndex}
+      AND T.TIMETABLE_WEEKDAY = #{timetable.timetableWeekday}
+      AND T.TIMETABLE_CLASSROOM_ID = #{timetable.timetableClassroomId}
+    UNION
+    (SELECT #{timetable.timetableClassId} timetableClassId FROM DUAL))
+    </select>
+    <select id="judgeSameClassroomSameTimeState" parameterType="timetable" resultType="timetable">
+        SELECT T.TIMETABLE_ID           timetableId,
+        T.TIMETABLE_COURSE_ID    timetableCourseId,
+        C.COURSE_NAME            timetableCourseName,
+        T.TIMETABLE_WEEKDAY      timetableWeekday,
+        T.TIMETABLE_INDEX        timetableIndex,
+        T.TIMETABLE_CLASS_ID     timetableClassId,
+        D.DEPT_NAME              timetableClassName,
+        T.TIMETABLE_CLASSROOM_ID timetableClassroomId,
+        R.CLASSROOM_NAME         timetableClassroomName,
+        R.BUILDING_NAME          timetableBuildingName,
+        T.TIMETABLE_YEAR         timetableYear,
+        T.TIMETABLE_TERM         timetableTerm,
+        T.TIMETABLE_STATE        timetableState,
+        T.CREATE_TIME            createTime,
+        T.CREATE_USER_ID         createUserId,
+        U.USERNAME               createUserName,
+        C.COURSE_TEACHER_ID      timetableCourseTeacherId,
+        U2.USERNAME              timetableCourseTeacherName
+        FROM T_TIMETABLE T
+        LEFT JOIN T_COURSE C ON T.TIMETABLE_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_DEPT D ON T.TIMETABLE_CLASS_ID = D.DEPT_ID
+        LEFT JOIN T_CLASSROOM R ON T.TIMETABLE_CLASSROOM_ID = R.CLASSROOM_ID
+        LEFT JOIN T_USER U ON T.CREATE_USER_ID = U.USER_ID
+        LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+        WHERE T.TIMETABLE_YEAR = #{timetable.timetableYear}
+        AND T.TIMETABLE_TERM = #{timetable.timetableTerm}
+        AND T.TIMETABLE_INDEX = #{timetable.timetableIndex}
+        AND T.TIMETABLE_WEEKDAY = #{timetable.timetableWeekday}
+        AND T.TIMETABLE_CLASSROOM_ID = #{timetable.timetableClassroomId}
+        AND T.TIMETABLE_COURSE_ID &lt;&gt; #{timetable.timetableCourseId}
+    </select>
+    <select id="selectCoursePeriod" parameterType="timetable" resultType="Integer">
+        SELECT COURSE_PERIOD
+FROM T_COURSE
+WHERE COURSE_ID = #{timetable.timetableCourseId}
+    </select>
+    <select id="selectCoursePeriodNow" parameterType="timetable" resultType="Integer">
+        SELECT COUNT(1)
+FROM T_TIMETABLE T
+WHERE T.TIMETABLE_YEAR = #{timetable.timetableYear}
+  AND T.TIMETABLE_TERM = #{timetable.timetableTerm}
+  AND T.TIMETABLE_COURSE_ID = #{timetable.timetableCourseId}
+  AND T.TIMETABLE_CLASS_ID = #{timetable.timetableClassId}
+    </select>
+    <select id="findById" resultType="timetable">
+        SELECT T.TIMETABLE_ID timetableId,
+        T.TIMETABLE_COURSE_ID timetableCourseId,
+        C.COURSE_NAME timetableCourseName,
+        T.TIMETABLE_WEEKDAY timetableWeekday,
+        T.TIMETABLE_INDEX timetableIndex,
+        T.TIMETABLE_CLASS_ID timetableClassId,
+        D.DEPT_NAME timetableClassName,
+        T.TIMETABLE_CLASSROOM_ID timetableClassroomId,
+        R.CLASSROOM_NAME timetableClassroomName,
+        R.BUILDING_NAME timetableBuildingName,
+        T.TIMETABLE_YEAR timetableYear,
+        T.TIMETABLE_TERM timetableTerm,
+        T.TIMETABLE_STATE timetableState,
+        T.CREATE_TIME createTime,
+        T.CREATE_USER_ID createUserId,
+        U.USERNAME createUserName,
+        C.COURSE_TEACHER_ID timetableCourseTeacherId,
+        U2.USERNAME timetableCourseTeacherName
+        FROM T_TIMETABLE T
+        LEFT JOIN T_COURSE C ON T.TIMETABLE_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_DEPT D ON T.TIMETABLE_CLASS_ID = D.DEPT_ID
+        LEFT JOIN T_CLASSROOM R ON T.TIMETABLE_CLASSROOM_ID = R.CLASSROOM_ID
+        LEFT JOIN T_USER U ON T.CREATE_USER_ID = U.USER_ID
+        LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+        WHERE T.TIMETABLE_ID = #{timetableId}
+    </select>
+    <select id="findMyTimetableList" parameterType="timetable" resultType="timetable">
+        SELECT C.COURSE_NAME       timetableCourseName,
+       T.TIMETABLE_WEEKDAY timetableWeekday,
+       T.TIMETABLE_INDEX   timetableIndex,
+       R.CLASSROOM_NAME    timetableClassroomName,
+       R.BUILDING_NAME     timetableBuildingName,
+       U2.USERNAME         timetableCourseTeacherName
+FROM T_TIMETABLE T
+         LEFT JOIN T_COURSE C ON T.TIMETABLE_COURSE_ID = C.COURSE_ID
+         LEFT JOIN T_DEPT D ON T.TIMETABLE_CLASS_ID = D.DEPT_ID
+         LEFT JOIN T_CLASSROOM R ON T.TIMETABLE_CLASSROOM_ID = R.CLASSROOM_ID
+         LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+WHERE 1 = 1
+  AND T.TIMETABLE_STATE = '1'
+  AND T.TIMETABLE_CLASS_ID = #{timetable.timetableClassId}
+  AND T.TIMETABLE_YEAR = #{timetable.timetableYear}
+  AND T.TIMETABLE_TERM = #{timetable.timetableTerm}
+    </select>
+</mapper>

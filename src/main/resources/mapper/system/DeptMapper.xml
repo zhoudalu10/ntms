@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.system.mapper.DeptMapper">
+    <select id="findDeptList" parameterType="dept" resultType="dept">
+        select d.DEPT_ID deptId,
+        d.PARENT_ID parentId,
+        d.DEPT_NAME deptName,
+        d.ORDER_NUM orderNum,
+        d.CLASS_GRADE classGrade,
+        (select count(1) from T_USER u where u.DEPT_ID = d.DEPT_ID) deptPeopleAmount
+        from T_DEPT d
+        where 1 = 1
+
+        <if test="dept.classGrade != null and dept.classGrade != ''">
+            and d.CLASS_GRADE = #{dept.classGrade}
+        </if>
+        <if test="dept.parentId != null and dept.parentId != ''">
+            and d.PARENT_ID = #{dept.parentId}
+        </if>
+    </select>
+</mapper>

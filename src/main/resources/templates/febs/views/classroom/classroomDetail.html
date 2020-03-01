@@ -1,0 +1,27 @@
+<style>
+    #febs-classroom-detail #classroom-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-classroom-detail .classroom-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-classroom-detail" lay-title="教室信息">
+    <div id="classroom-info-wrapper">
+        <div class="classroom-info">
+            <div><span class="layui-icon layui-icon-home"></span> 教学楼：
+                [[${classroom.buildingName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-location"></span> 教室名称：
+                [[${classroom.classroomName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-user"></span> 教室人数：
+                [[${classroom.classroomStudentAmount}]]
+            </div>
+        </div>
+    </div>
+</div>

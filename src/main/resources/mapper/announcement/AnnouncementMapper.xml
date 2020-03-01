@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.announcement.mapper.AnnouncementMapper">
+    <select id="findAnnouncementList" parameterType="announcement" resultType="announcement">
+        select a.announcement_id announcementId,
+        a.announcement_title announcementTitle,
+        a.announcement_state announcementState,
+        a.create_time createTime,
+        a.create_user_id createUserId,
+        u.USERNAME createUserName,
+        a.announcement_content announcementContent
+        from t_announcement a
+        left join T_USER u on a.create_user_id = u.USER_ID
+        where 1 = 1
+        <if test="announcement.announcementTitle != null and announcement.announcementTitle != ''">
+            <bind name="bindAnnouncementTitle" value="'%' + announcement.announcementTitle + '%'"/>
+            and a.announcement_title like #{bindAnnouncementTitle}
+        </if>
+        <if test="announcement.createTimeFrom != null and announcement.createTimeFrom != ''">
+            And a.create_time &gt; to_date(#{announcement.createTimeFrom}, 'yyyy-MM-dd')
+        </if>
+        <if test="announcement.createTimeTo != null and announcement.createTimeTo != ''">
+            and a.create_time &lt; to_date(#{announcement.createTimeTo}, 'yyyy-MM-dd')
+        </if>
+        <if test="announcement.createUserName != null and announcement.createUserName != ''">
+            and u.USERNAME = #{announcement.createUserName}
+        </if>
+        <if test="announcement.announcementState != null and announcement.announcementState != ''">
+            and a.announcement_state = #{announcement.announcementState}
+        </if>
+    </select>
+
+    <select id="findById" parameterType="String" resultType="announcement">
+        select a.announcement_id announcementId,
+        a.announcement_title announcementTitle,
+        a.announcement_state announcementState,
+        a.create_time createTime,
+        a.create_user_id createUserId,
+        u.USERNAME createUserName,
+        a.announcement_content announcementContent
+        from t_announcement a
+        left join T_USER u on a.create_user_id = u.USER_ID
+        where a.announcement_id = #{announcementId}
+    </select>
+
+    <select id="latestAnnouncements" resultType="announcement">
+        select *
+        from (
+        select a.announcement_id      announcementId,
+        a.announcement_title   announcementTitle,
+        a.create_time          createTime,
+        a.create_user_id       createUserId,
+        u.USERNAME             createUserName,
+        a.announcement_content announcementContent
+        from t_announcement a
+        left join T_USER u on a.create_user_id = u.USER_ID
+        where a.announcement_state = '1'
+        order by a.create_time desc)
+        where ROWNUM &lt;= 8
+    </select>
+
+</mapper>

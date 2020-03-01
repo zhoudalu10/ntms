@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.classroom.mapper.ClassroomMapper">
+    <sql id="findClassroomListSql">
+        select c.classroom_id classroomId,
+        c.building_name buildingName,
+        c.classroom_name classroomName,
+        c.classroom_student_amount classroomStudentAmount,
+        c.classroom_state classroomState
+        from t_classroom c
+        where 1 = 1
+        <if test="classroom.buildingName != null and classroom.buildingName != ''">
+            <bind name="bindBuildingName" value="'%' + classroom.buildingName + '%'"/>
+            and c.building_name like #{bindBuildingName}
+        </if>
+        <if test="classroom.classroomName != null and classroom.classroomName != ''">
+            <bind name="bindClassroomName" value="'%' + classroom.classroomName + '%'"/>
+            and c.classroom_name like #{bindClassroomName}
+        </if>
+        <if test="classroom.classroomStudentAmountFrom != null and classroom.classroomStudentAmountFrom != ''">
+            and c.classroom_student_amount &gt;= #{classroom.classroomStudentAmountFrom}
+        </if>
+        <if test="classroom.classroomStudentAmountTo != null and classroom.classroomStudentAmountTo != ''">
+            and c.classroom_student_amount &lt;= #{classroom.classroomStudentAmountTo}
+        </if>
+        <if test="classroom.classroomState != null and classroom.classroomState != ''">
+            and c.classroom_state = #{classroom.classroomState}
+        </if>
+    </sql>
+    <select id="findClassroomList" parameterType="classroom" resultType="classroom">
+        <include refid="findClassroomListSql"></include>
+    </select>
+    <select id="findClassroomListAll" parameterType="classroom" resultType="classroom">
+        <include refid="findClassroomListSql"></include>
+    </select>
+
+</mapper>

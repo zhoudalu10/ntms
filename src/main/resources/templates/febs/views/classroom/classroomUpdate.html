@@ -1,0 +1,92 @@
+<style>
+    #classroom-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="classroom-update">
+    <form class="layui-form" action="" lay-filter="classroom-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">教室id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="classroomId" data-th-value="${classroom.classroomId}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">教学楼：</label>
+            <div class="layui-input-block">
+                <input type="text" name="buildingName" minlength="1" maxlength="8"
+                       data-th-id="${classroom.buildingName}"
+                       lay-verify="range|buildingName"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">教室名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="classroomName" minlength="1" maxlength="8"
+                       data-th-id="${classroom.classroomName}"
+                       lay-verify="range|classroomName"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">教室人数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="classroomStudentAmount" max="999"
+                       data-th-id="${classroom.classroomStudentAmount}"
+                       lay-verify="max|classroomStudentAmount"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">教室状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="classroomState" value="1" title="有效">
+                <input type="radio" name="classroomState" value="0" title="禁用">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="classroom-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            classroom = [[${classroom}]],
+            validate = layui.validate;
+        form.verify(validate);
+        form.render();
+
+        initClassroomValue();
+
+        function initClassroomValue() {
+            form.val("classroom-update-form", {
+                "classroomId": classroom.classroomId,
+                "buildingName": classroom.buildingName,
+                "classroomName": classroom.classroomName,
+                "classroomStudentAmount": classroom.classroomStudentAmount,
+                "classroomState": classroom.classroomState
+            });
+        }
+
+        form.on('submit(classroom-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, classroom)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'classroom/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('教室修改成功');
+                $('#febs-classroom').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,115 @@
+<style>
+    #course-add {
+        padding: 20px 25px 25px 0;
+    }
+
+    #course-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="course-add">
+    <form class="layui-form" action="" lay-filter="course-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">课程名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="courseName" minlength="1" maxlength="20" lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">年级：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="courseGrade" value="1" title="大一" checked="">
+                <input type="radio" name="courseGrade" value="2" title="大二">
+                <input type="radio" name="courseGrade" value="3" title="大三">
+                <input type="radio" name="courseGrade" value="4" title="大四">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">学期：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="courseTerm" value="1" title="上学期" checked="">
+                <input type="radio" name="courseTerm" value="2" title="下学期">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">任课老师：</label>
+            <div class="layui-input-block">
+                <select name="courseTeacherId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="course-add-teacher"
+                        xm-select-skin="default"
+                        xm-select-radio>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">周课时数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="coursePeriod" minlength="1" maxlength="2" lay-verify="number|range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">课程状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="courseState" value="1" title="有效" checked="">
+                <input type="radio" name="courseState" value="0" title="禁用">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="course-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'validate'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            $view = $('#course-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        formSelects.render();
+
+        formSelects.config('course-add-teacher', {
+            searchUrl: ctx + 'user/find/courseTeachers',
+            response: {
+                statusCode: 200
+            },
+            beforeSuccess: function (id, url, searchVal, result) {
+                var data = result.data;
+                var tranData = [];
+                for (var i = 0; i < data.length; i++) {
+                    tranData.push({
+                        name: data[i].username,
+                        value: data[i].userId
+                    })
+                }
+                result.data = tranData;
+                return result;
+            },
+            error: function (id, url, searchVal, err) {
+                console.error(err);
+                febs.alert.error('获取任课老师列表失败');
+            }
+        });
+
+        form.on('submit(course-add-form-submit)', function (data) {
+            febs.post(ctx + 'course/add', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增课程成功！');
+                $('#febs-course').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

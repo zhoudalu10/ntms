@@ -1,0 +1,265 @@
+<style>
+
+    #myTimetable {
+        padding: 15px 10px;
+    }
+
+    .Courses-head {
+        background-color: #edffff;
+    }
+
+    .Courses-head > div {
+        text-align: center;
+        font-size: 14px;
+        line-height: 28px;
+    }
+
+    .left-hand-TextDom, .Courses-head {
+        background-color: #f2f6f7;
+    }
+
+    .Courses-leftHand {
+        background-color: #f2f6f7;
+        font-size: 12px;
+    }
+
+    .Courses-leftHand .left-hand-index {
+        color: #9c9c9c;
+        margin-bottom: 4px !important;
+    }
+
+    .Courses-leftHand .left-hand-name {
+        color: #666;
+    }
+
+    .Courses-leftHand p {
+        text-align: center;
+        font-weight: 900;
+    }
+
+    .Courses-head > div {
+        border-left: none !important;
+    }
+
+    .Courses-leftHand > div {
+        padding-top: 5px;
+        border-bottom: 1px dashed rgb(219, 219, 219);
+    }
+
+    .Courses-leftHand > div:last-child {
+        border-bottom: none !important;
+    }
+
+    .left-hand-TextDom, .Courses-head {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .Courses-content > ul {
+        border-bottom: 1px dashed rgb(219, 219, 219);
+        box-sizing: border-box;
+    }
+
+    .Courses-content > ul:last-child {
+        border-bottom: none !important;
+    }
+
+    .highlight-week {
+        color: #02a9f5 !important;
+    }
+
+    .Courses-content li {
+        text-align: center;
+        color: #666666;
+        font-size: 14px;
+        line-height: 50px;
+    }
+
+    .Courses-content li span {
+        padding: 6px 2px;
+        box-sizing: border-box;
+        line-height: 18px;
+        border-radius: 4px;
+        white-space: normal;
+        word-break: break-all;
+        cursor: pointer;
+    }
+
+    .grid-active {
+        z-index: 9999;
+    }
+
+    .grid-active span {
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+</style>
+<div class="layui-fluid layui-anim febs-anim" id="febs-myTimetable" lay-title="我的课表">
+    <div class="layui-row febs-container">
+        <div class="layui-col-sm6">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="myTimetable-table-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label layui-form-label-sm">年份</label>
+                                <div class="layui-input-inline">
+                                    <select name="timetableYear" lay-filter="myTimetable">
+                                        <option value="2018-2019">2018-2019</option>
+                                        <option value="2019-2020">2019-2020</option>
+                                        <option value="2020-2021">2020-2021</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label layui-form-label-sm">学期</label>
+                                <div class="layui-input-inline">
+                                    <select name="timetableTerm" lay-filter="myTimetable">
+                                        <option value="1">上学期</option>
+                                        <option value="2">下学期</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline" shiro:hasAnyPermissions="myTimetable:all">
+                                <label class="layui-form-label layui-form-label-sm">班级</label>
+                                <div class="layui-input-inline">
+                                    <select name="timetableClassId"
+                                            xm-select-direction="down"
+                                            xm-select="myTimetable-select-class"
+                                            xm-select-skin="default"
+                                            xm-select-radio
+                                            xm-select-search
+                                            xm-select-search-type="dl">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="myTimetable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/timetables/Timetables.min.js"></script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'form', 'formSelects', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            formSelects = layui.formSelects,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-myTimetable'),
+            $searchForm = $view.find('form'),
+            Timetable;
+        const classParentDeptId = 11;
+        form.render();
+
+        initTimetable();
+        if (currentUser.deptParentId === classParentDeptId) {
+            initTimetableData();
+        } else {
+            formSelects.data('myTimetable-select-class', 'server', {
+                type: 'get',
+                url: ctx + 'dept/list',
+                data: {
+                    parentId: classParentDeptId
+                },
+                response: {
+                    statusCode: 200
+                },
+                beforeSuccess: function (id, url, searchVal, result) {
+                    var data = result.data;
+                    var tranData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        tranData.push({
+                            name: data[i].deptName,
+                            value: data[i].deptId
+                        })
+                    }
+                    result.data = tranData;
+                    return result;
+                },
+                error: function (id, url, searchVal, err) {
+                    console.error(err);
+                    febs.alert.error('获取班级列表失败');
+                }
+            });
+            formSelects.on('myTimetable-select-class', function (id, vals, val, isAdd, isDisabled) {
+                if (isAdd) {
+                    initTimetableData(val.value);
+                }
+            });
+        }
+
+
+        form.on('select(myTimetable)', function (data) {
+            initTimetableData();
+        });
+
+        function initTimetable() {
+            var timetableType = [
+                [{index: '1', name: '8:00'}, 1],
+                [{index: '2', name: '8:55'}, 1],
+                [{index: '3', name: '10:10'}, 1],
+                [{index: '4', name: '11:05'}, 1],
+                [{index: '5', name: '13:30'}, 1],
+                [{index: '6', name: '14:25'}, 1],
+                [{index: '7', name: '15:40'}, 1],
+                [{index: '8', name: '16:35'}, 1],
+                [{index: '9', name: '18:30'}, 1],
+                [{index: '10', name: '19:25'}, 1]
+            ];
+            var styles = {
+                Gheight: 50,
+                leftHandWidth: 50,
+                palette: ['#ff6633', '#eeeeee']
+            };
+            Timetable = new Timetables({
+                el: '#myTimetable',
+                timetables: [['', '', '', '', '', '', '', '', '', '']],
+                week: ['一', '二', '三', '四', '五', '六', '日'],
+                timetableType: timetableType,
+                styles: styles
+            });
+        }
+
+        function initTimetableData(value) {
+            var classId;
+            if (currentUser.deptParentId === classParentDeptId) {
+                classId = currentUser.deptId;
+            } else {
+                if (value === undefined) {
+                    var classIdSelect = formSelects.value('myTimetable-select-class', 'val');
+                    if (classIdSelect.length === 0) {
+                        febs.alert.error('请选择班级！');
+                        return;
+                    } else {
+                        classId = classIdSelect[0];
+                    }
+                } else {
+                    classId = value;
+                }
+            }
+            febs.get(ctx + 'timetable/myTimetable',
+                {
+                    timetableYear: $searchForm.find("select[name='timetableYear']").val(),
+                    timetableTerm: $searchForm.find("select[name='timetableTerm']").val(),
+                    timetableClassId: classId
+
+                },
+                function (result) {
+                    var courseList = [['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '']];
+                    var data = result.data;
+                    for (var i = 0; i < data.length; i++) {
+                        courseList[parseInt(data[i].timetableWeekday) - 1][parseInt(data[i].timetableIndex) - 1] =
+                            data[i].timetableCourseName + '@' + data[i].timetableBuildingName + '-' + data[i].timetableClassroomName + '/' + data[i].timetableCourseTeacherName;
+                    }
+                    Timetable.setOption({
+                        timetables: courseList
+                    });
+                }
+            );
+        }
+    });
+</script>

@@ -1,0 +1,57 @@
+<style>
+    #febs-timetable-detail #timetable-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-timetable-detail .timetable-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-timetable-detail" lay-title="课程信息">
+    <div id="timetable-info-wrapper">
+        <div class="timetable-info">
+            <div><span class="layui-icon layui-icon-rate"></span> 课程名称：
+                [[${timetable.timetableCourseName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-slider"></span> 星期：
+                [[${timetable.timetableWeekday == '1' ? '周一' : (timetable.timetableWeekday == '2' ? '周二' :
+                (timetable.timetableWeekday == '3' ? '周三' : (timetable.timetableWeekday == '4' ? '周四' :
+                (timetable.timetableWeekday == '5' ? '周五' : (timetable.timetableWeekday == '6' ? '周六' : '周日')))))}]]
+            </div>
+            <div><span class="layui-icon layui-icon-next"></span> 课序：
+                [[${timetable.timetableIndex}]]
+            </div>
+            <div><span class="layui-icon layui-icon-user"></span> 班级：
+                [[${timetable.timetableClassName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-read"></span> 教学楼：
+                [[${timetable.timetableBuildingName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-location"></span> 教室：
+                [[${timetable.timetableClassroomName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-friends"></span> 任课老师：
+                [[${timetable.timetableCourseTeacherName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-log"></span> 年份：
+                [[${timetable.timetableYear}]]
+            </div>
+            <div><span class="layui-icon layui-icon-release"></span> 学期：
+                [[${timetable.timetableTerm == 1 ? '上学期' : '下学期'}]]
+            </div>
+            <div><span class="layui-icon layui-icon-ok"></span> 状态：
+                [[${timetable.timetableState == '1' ? '有效' : '禁用'}]]
+            </div>
+            <div><span class="layui-icon layui-icon-next"></span> 创建时间：
+                [[${createTime}]]
+            </div>
+            <div><span class="layui-icon layui-icon-friends"></span> 创建人：
+                [[${timetable.createUserName}]]
+            </div>
+
+        </div>
+    </div>
+</div>

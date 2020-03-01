@@ -1,0 +1,33 @@
+<style>
+    #febs-course-detail #course-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-course-detail .course-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-course-detail" lay-title="课程信息">
+    <div id="course-info-wrapper">
+        <div class="course-info">
+            <div><span class="layui-icon layui-icon-rate"></span> 课程名称：
+                [[${course.courseName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-reply-fill"></span> 年级：
+                [[${course.courseGrade == 1 ? '大一' : (course.courseGrade == 2 ? '大二' : (course.courseGrade == 3 ? '大三' : '大四'))}]]
+            </div>
+            <div><span class="layui-icon layui-icon-user"></span> 学期：
+                [[${course.courseTerm == 1 ? '上学期' : '下学期'}]]
+            </div>
+            <div><span class="layui-icon layui-icon-friends"></span> 任课老师：
+                [[${course.courseTeacherName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-slider"></span> 周课时数：
+                [[${course.coursePeriod}]]
+            </div>
+        </div>
+    </div>
+</div>

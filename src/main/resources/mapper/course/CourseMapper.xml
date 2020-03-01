@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.course.mapper.CourseMapper">
+    <sql id="findCourseListSql">
+        SELECT C.COURSE_ID courseId,
+        C.COURSE_NAME courseName,
+        C.COURSE_GRADE courseGrade,
+        C.COURSE_TERM courseTerm,
+        C.COURSE_STATE courseState,
+        C.COURSE_TEACHER_ID courseTeacherId,
+        U.USERNAME courseTeacherName,
+        C.COURSE_PERIOD coursePeriod
+        FROM T_COURSE C
+        LEFT JOIN T_USER U ON C.COURSE_TEACHER_ID = U.USER_ID
+        WHERE 1 = 1
+        <if test="course.courseName != null and course.courseName != ''">
+            <bind name="bindCourseName" value="'%' + course.courseName + '%'"/>
+            AND C.COURSE_NAME LIKE #{bindCourseName}
+        </if>
+        <if test="course.courseGrade != null and course.courseGrade != ''">
+            AND C.COURSE_GRADE = #{course.courseGrade}
+        </if>
+        <if test="course.courseTerm != null and course.courseTerm != ''">
+            AND C.COURSE_TERM = #{course.courseTerm}
+        </if>
+        <if test="course.courseState != null and course.courseState != ''">
+            AND C.COURSE_STATE = #{course.courseState}
+        </if>
+        <if test="course.courseTeacherName != null and course.courseTeacherName != ''">
+            <bind name="bindCourseTeacherName" value="'%' + course.courseTeacherName + '%'"/>
+            AND C.COURSE_TEACHER_ID IN (SELECT USER_ID FROM T_USER WHERE U.USERNAME LIKE #{bindCourseTeacherName})
+        </if>
+        <if test="course.coursePeriod != null and course.coursePeriod != ''">
+            AND C.COURSE_PERIOD = #{course.coursePeriod}
+        </if>
+    </sql>
+
+    <select id="findCourseList" parameterType="course" resultType="course">
+        <include refid="findCourseListSql"></include>
+    </select>
+
+    <select id="findCourseListAll" parameterType="course" resultType="course">
+        <include refid="findCourseListSql"></include>
+    </select>
+
+    <select id="findById" resultType="course">
+            SELECT C.COURSE_ID courseId,
+            C.COURSE_NAME courseName,
+            C.COURSE_GRADE courseGrade,
+            C.COURSE_TERM courseTerm,
+            C.COURSE_STATE courseState,
+            C.COURSE_TEACHER_ID courseTeacherId,
+            U.USERNAME courseTeacherName,
+            C.COURSE_PERIOD coursePeriod
+            FROM T_COURSE C
+            LEFT JOIN T_USER U ON C.COURSE_TEACHER_ID = U.USER_ID
+            WHERE C.COURSE_ID = #{courseId}
+    </select>
+
+</mapper>

@@ -1,0 +1,74 @@
+<style>
+    #classroom-add {
+        padding: 20px 25px 25px 0;
+    }
+
+    #classroom-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="classroom-add">
+    <form class="layui-form" action="" lay-filter="classroom-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">教学楼：</label>
+            <div class="layui-input-block">
+                <input type="text" name="buildingName" minlength="1" maxlength="8"
+                       lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">教室名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="classroomName" minlength="1" maxlength="8"
+                       lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">教室人数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="classroomStudentAmount" minlength="1" maxlength="3"
+                       lay-verify="number|range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">教室状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="classroomState" value="1" title="有效" checked="">
+                <input type="radio" name="classroomState" value="0" title="禁用">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="classroom-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'validate'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            $view = $('#classroom-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+
+        form.on('submit(classroom-add-form-submit)', function (data) {
+            var currentUserId = currentUser.userId + '';
+            data.field.createUserId = currentUserId;
+            febs.post(ctx + 'classroom/add', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增教室成功！');
+                $('#febs-classroom').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

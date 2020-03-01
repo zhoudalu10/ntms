@@ -1,0 +1,62 @@
+<style>
+    #announcement-detail {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="announcement-detail">
+    <form class="layui-form" action="" lay-filter="announcement-detail-form">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">公告标题：</label>
+            <div class="layui-input-block">
+                <input type="text" name="announcementTitle"
+                       data-th-id="${announcement.announcementTitle}"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">创建人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="createUserName" data-th-id="${announcement.createUserName}"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">创建时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="createTime" data-th-id="${announcement.createTime}"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公告内容：</label>
+            <div class="layui-input-block">
+                <textarea name="announcementContent" class="layui-textarea" style="height: 500px"
+                          data-th-id="${announcement.announcementContent}" readonly></textarea>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            form = layui.form,
+            announcement = [[${announcement}]],
+            validate = layui.validate;
+        form.verify(validate);
+        form.render();
+
+        initAnnouncementValue();
+
+        function initAnnouncementValue() {
+            form.val("announcement-detail-form", {
+                "announcementTitle": announcement.announcementTitle,
+                "createUserName": announcement.createUserName,
+                "createTime": announcement.createTime,
+                "announcementContent": announcement.announcementContent
+            });
+        }
+    });
+</script>

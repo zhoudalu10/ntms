@@ -1,0 +1,436 @@
+<style>
+    #febs-index .welcome-info {
+        border: 1px solid #f1f1f1;
+        margin-bottom: .5rem;
+        padding: .5rem;
+    }
+
+    #febs-index .welcome-info-wrapper {
+        padding: .2rem;
+        display: inline-block
+    }
+
+    #febs-index .welcome-info-wrapper .user-header {
+        display: inline-block;
+        vertical-align: middle
+    }
+
+    #febs-index .welcome-info-wrapper .user-header img {
+        width: 5rem;
+        margin: .5rem 1rem;
+        border-radius: 50%
+    }
+
+    #febs-index .welcome-info-wrapper .user-info {
+        display: inline-block;
+        vertical-align: middle
+    }
+
+    #febs-index .welcome-info-wrapper .user-info .random-message {
+        font-size: 1rem;
+        margin-bottom: .2rem;
+        max-width: 21rem
+    }
+
+    #febs-index .welcome-info-wrapper .user-info .user-dept, #febs-index .welcome-info-wrapper .user-info .user-login-info {
+        color: rgba(0, 0, 0, 0.45);
+    }
+
+    #febs-index .login-count-table {
+        width: 100%;
+        margin: 1rem;
+    }
+
+    #febs-index .login-count-table .count {
+        padding-top: .8rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1890ff
+    }
+
+    #febs-index .project-table {
+        padding: .5rem;
+        border: 1px solid #f1f1f1;
+        width: 100%
+    }
+
+    #febs-index .project-table-td {
+        padding: .5rem 0.7rem;
+        border: 1px solid #f1f1f1;
+    }
+
+    #febs-index .project-table-td a {
+        color: #42b983;
+        font-size: .9rem;
+        font-weight: 600;
+    }
+
+    #febs-index .project-desc {
+        color: rgba(0, 0, 0, 0.45);
+    }
+</style>
+<div class="layui-fluid layui-anim febs-anim-up" id="febs-index" lay-title="系统首页">
+    <div class="layui-row layui-col-space8 febs-container">
+        <div class="layui-col-md12 layui-col-sm12 layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-body layui-anim layui-anim-fadein">
+                    <div class="layui-row welcome-info">
+                        <div class="layui-col-md6 layui-col-sm12 layui-col-xs12">
+                            <div class="layui-row welcome-info-wrapper">
+                                <div class="user-header">
+                                    <img alt="头像" id="user-avatar" data-th-src="@{febs/images/avatar/empty.jpg}">
+                                </div>
+                                <div class="user-info">
+                                    <div class="layui-row">
+                                        <div class="random-message">
+                                            <span id="welcome-message"></span>
+                                        </div>
+                                        <div class="user-dept">
+                                            <span id="user-dept"></span> | <span id="user-role"></span>
+                                        </div>
+                                        <div class="user-login-info">
+                                            上次登录时间：<span id="last-login-time">2019-05-23 18:45:12</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6 layui-col-sm12 layui-col-xs12">
+                            <div class="layui-col-md-offset5">
+                                <table class="login-count-table">
+                                    <tr>
+                                        <td>今日IP</td>
+                                        <td>今日访问</td>
+                                        <td>总访问量</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="count" id="today-ip">
+                                            0
+                                        </td>
+                                        <td class="count" id="today-visit-count">
+                                            0
+                                        </td>
+                                        <td class="count" id="total-visit-count">
+                                            0
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6 layui-col-sm6 layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="chart" style="height: 350px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6 layui-col-sm6 layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table class="project-table">
+                        <tr>
+                            <td style="padding: .8rem;">公告栏</td>
+                            <td style="padding: .8rem;text-align: right">
+                                <a target="_blank" href="">更多</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="project-table-td">
+                                <div class="layui-row">
+                                    <div class="layui-col-md12 layui-col-xs12">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md12">
+                                                <a href="javascript:void(0)" id="announcement-0"></a>
+                                            </div>
+                                            <div class="project-desc" id="announcement-time-0">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="project-table-td">
+                                <div class="layui-row">
+                                    <div class="layui-col-md12 layui-col-xs12">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md12">
+                                                <a href="javascript:void(0)" id="announcement-1"></a>
+                                            </div>
+                                            <div class="project-desc" id="announcement-time-1">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="project-table-td">
+                                <div class="layui-row">
+                                    <div class="layui-col-md12 layui-col-xs12">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md12">
+                                                <a href="javascript:void(0)" id="announcement-2"></a>
+                                            </div>
+                                            <div class="project-desc" id="announcement-time-2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="project-table-td">
+                                <div class="layui-row">
+                                    <div class="layui-col-md12 layui-col-xs12">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md12">
+                                                <a href="javascript:void(0)" id="announcement-3"></a>
+                                            </div>
+                                            <div class="project-desc" id="announcement-time-3">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="project-table-td">
+                                <div class="layui-row">
+                                    <div class="layui-col-md12 layui-col-xs12">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md12">
+                                                <a href="javascript:void(0)" id="announcement-4"></a>
+                                            </div>
+                                            <div class="project-desc" id="announcement-time-4">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="project-table-td">
+                                <div class="layui-row">
+                                    <div class="layui-col-md12 layui-col-xs12">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md12">
+                                                <a href="javascript:void(0)" id="announcement-5"></a>
+                                            </div>
+                                            <div class="project-desc" id="announcement-time-5">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="project-table-td">
+                                <div class="layui-row">
+                                    <div class="layui-col-md12 layui-col-xs12">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md12">
+                                                <a href="javascript:void(0)" id="announcement-6"></a>
+                                            </div>
+                                            <div class="project-desc" id="announcement-time-6">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="project-table-td">
+                                <div class="layui-row">
+                                    <div class="layui-col-md12 layui-col-xs12">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md12">
+                                                <a href="javascript:void(0)" id="announcement-7"></a>
+                                            </div>
+                                            <div class="project-desc" id="announcement-time-7">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script data-th-inline="javascript" type="text/javascript">
+    layui.use(['apexcharts', 'febs', 'jquery', 'util'], function () {
+        var $ = layui.jquery,
+            util = layui.util,
+            $view = $('#febs-index'),
+            febs = layui.febs;
+
+        febs.get(ctx + 'index/' + currentUser.username, null, function (r) {
+            handleSuccess(r.data);
+        });
+
+        function handleSuccess(data) {
+            var hour = new Date().getHours();
+            var time;
+            var welcomeArr;
+
+            if (hour > 22 || hour <= 4) {
+                time = '夜深了';
+                welcomeArr = ['要记得早点休息', '还不睡觉吗？'];
+            } else if (hour > 4 && hour <= 8) {
+                time = '早上好';
+                welcomeArr = ['今天也是元气满满的一天呢', '早起的鸟儿有虫吃'];
+            } else if (hour > 8 && hour <= 10) {
+                time = '上午好';
+                welcomeArr = ['辛苦学习和工作都是为了将来', '今天也有好好学习和工作吗？'];
+            } else if (hour > 10 && hour <= 12) {
+                time = '中午啦';
+                welcomeArr = ['午饭吃点什么好呢？', '吃饱了才有力气学习和工作😊'];
+            } else if (hour > 12 && hour <= 17) {
+                time = '下午好';
+                welcomeArr = ['别让瞌睡阻挡你前进的步伐！', '累了就休息一会吧♨️', '来杯咖啡吧！'];
+            } else if (hour > 17 && hour <= 22) {
+                time = '晚上好';
+                welcomeArr = ['忙碌了一天很辛苦吧', '明天也要这么元气满满哦️', '周末要不要去看个电影？'];
+            }
+            var index = Math.floor((Math.random() * welcomeArr.length));
+            var welcomeMessage = time + '，<a id="febs-index-user">' + currentUser.username + '</a>，' + welcomeArr[index];
+            $view.find('#today-ip').text(data.todayIp).end()
+                .find('#today-visit-count').text(data.todayVisitCount).end()
+                .find('#total-visit-count').text(data.totalVisitCount).end()
+                .find('#user-dept').text(currentUser.deptName ? currentUser.deptName : '暂无所属部门').end()
+                .find('#user-role').text(currentUser.roleName ? currentUser.roleName : '暂无角色').end()
+                .find('#last-login-time').text(currentUser.lastLoginTime ? currentUser.lastLoginTime : '第一次访问系统').end()
+                .find('#welcome-message').html(welcomeMessage).end()
+                .find('#user-avatar').attr('src', ctx + "febs/images/avatar/" + currentUser.avatar);
+
+            var currentTime = new Date().getTime();
+            var yourVisitCount = [];
+            var totalVisitCount = [];
+            var lastTenDays = [
+                util.toDateString(new Date(currentTime - 1000 * 9 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime - 1000 * 8 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime - 1000 * 7 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime - 1000 * 6 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime - 1000 * 5 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime - 1000 * 4 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime - 1000 * 3 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime - 1000 * 2 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime - 1000 * 86400), 'MM-dd'),
+                util.toDateString(new Date(currentTime), 'MM-dd')
+            ];
+
+
+            layui.each(lastTenDays, function (k, i) {
+                var contain = false;
+                layui.each(data.lastSevenUserVisitCount, function (key, item) {
+                    if (i === item.DAYS) {
+                        yourVisitCount.push(item.COUNT);
+                        contain = true;
+                    }
+                });
+                if (!contain) yourVisitCount.push(0);
+                contain = false;
+                layui.each(data.lastSevenVisitCount, function (key, item) {
+                    if (i === item.DAYS) {
+                        totalVisitCount.push(item.COUNT);
+                        contain = true;
+                    }
+                });
+                if (!contain) totalVisitCount.push(0);
+            });
+
+            var options = {
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                    toolbar: {
+                        show: false
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '32rem'
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 1,
+                    colors: ['transparent']
+                },
+                series: [{
+                    name: '总数',
+                    data: totalVisitCount
+                }, {
+                    name: '您',
+                    data: yourVisitCount
+                }],
+                xaxis: {
+                    categories: lastTenDays,
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#f1f1f1'
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                title: {
+                    text: '近10天系统访问记录',
+                    align: 'left',
+                    style: {
+                        color: 'rgba(0, 0, 0, .65)'
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return "访问次数 " + val + " 次"
+                        }
+                    }
+                },
+                grid: {
+                    row: {
+                        colors: ['transparent', 'transparent'],
+                        opacity: 0.2
+                    },
+                    borderColor: '#f1f1f1'
+                }
+            };
+
+            new ApexCharts(
+                document.querySelector("#chart"),
+                options
+            ).render();
+
+            $.get(ctx + 'announcement/latest/', null, function (result) {
+                var announcements = result.data;
+                for (let i = 0; i < announcements.length; i++) {
+                    const announcement = $view.find('#announcement-' + i);
+                    announcement.html(announcements[i].announcementTitle).on('click', function () {
+                        febs.modal.view('公告信息', 'announcement/detail/' + announcements[i].announcementId, {
+                            area: $(window).width() <= 750 ? '95%' : '660px'
+                        });
+                    });
+                    $view.find('#announcement-time-' + i).html(announcements[i].createTime);
+                }
+            });
+
+
+        }
+
+        $view.on('click', '#febs-index-user', function () {
+            febs.navigate("/user/profile");
+        })
+
+    });
+</script>

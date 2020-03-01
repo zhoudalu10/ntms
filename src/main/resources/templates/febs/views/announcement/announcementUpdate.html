@@ -1,0 +1,99 @@
+<style>
+    #announcement-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="announcement-update">
+    <form class="layui-form" action="" lay-filter="announcement-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">公告id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="announcementId" data-th-value="${announcement.announcementId}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">公告标题：</label>
+            <div class="layui-input-block">
+                <input type="text" name="announcementTitle" minlength="1" maxlength="12"
+                       data-th-id="${announcement.announcementTitle}"
+                       lay-verify="range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">公告状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="announcementState" value="1" title="展示">
+                <input type="radio" name="announcementState" value="0" title="隐藏">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">创建人：</label>
+            <div class="layui-input-block">
+                <input type="text" name="createUserName" data-th-id="${announcement.createUserName}"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">创建时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="createTime" data-th-id="${announcement.createTime}"
+                       autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">公告内容：</label>
+            <div class="layui-input-block">
+                <textarea name="announcementContent" minlength="1" maxlength="1000" class="layui-textarea"
+                          data-th-id="${announcement.announcementContent}"
+                          lay-verify="range" style="height: 500px"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="announcement-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            announcement = [[${announcement}]],
+            $view = $('#announcement-update'),
+            validate = layui.validate;
+        form.verify(validate);
+        form.render();
+
+        initAnnouncementValue();
+
+        function initAnnouncementValue() {
+            form.val("announcement-update-form", {
+                "announcementId": announcement.announcementId,
+                "announcementTitle": announcement.announcementTitle,
+                "announcementState": announcement.announcementState,
+                "createUserName": announcement.createUserName,
+                "createTime": announcement.createTime,
+                "announcementContent": announcement.announcementContent
+            });
+        }
+
+        form.on('submit(announcement-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, announcement)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'announcement/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('公告修改成功');
+                $('#febs-announcement').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>
