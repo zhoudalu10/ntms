@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 @Slf4j
 public class ScheduleRunnable implements Runnable {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
     private Object target;
     private Method method;
     private String params;

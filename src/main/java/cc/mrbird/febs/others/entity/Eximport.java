@@ -14,7 +14,7 @@ import java.util.Date;
  * @author MrBird
  */
 @Data
-@TableName("t_eximport")
+@TableName("T_EXIMPORT")
 @Excel("测试导入导出数据")
 public class Eximport {
 

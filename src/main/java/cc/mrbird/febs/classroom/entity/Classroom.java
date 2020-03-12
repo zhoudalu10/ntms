@@ -11,32 +11,32 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Data
-@TableName("t_classroom")
+@TableName("T_CLASSROOM")
 @Excel("教室表")
-@KeySequence(value = "seq_t_classroom")
+@KeySequence(value = "SEQ_T_CLASSROOM")
 public class Classroom implements Serializable {
 
     private static final long serialVersionUID = 8705483361127896763L;
 
-    @TableId(value = "classroom_id", type = IdType.INPUT)
+    @TableId(value = "CLASSROOM_ID", type = IdType.INPUT)
     private Long classroomId;
 
-    @TableField("building_name")
+    @TableField("BUILDING_NAME")
     @Size(min = 1, max = 8, message = "{range}")
     @ExcelField(value = "教学楼")
     private String buildingName;
 
-    @TableField("classroom_name")
+    @TableField("CLASSROOM_NAME")
     @Size(min = 1, max = 8, message = "{range}")
     @ExcelField(value = "教室名称")
     private String classroomName;
 
-    @TableField("classroom_student_amount")
+    @TableField("CLASSROOM_STUDENT_AMOUNT")
     @Max(value = 999)
     @ExcelField(value = "教室人数")
     private Integer classroomStudentAmount;
 
-    @TableField("classroom_state")
+    @TableField("CLASSROOM_STATE")
     @NotBlank(message = "{required}")
     @ExcelField(value = "状态", writeConverterExp = "0=禁用,1=有效")
     private String classroomState;

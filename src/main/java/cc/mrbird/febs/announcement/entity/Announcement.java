@@ -15,35 +15,35 @@ import java.util.Date;
 
 
 @Data
-@TableName("t_announcement")
+@TableName("T_ANNOUNCEMENT")
 @Excel("公告表")
-@KeySequence(value = "seq_t_announcement")
+@KeySequence(value = "SEQ_T_ANNOUNCEMENT")
 public class Announcement implements Serializable {
 
     private static final long serialVersionUID = -2940936575877003941L;
 
-    @TableId(value = "announcement_id", type = IdType.INPUT)
+    @TableId(value = "ANNOUNCEMENT_ID", type = IdType.INPUT)
     private Long announcementId;
 
-    @TableField("announcement_title")
+    @TableField("ANNOUNCEMENT_TITLE")
     @Size(min = 1, max = 12, message = "{range}")
     @ExcelField(value = "公告标题")
     private String announcementTitle;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @TableField("create_time")
+    @TableField("CREATE_TIME")
     @ExcelField(value = "创建时间", writeConverter = TimeConverter.class)
     private Date createTime;
 
-    @TableField("create_user_id")
+    @TableField("CREATE_USER_ID")
     private Long createUserId;
 
     @TableField(exist = false)
     @ExcelField(value = "创建人")
     private String createUserName;
 
-    @TableField("announcement_content")
+    @TableField("ANNOUNCEMENT_CONTENT")
     @Size(min = 1, max = 1000, message = "{range}")
     @ExcelField(value = "公告内容")
     private String announcementContent;
@@ -54,7 +54,7 @@ public class Announcement implements Serializable {
     @TableField(exist = false)
     private String createTimeTo;
 
-    @TableField("announcement_state")
+    @TableField("ANNOUNCEMENT_STATE")
     @NotBlank(message = "{required}")
     @ExcelField(value = "状态", writeConverterExp = "0=隐藏,1=展示")
     private String announcementState;

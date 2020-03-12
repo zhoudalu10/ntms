@@ -11,40 +11,40 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Data
-@TableName("t_course")
+@TableName("T_COURSE")
 @Excel("教室表")
-@KeySequence(value = "seq_t_course")
+@KeySequence(value = "SEQ_T_COURSE")
 public class Course implements Serializable {
 
     private static final long serialVersionUID = -6191126333629326690L;
 
-    @TableId(value = "course_id", type = IdType.INPUT)
+    @TableId(value = "COURSE_ID", type = IdType.INPUT)
     private Long courseId;
 
-    @TableField("course_name")
+    @TableField("COURSE_NAME")
     @Size(min = 1, max = 20, message = "{range}")
     @ExcelField(value = "课程名称")
     private String courseName;
 
-    @TableField("course_grade")
+    @TableField("COURSE_GRADE")
     @Max(value = 4)
     @ExcelField(value = "年级", writeConverterExp = "1=大一,2=大二,3=大三,4=大四")
     private Integer courseGrade;
 
-    @TableField("course_term")
+    @TableField("COURSE_TERM")
     @NotBlank(message = "{required}")
     @ExcelField(value = "学期", writeConverterExp = "1=上学期,2=下学期")
     private String courseTerm;
 
-    @TableField("course_state")
+    @TableField("COURSE_STATE")
     @NotBlank(message = "{required}")
     @ExcelField(value = "状态", writeConverterExp = "0=禁用,1=有效")
     private String courseState;
 
-    @TableField("course_teacher_id")
+    @TableField("COURSE_TEACHER_ID")
     private Long courseTeacherId;
 
-    @TableField("course_period")
+    @TableField("COURSE_PERIOD")
     @Max(value = 99)
     @ExcelField(value = "周课时数")
     private Integer coursePeriod;

@@ -12,13 +12,10 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author MrBird
- */
 @Data
-@TableName("t_job")
+@TableName("T_JOB")
 @Excel("定时任务信息表")
-@KeySequence(value = "seq_t_job")
+@KeySequence(value = "SEQ_T_JOB")
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 400066840871805700L;
@@ -52,39 +49,39 @@ public class Job implements Serializable {
     @TableId(value = "JOB_ID", type = IdType.INPUT)
     private Long jobId;
 
-    @TableField("bean_name")
+    @TableField("BEAN_NAME")
     @NotBlank(message = "{required}")
     @Size(max = 50, message = "{noMoreThan}")
     @ExcelField(value = "Bean名称")
     private String beanName;
 
-    @TableField("method_name")
+    @TableField("METHOD_NAME")
     @NotBlank(message = "{required}")
     @Size(max = 50, message = "{noMoreThan}")
     @ExcelField(value = "方法名称")
     private String methodName;
 
-    @TableField("params")
+    @TableField("PARAMS")
     @Size(max = 50, message = "{noMoreThan}")
     @ExcelField(value = "方法参数")
     private String params;
 
-    @TableField("cron_expression")
+    @TableField("CRON_EXPRESSION")
     @NotBlank(message = "{required}")
     @IsCron(message = "{invalid}")
     @ExcelField(value = "Cron表达式")
     private String cronExpression;
 
-    @TableField("status")
+    @TableField("STATUS")
     @ExcelField(value = "状态", writeConverterExp = "0=正常,1=暂停")
     private String status;
 
-    @TableField("remark")
+    @TableField("REMARK")
     @Size(max = 100, message = "{noMoreThan}")
     @ExcelField(value = "备注")
     private String remark;
 
-    @TableField("create_time")
+    @TableField("CREATE_TIME")
     @ExcelField(value = "创建时间", writeConverter = TimeConverter.class)
     private Date createTime;
 

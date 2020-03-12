@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class TimetableServiceImpl extends ServiceImpl<TimetableMapper, Timetable
     public IPage<Timetable> findTimetableList(Timetable timetable, QueryRequest request) {
         Page<Timetable> page = new Page<>(request.getPageNum(), request.getPageSize());
         SortUtil.handlePageSort(request, page, "timetableId", FebsConstant.ORDER_ASC, false);
-        if (timetable.getTimetableIndex() != null && !timetable.getTimetableIndex().equals("")) {
+        if (StringUtils.isNotEmpty(timetable.getTimetableIndex())) {
             timetable.setTimetableIndexList(new ArrayList<>(Arrays.asList(timetable.getTimetableIndex().split(StringPool.COMMA))));
         }
         return this.baseMapper.findTimetableList(page, timetable);
@@ -34,33 +35,34 @@ public class TimetableServiceImpl extends ServiceImpl<TimetableMapper, Timetable
     @Override
     public TimetableAddState addTimetable(Timetable timetable) {
         timetable.setTimetableIndexList(new ArrayList<>(Arrays.asList(timetable.getTimetableIndex().split(StringPool.COMMA))));
-        if (judgeSameClassSameTimeState(timetable)) {
-            if (judgeSameClassSameTeacherState(timetable)) {
-                if (judgeClassroomState(timetable)) {
-                    if (judgeSameClassroomSameTimeState(timetable)) {
-                        if (judgeCoursePeriod(timetable)) {
-                            List<String> timetableIndexList = timetable.getTimetableIndexList();
-                            for (String timetableIndex : timetableIndexList) {
-                                timetable.setTimetableIndex(timetableIndex);
-                                timetable.setCreateTime(new Date());
-                                save(timetable);
-                            }
-                            return TimetableAddState.SUCCESS;
-                        } else {
-                            return TimetableAddState.COURSEPERIODCLASH;
-                        }
-                    } else {
-                        return TimetableAddState.SAMECLASSROOMSAMETIMECLASH;
-                    }
-                } else {
-                    return TimetableAddState.CLASSROOMPEOPLEAMOUNTCLASH;
-                }
-            } else {
-                return TimetableAddState.SAMETEACHERSAMETIMECLASH;
-            }
-        } else {
+
+        if (!judgeSameClassSameTimeState(timetable)) {
             return TimetableAddState.SAMECLASSSAMETIMECLASH;
         }
+
+        if (!judgeSameClassSameTeacherState(timetable)) {
+            return TimetableAddState.SAMETEACHERSAMETIMECLASH;
+        }
+
+        if (!judgeClassroomState(timetable)) {
+            return TimetableAddState.CLASSROOMPEOPLEAMOUNTCLASH;
+        }
+
+        if (!judgeSameClassroomSameTimeState(timetable)) {
+            return TimetableAddState.SAMECLASSROOMSAMETIMECLASH;
+        }
+
+        if (!judgeCoursePeriod(timetable)) {
+            return TimetableAddState.COURSEPERIODCLASH;
+        }
+
+        List<String> timetableIndexList = timetable.getTimetableIndexList();
+        for (String timetableIndex : timetableIndexList) {
+            timetable.setTimetableIndex(timetableIndex);
+            timetable.setCreateTime(new Date());
+            save(timetable);
+        }
+        return TimetableAddState.SUCCESS;
     }
 
     @Override

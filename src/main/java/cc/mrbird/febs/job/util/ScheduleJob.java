@@ -7,8 +7,6 @@ import cc.mrbird.febs.job.service.IJobLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.JobExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.util.Date;
@@ -16,15 +14,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-/**
- * 定时任务
- *
- * @author MrBird
- */
 @Slf4j
 public class ScheduleJob extends QuartzJobBean {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
     private ExecutorService service = Executors.newSingleThreadExecutor();
 
     @Override

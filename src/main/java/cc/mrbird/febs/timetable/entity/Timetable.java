@@ -21,34 +21,34 @@ public class Timetable implements Serializable {
 
     private static final long serialVersionUID = -1605336187864905145L;
 
-    @TableId(value = "timetable_id", type = IdType.INPUT)
+    @TableId(value = "TIMETABLE_ID", type = IdType.INPUT)
     private Long timetableId;
 
-    @TableField("timetable_course_id")
+    @TableField("TIMETABLE_COURSE_ID")
     private Long timetableCourseId;
 
     @TableField(exist = false)
     @ExcelField(value = "课程名称")
     private String timetableCourseName;
 
-    @TableField("timetable_weekday")
+    @TableField("TIMETABLE_WEEKDAY")
     @NotBlank(message = "{required}")
     @ExcelField(value = "星期", writeConverterExp = "1=一,2=二,3=三,4=四,5=五,6=六,7=日")
     private String timetableWeekday;
 
-    @TableField("timetable_index")
+    @TableField("TIMETABLE_INDEX")
     @NotBlank(message = "{required}")
     @ExcelField(value = "课序")
     private String timetableIndex;
 
-    @TableField("timetable_class_id")
+    @TableField("TIMETABLE_CLASS_ID")
     private Long timetableClassId;
 
     @TableField(exist = false)
     @ExcelField(value = "班级")
     private String timetableClassName;
 
-    @TableField("timetable_classroom_id")
+    @TableField("TIMETABLE_CLASSROOM_ID")
     private Long timetableClassroomId;
 
     @TableField(exist = false)
@@ -59,28 +59,28 @@ public class Timetable implements Serializable {
     @ExcelField(value = "教学楼")
     private String timetableBuildingName;
 
-    @TableField("timetable_year")
+    @TableField("TIMETABLE_YEAR")
     @NotBlank(message = "{required}")
     @ExcelField(value = "年份")
     private String timetableYear;
 
-    @TableField("timetable_term")
+    @TableField("TIMETABLE_TERM")
     @NotBlank(message = "{required}")
     @ExcelField(value = "学期", writeConverterExp = "1=上学期,2=下学期")
     private String timetableTerm;
 
-    @TableField("timetable_state")
+    @TableField("TIMETABLE_STATE")
     @NotBlank(message = "{required}")
     @ExcelField(value = "状态", writeConverterExp = "0=禁用,1=有效")
     private String timetableState;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @TableField("create_time")
+    @TableField("CREATE_TIME")
     @ExcelField(value = "创建时间", writeConverter = TimeConverter.class)
     private Date createTime;
 
-    @TableField("create_user_id")
+    @TableField("CREATE_USER_ID")
     private Long createUserId;
 
     @TableField(exist = false)

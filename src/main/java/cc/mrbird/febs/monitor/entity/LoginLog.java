@@ -15,14 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author MrBird
- */
 @Slf4j
 @Data
-@TableName("t_login_log")
+@TableName("T_LOGIN_LOG")
 @Excel("登录日志")
-@KeySequence(value = "seq_t_login_log")
+@KeySequence(value = "SEQ_T_LOGIN_LOG")
 public class LoginLog implements Serializable {
 
     private static final long serialVersionUID = 921991157363932095L;

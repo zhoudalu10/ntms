@@ -8,9 +8,6 @@ import lombok.Data;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-/**
- * @author MrBird
- */
 @Data
 @TableName("t_generator_config")
 @KeySequence(value = "seq_t_generator_config")

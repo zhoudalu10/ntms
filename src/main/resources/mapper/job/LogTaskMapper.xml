@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.job.mapper.LogTaskMapper">
+
+    <delete id="deleteLoginLog">
+        DELETE
+        FROM T_LOGIN_LOG L
+        WHERE SYSDATE - L.LOGIN_TIME &gt;= 15
+    </delete>
+    <delete id="deleteJobLog">
+        DELETE
+        FROM T_JOB_LOG J
+        WHERE SYSDATE - J.CREATE_TIME &gt;= 15
+    </delete>
+
+</mapper>
