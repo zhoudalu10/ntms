@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
-
 @Data
 @TableName("T_ANNOUNCEMENT")
 @Excel("公告表")
@@ -58,76 +57,4 @@ public class Announcement implements Serializable {
     @NotBlank(message = "{required}")
     @ExcelField(value = "状态", writeConverterExp = "0=隐藏,1=展示")
     private String announcementState;
-
-    public Long getAnnouncementId() {
-        return announcementId;
-    }
-
-    public void setAnnouncementId(Long announcementId) {
-        this.announcementId = announcementId;
-    }
-
-    public String getAnnouncementTitle() {
-        return announcementTitle;
-    }
-
-    public void setAnnouncementTitle(String announcementTitle) {
-        this.announcementTitle = announcementTitle;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(Long createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public String getAnnouncementContent() {
-        return announcementContent;
-    }
-
-    public void setAnnouncementContent(String announcementContent) {
-        this.announcementContent = announcementContent;
-    }
-
-    public String getCreateUserName() {
-        return createUserName;
-    }
-
-    public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName;
-    }
-
-    public String getCreateTimeFrom() {
-        return createTimeFrom;
-    }
-
-    public void setCreateTimeFrom(String createTimeFrom) {
-        this.createTimeFrom = createTimeFrom;
-    }
-
-    public String getCreateTimeTo() {
-        return createTimeTo;
-    }
-
-    public void setCreateTimeTo(String createTimeTo) {
-        this.createTimeTo = createTimeTo;
-    }
-
-    public String getAnnouncementState() {
-        return announcementState;
-    }
-
-    public void setAnnouncementState(String announcementState) {
-        this.announcementState = announcementState;
-    }
 }

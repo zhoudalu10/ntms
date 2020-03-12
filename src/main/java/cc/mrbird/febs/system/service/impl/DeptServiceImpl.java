@@ -25,9 +25,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author MrBird
- */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements IDeptService {
