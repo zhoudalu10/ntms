@@ -44,7 +44,7 @@
                 <select name="courseTeacherId"
                         lay-verify="required"
                         xm-select-direction="down"
-                        xm-select="course-add-teacher"
+                        xm-select="course-update-teacher"
                         xm-select-skin="default"
                         xm-select-radio>
                 </select>
@@ -88,7 +88,7 @@
 
         formSelects.render();
 
-        formSelects.config('course-add-teacher', {
+        formSelects.config('course-update-teacher', {
             searchUrl: ctx + 'user/find/courseTeachers',
             response: {
                 statusCode: 200
@@ -108,7 +108,7 @@
             success: function () {
                 var courseTeacherId = [];
                 courseTeacherId.push(course.courseTeacherId);
-                formSelects.value('course-add-teacher', courseTeacherId);
+                formSelects.value('course-update-teacher', courseTeacherId);
             },
             error: function (id, url, searchVal, err) {
                 console.error(err);

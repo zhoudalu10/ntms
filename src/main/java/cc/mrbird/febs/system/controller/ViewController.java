@@ -13,6 +13,10 @@ import cc.mrbird.febs.course.entity.Course;
 import cc.mrbird.febs.course.service.CourseService;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserService;
+import cc.mrbird.febs.test.entity.Paper;
+import cc.mrbird.febs.test.entity.Question;
+import cc.mrbird.febs.test.service.PaperService;
+import cc.mrbird.febs.test.service.QuestionService;
 import cc.mrbird.febs.timetable.entity.Timetable;
 import cc.mrbird.febs.timetable.service.TimetableService;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -37,16 +41,27 @@ public class ViewController extends BaseController {
 
     @Autowired
     private IUserService userService;
+
     @Autowired
     private ShiroHelper shiroHelper;
+
     @Autowired
     private AnnouncementService announcementService;
+
     @Autowired
     private ClassroomService classroomService;
+
     @Autowired
     private CourseService courseService;
+
     @Autowired
     private TimetableService timetableService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private PaperService paperService;
 
     @GetMapping("login")
     @ResponseBody
@@ -197,6 +212,7 @@ public class ViewController extends BaseController {
     public String announcementDetail(@PathVariable String announcementId, Model model) {
         Announcement announcement = announcementService.findById(announcementId);
         model.addAttribute("announcement", announcement);
+        model.addAttribute("createTime", DateUtil.getDateFormat(announcement.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
         return FebsUtil.view("announcement/announcementDetail");
     }
 
@@ -281,6 +297,64 @@ public class ViewController extends BaseController {
     @RequiresPermissions("myTimetable:view")
     public String myTimetable() {
         return FebsUtil.view("timetable/myTimetable");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/question")
+    @RequiresPermissions("question:view")
+    public String question() {
+        return FebsUtil.view("test/question/question");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/question/add")
+    @RequiresPermissions("question:add")
+    public String questionAdd() {
+        return FebsUtil.view("test/question/questionAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/question/update/{questionId}")
+    @RequiresPermissions("question:update")
+    public String questionUpdate(@PathVariable String questionId, Model model) {
+        Question question = questionService.findById(questionId);
+        model.addAttribute("question", question);
+        return FebsUtil.view("test/question/questionUpdate");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/question/detail/{questionId}")
+    @RequiresPermissions("question:view")
+    public String questionDetail(@PathVariable String questionId, Model model) {
+        Question question = questionService.findById(questionId);
+        model.addAttribute("question", question);
+        model.addAttribute("createTime", DateUtil.getDateFormat(question.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
+        return FebsUtil.view("test/question/questionDetail");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/paper")
+    @RequiresPermissions("paper:view")
+    public String paper() {
+        return FebsUtil.view("test/paper/paper");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/paper/add")
+    @RequiresPermissions("paper:add")
+    public String paperAdd() {
+        return FebsUtil.view("test/paper/paperAdd");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/paper/update/{paperId}")
+    @RequiresPermissions("paper:update")
+    public String paperUpdate(@PathVariable String paperId, Model model) {
+        Paper paper = paperService.findById(paperId);
+        model.addAttribute("paper", paper);
+        return FebsUtil.view("test/paper/paperUpdate");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/paper/detail/{paperId}")
+    @RequiresPermissions("paper:view")
+    public String paperDetail(@PathVariable String paperId, Model model) {
+        Paper paper = paperService.findById(paperId);
+        model.addAttribute("paper", paper);
+        model.addAttribute("createTime", DateUtil.getDateFormat(paper.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
+        return FebsUtil.view("test/paper/paperDetail");
     }
 
     private void resolveUserModel(String username, Model model, Boolean transform) {

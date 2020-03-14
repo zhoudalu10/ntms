@@ -1,0 +1,43 @@
+<style>
+    #febs-question-detail #question-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-question-detail .question-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-question-detail" lay-title="课程信息">
+    <div id="question-info-wrapper">
+        <div class="question-info">
+            <div><span class="layui-icon layui-icon-rate"></span> 课程：
+                [[${question.questionCourseName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-survey"></span> 题目内容：
+                [[${question.questionContent}]]
+            </div>
+            <div><span class="layui-icon layui-icon-rmb"></span> 分值：
+                [[${question.questionScore}]]分
+            </div>
+            <div><span class="layui-icon layui-icon-component"></span> 试题类型：
+                [[${question.questionType == 1 ? '单选' : (question.questionType == 2 ? '判断' : '多选')}]]
+            </div>
+            <div><span class="layui-icon layui-icon-username"></span> 创建人：
+                [[${question.createUserName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-next"></span> 创建时间：
+                [[${createTime}]]
+            </div>
+            <div><span class="layui-icon layui-icon-key"></span> 答案：
+                <p th:each="option,count:${question.optionList}" th:if="${option.optionIsKey} == '1'"
+                   style="display: inline">选项[[${count.count}]] </p>
+            </div>
+            <div th:each=" option,count:${question.optionList}"><span class="layui-icon layui-icon-flag"></span>
+                选项[[${count.count}]]：[[${option.optionContent}]]
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="layui-form-item febs-hide">
-                            <label class="layui-form-label">年级：</label>
+                            <label class="layui-form-label febs-form-item-require">年级：</label>
                             <div class="layui-input-block">
                                 <input type="radio" name="classGrade" value="1" title="大一" checked="">
                                 <input type="radio" name="classGrade" value="2" title="大二">
@@ -120,10 +120,8 @@
             _currentDeptData = data;
             if (data.parentId === classParentDeptId) {
                 $classGradeDiv.removeClass('febs-hide');
-                $classGradeLabel.addClass('febs-form-item-require');
             } else {
                 $classGradeDiv.addClass('febs-hide');
-                $classGradeLabel.removeClass('febs-form-item-require');
 
             }
             form.val("dept-form", {
@@ -259,7 +257,6 @@
         }
 
         form.on('submit(dept-form-submit)', function (data) {
-            debugger;
             if (data.field.parentId != classParentDeptId) {
                 delete data.field.classGrade;
             }

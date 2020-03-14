@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.test.mapper.PaperMapper">
+    <sql id="findPaperListSql">
+        SELECT P.PAPER_ID paperId,
+        P.PAPER_COURSE_ID paperCourseId,
+        C.COURSE_NAME paperCourseName,
+        P.PAPER_NAME paperName,
+        P.PAPER_TEST_TIME paperTestTime,
+        (SELECT COUNT(*) FROM T_QUESTION_PAPER QP WHERE P.PAPER_ID = QP.PAPER_ID) paperQuestionAmount,
+        P.PAPER_STATE paperState,
+        P.CREATE_USER_ID createUserId,
+        U.USERNAME createUserName,
+        P.CREATE_TIME createTime
+        FROM T_PAPER P
+        LEFT JOIN T_USER U ON P.CREATE_USER_ID = U.USER_ID
+        LEFT JOIN T_COURSE C ON P.PAPER_COURSE_ID = C.COURSE_ID
+        WHERE 1 = 1
+        <if test="paper.paperCourseName != null and paper.paperCourseName != ''">
+            <bind name="bindPaperCourseName" value="'%' + paper.paperCourseName + '%'"/>
+            AND C.COURSE_NAME LIKE #{bindPaperCourseName}
+        </if>
+        <if test="paper.paperName != null and paper.paperName != ''">
+            <bind name="bindPaperName" value="'%' + paper.paperName + '%'"/>
+            AND P.PAPER_NAME LIKE #{bindPaperName}
+        </if>
+        <if test="paper.paperState != null and paper.paperState != ''">
+            AND P.PAPER_STATE = #{paper.paperState}
+        </if>
+        <if test="paper.createUserId != null and paper.createUserId != ''">
+            AND P.CREATE_USER_ID = #{paper.createUserId}
+        </if>
+        <if test="paper.createUserName != null and paper.createUserName != ''">
+            <bind name="bindCreateUserName" value="'%' + paper.createUserName + '%'"/>
+            AND U.USERNAME LIKE #{bindCreateUserName}
+        </if>
+    </sql>
+
+    <select id="findPaperList" parameterType="paper" resultType="paper">
+        <include refid="findPaperListSql"></include>
+    </select>
+
+    <select id="findPaperListAll" parameterType="paper" resultType="paper">
+        <include refid="findPaperListSql"></include>
+    </select>
+
+    <select id="findById" parameterType="String" resultType="paper">
+        SELECT P.PAPER_ID                                                                paperId,
+       P.PAPER_COURSE_ID                                                         paperCourseId,
+       C.COURSE_NAME                                                             paperCourseName,
+       P.PAPER_NAME                                                              paperName,
+       P.PAPER_TEST_TIME                                                         paperTestTime,
+       (SELECT COUNT(*) FROM T_QUESTION_PAPER QP WHERE P.PAPER_ID = QP.PAPER_ID) paperQuestionAmount,
+       P.PAPER_STATE                                                             paperState,
+       P.CREATE_USER_ID                                                          createUserId,
+       U.USERNAME                                                                createUserName,
+       P.CREATE_TIME                                                             createTime
+FROM T_PAPER P
+         LEFT JOIN T_USER U ON P.CREATE_USER_ID = U.USER_ID
+         LEFT JOIN T_COURSE C ON P.PAPER_COURSE_ID = C.COURSE_ID
+WHERE P.PAPER_ID = #{paperId}
+    </select>
+
+</mapper>

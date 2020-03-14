@@ -43,19 +43,19 @@ public class TimetableController extends BaseController {
     @ControllerEndpoint(operation = "新增课程安排", exceptionMessage = "新增课程安排失败")
     public FebsResponse addTimetable(@Valid Timetable timetable) {
         switch (timetableService.addTimetable(timetable)) {
-            case SAMECLASSSAMETIMECLASH: {
+            case SAME_CLASS_SAME_TIME_CLASH: {
                 return new FebsResponse().fail().message("所选班级当前时段已有课程安排");
             }
-            case SAMETEACHERSAMETIMECLASH: {
+            case SAME_TEACHER_SAME_TIME_CLASH: {
                 return new FebsResponse().fail().message("所选课程任课老师当前时段已有课程安排");
             }
-            case CLASSROOMPEOPLEAMOUNTCLASH: {
+            case CLASSROOM_PEOPLE_AMOUNT_CLASH: {
                 return new FebsResponse().fail().message("所选教室当前时段人数过多");
             }
-            case SAMECLASSROOMSAMETIMECLASH: {
+            case SAME_CLASSROOM_SAME_TIME_CLASH: {
                 return new FebsResponse().fail().message("所选教室当前时段已有课程安排");
             }
-            case COURSEPERIODCLASH: {
+            case COURSE_PERIOD_CLASH: {
                 return new FebsResponse().fail().message("所选课程安排课时达到上限");
             }
             case SUCCESS: {

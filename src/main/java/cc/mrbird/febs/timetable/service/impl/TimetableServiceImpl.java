@@ -37,23 +37,23 @@ public class TimetableServiceImpl extends ServiceImpl<TimetableMapper, Timetable
         timetable.setTimetableIndexList(new ArrayList<>(Arrays.asList(timetable.getTimetableIndex().split(StringPool.COMMA))));
 
         if (!judgeSameClassSameTimeState(timetable)) {
-            return TimetableAddState.SAMECLASSSAMETIMECLASH;
+            return TimetableAddState.SAME_CLASS_SAME_TIME_CLASH;
         }
 
         if (!judgeSameClassSameTeacherState(timetable)) {
-            return TimetableAddState.SAMETEACHERSAMETIMECLASH;
+            return TimetableAddState.SAME_TEACHER_SAME_TIME_CLASH;
         }
 
         if (!judgeClassroomState(timetable)) {
-            return TimetableAddState.CLASSROOMPEOPLEAMOUNTCLASH;
+            return TimetableAddState.CLASSROOM_PEOPLE_AMOUNT_CLASH;
         }
 
         if (!judgeSameClassroomSameTimeState(timetable)) {
-            return TimetableAddState.SAMECLASSROOMSAMETIMECLASH;
+            return TimetableAddState.SAME_CLASSROOM_SAME_TIME_CLASH;
         }
 
         if (!judgeCoursePeriod(timetable)) {
-            return TimetableAddState.COURSEPERIODCLASH;
+            return TimetableAddState.COURSE_PERIOD_CLASH;
         }
 
         List<String> timetableIndexList = timetable.getTimetableIndexList();

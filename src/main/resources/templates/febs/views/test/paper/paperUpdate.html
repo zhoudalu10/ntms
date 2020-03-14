@@ -1,0 +1,83 @@
+<style>
+    #paper-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="paper-update">
+    <form class="layui-form" action="" lay-filter="paper-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">试卷id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paperId" data-th-value="${paper.paperId}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">课程：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paperCourseName"
+                       data-th-id="${paper.paperCourseName}"
+                       autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">试卷名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paperName" maxlength="20"
+                       data-th-id="${paper.paperName}"
+                       lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">测验时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="paperTestTime" maxlength="3"
+                       data-th-id="${paper.paperTestTime}"
+                       lay-verify="number|required|range"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="paper-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            paper = [[${paper}]],
+            validate = layui.validate;
+        form.verify(validate);
+        form.render();
+
+        initPaperValue();
+
+        function initPaperValue() {
+            form.val("paper-update-form", {
+                "paperId": paper.paperId,
+                "paperCourseName": paper.paperCourseName,
+                "paperName": paper.paperName,
+                "paperTestTime": paper.paperTestTime
+            });
+        }
+
+        form.on('submit(paper-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, paper)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'paper/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('试卷修改成功');
+                $('#febs-paper').find('#query').click();
+            });
+            return false;
+        });
+
+
+    });
+</script>

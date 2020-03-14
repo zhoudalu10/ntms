@@ -1,0 +1,317 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-question" lay-title="试题管理">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="question-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">课程名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="questionCourseName" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">题目内容</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="questionContent" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">分值</label>
+                                        <div class="layui-input-inline">
+                                            <select name="questionScore">
+                                                <option value=""></option>
+                                                <option value="1">1分</option>
+                                                <option value="2">2分</option>
+                                                <option value="3">3分</option>
+                                                <option value="4">4分</option>
+                                                <option value="5">5分</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">试题类型</label>
+                                        <div class="layui-input-inline">
+                                            <select name="questionType">
+                                                <option value=""></option>
+                                                <option value="1">单选</option>
+                                                <option value="2">判断</option>
+                                                <option value="3">多选</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">已添加到试卷</label>
+                                        <div class="layui-input-inline">
+                                            <select name="questionIsBindPaper">
+                                                <option value=""></option>
+                                                <option value="0">未添加</option>
+                                                <option value="1">已添加</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" shiro:hasPermission="test:viewAll">
+                                        <label class="layui-form-label layui-form-label-sm">创建人</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="createUserName" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="question:add,question:update,question:export">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="questionTable" lay-data="{id: 'questionTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    hasViewAllPerm = false;
+</script>
+<script type="text/javascript" shiro:hasPermission="test:viewAll">
+    hasViewAllPerm = true;
+</script>
+<script type="text/html" id="question-type">
+    {{#
+    var type = {
+    1: {title: '单选', color: 'lime'},
+    2: {title: '判断', color: 'cyan'},
+    3: {title: '多选', color: 'blue'}
+    }[d.questionType];
+    }}
+    <span class="layui-badge febs-bg-{{type.color}}">{{ type.title }}</span>
+</script>
+<script type="text/html" id="question-bind">
+    {{#
+    var bind = {
+    0: {title: '未添加', color: 'gold'},
+    1: {title: '已添加', color: 'geekblue'}
+    }[d.questionIsBindPaper];
+    }}
+    <span class="layui-badge febs-bg-{{bind.color}}">{{ bind.title }}</span>
+</script>
+<script type="text/html" id="question-option">
+    <span shiro:lacksPermission="question:view,question:update,question:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="question:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="edit" shiro:hasPermission="question:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del" shiro:hasPermission="question:delete"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'form', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-question'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns,
+            currentUserId = currentUser.userId;
+        form.render();
+        initTable();
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('questionTable');
+                if (name === 'add') {
+                    febs.modal.open('新增试题', 'test/question/add', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? ['95%', '95%'] : ['50%', '60%'],
+                        yes: function (index, layero) {
+                            $('#question-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#question-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要删除的试题');
+                    } else {
+                        var questionIsBindPaperFlag = false;
+                        layui.each(checkStatus.data, function (key, item) {
+                            if (item.questionIsBindPaper === '1') {
+                                questionIsBindPaperFlag = true;
+                            }
+                        });
+                        if (questionIsBindPaperFlag) {
+                            febs.alert.warn('已添加到试卷的试题无法删除');
+                            return false;
+                        }
+                        febs.modal.confirm('删除试题', '确定删除该试题？', function () {
+                            var questionIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                questionIds.push(item.questionId)
+                            });
+                            deleteQuestions(questionIds.join(','));
+                        });
+                    }
+                }
+                if (name === 'export') {
+                    var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+                    params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
+                    params.pageNum = $view.find(".layui-laypage-em").next().html();
+                    febs.download(ctx + 'question/excel', params, '试题信息表.xlsx');
+                }
+            },
+            options: [{
+                name: 'add',
+                title: '新增试题',
+                perms: 'question:add'
+            }, {
+                name: 'delete',
+                title: '删除试题',
+                perms: 'question:delete'
+            }, {
+                name: 'addToPaper',
+                title: '添加到试卷',
+                perms: 'question:addToPaper'
+            }, {
+                name: 'removeFromPaper',
+                title: '从试卷移除',
+                perms: 'question:removeFromPaper'
+            }, {
+                name: 'export',
+                title: '导出Excel',
+                perms: 'question:export'
+            }]
+        });
+
+        table.on('tool(questionTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                febs.modal.view('试题信息', 'test/question/detail/' + data.questionId, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            if (layEvent === 'del') {
+                if (data.questionIsBindPaper === '1') {
+                    febs.alert.warn('已添加到试卷的试题无法删除');
+                    return;
+                }
+                febs.modal.confirm('删除试题', '确定删除该试题？', function () {
+                    deleteQuestions(data.questionId);
+                });
+            }
+            if (layEvent === 'edit') {
+                if (data.questionIsBindPaper === '1') {
+                    febs.alert.warn('已添加到试卷的试题无法修改');
+                    return;
+                }
+                febs.modal.open('修改试题', 'test/question/update/' + data.questionId, {
+                    area: $(window).width() <= 750 ? ['95%', '95%'] : ['50%', '60%'],
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#question-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        table.on('sort(questionTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            var createUserId = "";
+            if (!hasViewAllPerm) {
+                createUserId = currentUserId;
+            }
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'questionTable',
+                url: ctx + 'question/list',
+                where: {
+                    createUserId: createUserId
+                },
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'questionCourseName', title: '课程名称', width: 100, minWidth: 100},
+                    {field: 'questionContent', title: '题目内容', width: 500},
+                    {field: 'questionScore', title: '分值', width: 50, unresize: true, align: 'center'},
+                    {title: '试题类型', templet: '#question-type', width: 90, unresize: true, align: 'center'},
+                    {title: '已添加到试卷', templet: '#question-bind', width: 120, unresize: true, align: 'center'},
+                    {field: 'createUserName', title: '创建人', width: 100, maxWidth: 120},
+                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
+                    {title: '操作', toolbar: '#question-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            var createUserId = "";
+            if (!hasViewAllPerm) {
+                createUserId = currentUserId;
+            }
+            return {
+                questionCourseName: $searchForm.find('input[name="questionCourseName"]').val().trim(),
+                questionContent: $searchForm.find('input[name="questionContent"]').val().trim(),
+                questionScore: $searchForm.find("select[name='questionScore']").val(),
+                questionType: $searchForm.find('select[name="questionType"]').val(),
+                questionIsBindPaper: $searchForm.find('select[name="questionIsBindPaper"]').val(),
+                createUserName: $searchForm.find('input[name="createUserName"]').val().trim(),
+                createUserId: createUserId,
+                invalidate_ie_cache: new Date()
+            };
+        }
+
+        function deleteQuestions(questionIds) {
+            febs.get(ctx + 'question/delete/' + questionIds, null, function () {
+                febs.alert.success('删除试题成功');
+                $query.click();
+            });
+        }
+    })
+</script>

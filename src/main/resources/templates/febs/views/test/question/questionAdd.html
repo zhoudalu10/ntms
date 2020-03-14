@@ -1,0 +1,341 @@
+<style>
+    #question-add {
+        padding: 20px 25px 25px 0;
+    }
+
+    #question-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="question-add">
+    <form class="layui-form" action="" lay-filter="question-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">课程：</label>
+            <div class="layui-input-block">
+                <select name="questionCourseId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="question-add-course"
+                        xm-select-skin="default"
+                        xm-select-radio
+                        xm-select-search
+                        xm-select-search-type="dl">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">分值：</label>
+            <div class="layui-input-block">
+                <select name="questionScore" lay-verify="required">
+                    <option value=""></option>
+                    <option value="1">1分</option>
+                    <option value="2">2分</option>
+                    <option value="3">3分</option>
+                    <option value="4">4分</option>
+                    <option value="5">5分</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">题目内容：</label>
+            <div class="layui-input-block">
+                <input type="text" name="questionContent" maxlength="50"
+                       lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">题目类型：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="questionType" lay-filter="question-add-form-radio-questionType" value="1"
+                       title="单选" checked="">
+                <input type="radio" name="questionType" lay-filter="question-add-form-radio-questionType" value="2"
+                       title="判断">
+                <input type="radio" name="questionType" lay-filter="question-add-form-radio-questionType" value="3"
+                       title="多选">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">答案：</label>
+            <div class="layui-input-block">
+                <select name="questionOptionKey"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="question-add-option-key"
+                        xm-select-skin="default"
+                        xm-select-radio>
+                </select>
+            </div>
+        </div>
+        <div id="question-add-option">
+            <div class="layui-form-item" style="text-align: center">
+                <div class="layui-btn-group">
+                    <button type="button" class="layui-btn" id="question-add-option-add">
+                        <i class="layui-icon">&#xe624;</i> 添加
+                    </button>
+                    <button type="button" class="layui-btn" id="question-add-option-delete">
+                        <i class="layui-icon">&#xe67e;</i> 删除
+                    </button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label febs-form-item-require">选项 1：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="questionOptionContent-1" maxlength="50"
+                           lay-verify="range|required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label febs-form-item-require">选项 2：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="questionOptionContent-2" maxlength="50"
+                           lay-verify="range|required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label febs-form-item-require">选项 3：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="questionOptionContent-3" maxlength="50"
+                           lay-verify="range|required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label febs-form-item-require">选项 4：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="questionOptionContent-4" maxlength="50"
+                           lay-verify="range|required"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="question-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'validate'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            $view = $('#question-add'),
+            $optionAdd = $view.find('#question-add-option-add'),
+            $optionDelete = $view.find('#question-add-option-delete'),
+            $option = $view.find('#question-add-option'),
+            optionCount = 4,
+            $questionOptionContent1 = $option.find('input[name="questionOptionContent-1"]'),
+            $questionOptionContent2 = $option.find('input[name="questionOptionContent-2"]'),
+            $btnGroup = $option.find('.layui-btn-group'),
+            currentUserId = currentUser.userId;
+        var optionKey = [
+            {name: '选项1', value: 1},
+            {name: '选项2', value: 2},
+            {name: '选项3', value: 3},
+            {name: '选项4', value: 4}
+        ];
+        validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+        formSelects.render();
+        formSelects.data('question-add-option-key', 'local', {
+            arr: optionKey
+        });
+        initCourseSelect();
+
+        form.on('radio(question-add-form-radio-questionType)', function (data) {
+            switch (data.value) {
+                case '1':
+                    initSingleChoice();
+                    break;
+                case '2':
+                    initJudgement();
+                    break;
+                case '3':
+                    initMultipleChoice();
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        $optionAdd.on('click', function () {
+            if (optionCount >= 6) {
+                febs.alert.warn('选项不能超过6个！');
+                return;
+            }
+            addOption();
+        });
+
+        $optionDelete.on('click', function () {
+            if (optionCount <= 2) {
+                febs.alert.warn('选项不能少于2个！');
+                return;
+            }
+            deleteOption();
+        });
+
+        form.on('submit(question-add-form-submit)', function (data) {
+            var optionList = [];
+            var questionOptionKey = data.field.questionOptionKey.split(',');
+            for (var i = 1; i <= optionCount; i++) {
+                var optionIsKey = 0;
+                if (questionOptionKey.indexOf(i + '') >= 0) {
+                    optionIsKey = 1;
+                }
+                var option = {
+                    optionContent: data.field['questionOptionContent-' + i + ''],
+                    optionIsKey: optionIsKey
+                };
+                optionList.push(option);
+                delete data.field['questionOptionContent-' + i + ''];
+            }
+            data.field.optionList = optionList;
+            delete data.field.questionOptionKey;
+            data.field.createUserId = currentUserId;
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json;charset=UTF-8',
+                url: ctx + 'question/add',
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.closeAll();
+                        febs.alert.success('新增试题成功！');
+                        $('#febs-question').find('#query').click();
+                    }
+                }
+            });
+            return false;
+        });
+
+        function initSingleChoice() {
+            $btnGroup.removeClass('febs-hide');
+            formSelects.render('question-add-option-key', {
+                radio: true
+            });
+            formSelects.data('question-add-option-key', 'local', {
+                arr: optionKey
+            });
+            while (optionCount < 4) {
+                addOption();
+            }
+            $questionOptionContent1.val('');
+            $questionOptionContent2.val('');
+            $questionOptionContent1.removeAttr('disabled');
+            $questionOptionContent2.removeAttr('disabled');
+        }
+
+        function initJudgement() {
+            $btnGroup.addClass('febs-hide');
+            formSelects.render('question-add-option-key', {
+                radio: true
+            });
+            formSelects.data('question-add-option-key', 'local', {
+                arr: optionKey
+            });
+            while (optionCount > 2) {
+                deleteOption();
+            }
+            $questionOptionContent1.val('正确');
+            $questionOptionContent2.val('错误');
+            $questionOptionContent1.attr('disabled', '');
+            $questionOptionContent2.attr('disabled', '');
+
+        }
+
+        function initMultipleChoice() {
+            $btnGroup.removeClass('febs-hide');
+            formSelects.render('question-add-option-key', {
+                radio: false
+            });
+            formSelects.data('question-add-option-key', 'local', {
+                arr: optionKey
+            });
+            while (optionCount < 4) {
+                addOption();
+            }
+            $questionOptionContent1.val('');
+            $questionOptionContent2.val('');
+            $questionOptionContent1.removeAttr('disabled');
+            $questionOptionContent2.removeAttr('disabled');
+        }
+
+        function initCourseSelect() {
+            var courseTeacherId = "";
+            if (!hasViewAllPerm) {
+                courseTeacherId = currentUserId;
+            }
+
+            formSelects.data('question-add-course', 'server', {
+                type: 'get',
+                url: ctx + 'course/listAll',
+                data: {
+                    courseState: '1',
+                    courseTeacherId: courseTeacherId
+                },
+                response: {
+                    statusCode: 200
+                },
+                beforeSuccess: function (id, url, searchVal, result) {
+                    var data = result.data;
+                    var tranData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        tranData.push({
+                            name: data[i].courseName,
+                            value: data[i].courseId,
+                            courseGrade: data[i].courseGrade
+                        })
+                    }
+                    result.data = tranData;
+                    return result;
+                },
+                error: function (id, url, searchVal, err) {
+                    console.error(err);
+                    febs.alert.error('获取课程列表失败');
+                }
+            });
+            formSelects.render('question-add-course', {
+                template: function (name, value, selected, disabled) {
+                    return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">大' +
+                        (value.courseGrade == 1 ? '一' : (value.courseGrade == 2 ? '二' : (value.courseGrade == 3 ? '三' : '四'))) + '</span>';
+                }
+            });
+        }
+
+        function addOption() {
+            optionCount++;
+            $option.append('<div class="layui-form-item">\n' +
+                '                <label class="layui-form-label febs-form-item-require">选项 ' + optionCount + '：</label>\n' +
+                '                <div class="layui-input-block">\n' +
+                '                    <input type="text" name="questionOptionContent-' + optionCount + '" maxlength="50"\n' +
+                '                           lay-verify="range|required"\n' +
+                '                           autocomplete="off" class="layui-input">\n' +
+                '                </div>\n' +
+                '            </div>');
+            optionKey.push({name: '选项' + optionCount, value: optionCount});
+            formSelects.data('question-add-option-key', 'local', {
+                arr: optionKey
+            });
+        }
+
+        function deleteOption() {
+            $option.children('.layui-form-item').last().remove();
+            optionKey.pop();
+            formSelects.data('question-add-option-key', 'local', {
+                arr: optionKey
+            });
+            optionCount--;
+        }
+
+
+    });
+</script>

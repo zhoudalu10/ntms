@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.test.mapper.QuestionMapper">
+    <select id="findQuestionList" parameterType="question" resultType="question">
+        SELECT *
+        FROM (
+        SELECT
+        Q.QUESTION_ID questionId,
+        C.COURSE_NAME questionCourseName,
+        Q.QUESTION_CONTENT questionContent,
+        Q.QUESTION_SCORE questionScore,
+        Q.QUESTION_TYPE questionType,
+        DECODE((SELECT COUNT(*) FROM T_QUESTION_PAPER QP WHERE Q.QUESTION_ID = QP.QUESTION_ID), 0, 0,
+        1) questionIsBindPaper,
+        U.USERNAME createUserName,
+        Q.CREATE_TIME createTime
+        FROM T_QUESTION Q
+        LEFT JOIN T_COURSE C ON Q.QUESTION_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_USER U ON Q.CREATE_USER_ID = U.USER_ID
+        WHERE 1 = 1
+        <if test="question.questionCourseName != null and question.questionCourseName != ''">
+            <bind name="bindQuestionCourseName" value="'%' + question.questionCourseName + '%'"/>
+            AND C.COURSE_NAME LIKE #{bindQuestionCourseName}
+        </if>
+        <if test="question.questionContent != null and question.questionContent != ''">
+            <bind name="bindQuestionContent" value="'%' + question.questionContent + '%'"/>
+            AND Q.QUESTION_CONTENT LIKE #{bindQuestionContent}
+        </if>
+        <if test="question.questionScore != null and question.questionScore != ''">
+            AND Q.QUESTION_SCORE = #{question.questionScore}
+        </if>
+        <if test="question.questionType != null and question.questionType != ''">
+            AND Q.QUESTION_TYPE = #{question.questionType}
+        </if>
+        <if test="question.createUserName != null and question.createUserName != ''">
+            <bind name="bindCreateUserName" value="'%' + question.createUserName + '%'"/>
+            AND U.USERNAME LIKE #{bindCreateUserName}
+        </if>
+        <if test="question.createUserId != null and question.createUserId != ''">
+            AND Q.CREATE_USER_ID = #{question.createUserId}
+        </if>
+        )
+        <if test="question.questionIsBindPaper != null and question.questionIsBindPaper != ''">
+            WHERE questionIsBindPaper = #{question.questionIsBindPaper}
+        </if>
+    </select>
+
+    <select id="findById" parameterType="String" resultType="question">
+        SELECT Q.QUESTION_ID      questionId,
+       C.COURSE_NAME      questionCourseName,
+       Q.QUESTION_CONTENT questionContent,
+       Q.QUESTION_SCORE   questionScore,
+       Q.QUESTION_TYPE    questionType,
+       U.USERNAME         createUserName,
+       Q.CREATE_TIME      createTime
+FROM T_QUESTION Q
+         LEFT JOIN T_COURSE C ON Q.QUESTION_COURSE_ID = C.COURSE_ID
+         LEFT JOIN T_USER U ON Q.CREATE_USER_ID = U.USER_ID
+WHERE Q.QUESTION_ID = #{questionId}
+    </select>
+</mapper>

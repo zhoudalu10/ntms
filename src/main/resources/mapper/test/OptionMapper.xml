@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.test.mapper.OptionMapper">
+    <select id="findByQuestionId" parameterType="String" resultType="option">
+        SELECT O.OPTION_ID      optionId,
+       O.OPTION_CONTENT optionContent,
+       O.OPTION_ISKEY   optionIsKey
+FROM T_OPTION O
+WHERE O.OPTION_QUESTION_ID = #{questionId}
+    </select>
+
+    <delete id="deleteOptionsByQuestionId" parameterType="String">
+        DELETE FROM T_OPTION O
+        WHERE O.OPTION_QUESTION_ID = #{questionId}
+    </delete>
+</mapper>

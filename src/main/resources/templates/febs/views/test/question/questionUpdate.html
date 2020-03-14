@@ -1,0 +1,200 @@
+<style>
+    #question-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="question-update">
+    <form class="layui-form" action="" lay-filter="question-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">试题id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="questionId" data-th-value="${question.questionId}">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">课程：</label>
+            <div class="layui-input-block">
+                <input type="text" name="questionCourseName"
+                       data-th-id="${question.questionCourseName}"
+                       autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">分值：</label>
+            <div class="layui-input-block">
+                <select name="questionScore" lay-verify="required" data-th-id="${question.questionScore}">
+                    <option value=""></option>
+                    <option value="1">1分</option>
+                    <option value="2">2分</option>
+                    <option value="3">3分</option>
+                    <option value="4">4分</option>
+                    <option value="5">5分</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">题目内容：</label>
+            <div class="layui-input-block">
+                <input type="text" name="questionContent" maxlength="50"
+                       lay-verify="range|required" data-th-id="${question.questionContent}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">题目类型：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="questionType" lay-filter="question-update-form-radio-questionType" value="1"
+                       title="单选" disabled>
+                <input type="radio" name="questionType" lay-filter="question-update-form-radio-questionType" value="2"
+                       title="判断" disabled>
+                <input type="radio" name="questionType" lay-filter="question-update-form-radio-questionType" value="3"
+                       title="多选" disabled>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">答案：</label>
+            <div class="layui-input-block">
+                <select name="questionOptionKey"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="question-update-option-key"
+                        xm-select-skin="default"
+                        xm-select-radio>
+                </select>
+            </div>
+        </div>
+
+        <div id="question-update-option">
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="question-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            form = layui.form,
+            question = [[${question}]],
+            $view = $('#question-update'),
+            $option = $view.find('#question-update-option'),
+            validate = layui.validate;
+        form.verify(validate);
+        form.render();
+
+        initQuestionValue();
+
+        function initQuestionValue() {
+            form.val("question-update-form", {
+                "questionId": question.questionId,
+                "questionCourseName": question.questionCourseName,
+                "questionScore": question.questionScore,
+                "questionContent": question.questionContent,
+                "questionType": question.questionType
+            });
+            switch (question.questionType) {
+                case '1':
+                    formSelects.render('question-update-option-key', {
+                        radio: true
+                    });
+                    initOptionKey();
+                    initOption();
+                    break;
+                case '2':
+                    formSelects.render('question-update-option-key', {
+                        radio: true
+                    });
+                    initOptionKey();
+                    initOption();
+                    $option.find('input[name="questionOptionContent-1"]').attr('disabled', '');
+                    $option.find('input[name="questionOptionContent-2"]').attr('disabled', '');
+                    break;
+                case '3':
+                    formSelects.render('question-update-option-key', {
+                        radio: false
+                    });
+                    initOptionKey();
+                    initOption();
+                    break;
+            }
+
+        }
+
+        form.on('submit(question-update-form-submit)', function (data) {
+            var optionList = [];
+            var questionOptionKey = data.field.questionOptionKey.split(',');
+            for (var i = 1; i <= question.optionList.length; i++) {
+                var optionIsKey = 0;
+                if (questionOptionKey.indexOf(i + '') >= 0) {
+                    optionIsKey = 1;
+                }
+                var option = {
+                    optionId: $option.find('input[name="questionOptionContent-' + i + '"]').attr('optionId'),
+                    optionQuestionId: question.questionId,
+                    optionContent: data.field['questionOptionContent-' + i],
+                    optionIsKey: optionIsKey
+                };
+                optionList.push(option);
+                delete data.field['questionOptionContent-' + i + ''];
+            }
+            data.field.optionList = optionList;
+            delete data.field.questionOptionKey;
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json;charset=UTF-8',
+                url: ctx + 'question/update',
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.closeAll();
+                        febs.alert.success('试题修改成功');
+                        $('#febs-question').find('#query').click();
+                    }
+                }
+            });
+            return false;
+        });
+
+        function initOptionKey() {
+            var optionKeyArray = [];
+            var optionKeyValue = [];
+            for (var i = 0; i < question.optionList.length; i++) {
+                optionKeyArray.push({name: '选项' + (i + 1), value: (i + 1)});
+                if (question.optionList[i].optionIsKey === '1') {
+                    optionKeyValue.push(i + 1);
+                }
+            }
+            formSelects.data('question-update-option-key', 'local', {
+                arr: optionKeyArray
+            });
+            //方法参数只接受数组，好大一个坑
+            formSelects.value('question-update-option-key', optionKeyValue);
+        }
+
+        function initOption() {
+            for (var i = 0; i < question.optionList.length; i++) {
+                $option.append('<div class="layui-form-item">\n' +
+                    '                <label class="layui-form-label febs-form-item-require">选项 ' + (i + 1) + '：</label>\n' +
+                    '                <div class="layui-input-block">\n' +
+                    '                    <input type="text" name="questionOptionContent-' + (i + 1) + '" maxlength="50"\n' +
+                    '                           data-th-id="${question.optionList[' + i + '].optionContent}"\n' +
+                    '                           optionId="' + question.optionList[i].optionId + '"\n' +
+                    '                           lay-verify="range|required"\n' +
+                    '                           autocomplete="off" class="layui-input">\n' +
+                    '                </div>\n' +
+                    '            </div>');
+                form.val("question-update-form", {
+                    ["questionOptionContent-" + (i + 1)]: question.optionList[i].optionContent
+                });
+            }
+        }
+    });
+</script>

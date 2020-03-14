@@ -1,0 +1,39 @@
+<style>
+    #febs-paper-detail #paper-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-paper-detail .paper-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-paper-detail" lay-title="试卷信息">
+    <div id="paper-info-wrapper">
+        <div class="paper-info">
+            <div><span class="layui-icon layui-icon-rate"></span> 课程名称：
+                [[${paper.paperCourseName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-survey"></span> 试卷名称：
+                [[${paper.paperName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-refresh"></span> 测验时间：
+                [[${paper.paperTestTime}]]分钟
+            </div>
+            <div><span class="layui-icon layui-icon-align-left"></span> 试题数量：
+                [[${paper.paperQuestionAmount}]]
+            </div>
+            <div><span class="layui-icon layui-icon-loading-1"></span> 试卷状态：
+                [[${paper.paperState == '1' ? '组卷中' : (paper.paperState == '2' ? '测验中' : '测验结束')}]]
+            </div>
+            <div><span class="layui-icon layui-icon-username"></span> 创建人：
+                [[${paper.createUserName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-next"></span> 创建时间：
+                [[${createTime}]]
+            </div>
+        </div>
+    </div>
+</div>
