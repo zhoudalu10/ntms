@@ -33,9 +33,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * @author MrBird
- */
 @Controller("systemView")
 public class ViewController extends BaseController {
 
