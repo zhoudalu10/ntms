@@ -26,4 +26,6 @@ public interface PaperService {
     void startTest(String[] ids);
 
     void endTest(String[] ids);
+
+    List<Paper> findUserPaper(String userId);
 }

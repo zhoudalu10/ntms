@@ -79,4 +79,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         List<String> list = Arrays.asList(ids);
         list.forEach(paperId -> this.baseMapper.endTest(paperId));
     }
+
+    @Override
+    public List<Paper> findUserPaper(String userId) {
+        return this.baseMapper.findUserPaper(userId);
+    }
 }

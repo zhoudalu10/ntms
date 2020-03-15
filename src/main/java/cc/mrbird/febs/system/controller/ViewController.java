@@ -369,6 +369,19 @@ public class ViewController extends BaseController {
         return FebsUtil.view("test/question/questionRemoveFromPaper");
     }
 
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/testStart")
+    @RequiresPermissions("test:testStart")
+    public String testStart() {
+        return FebsUtil.view("test/test/testStart");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/testPage/{paperId}")
+    @RequiresPermissions("test:testStart")
+    public String testPage(@PathVariable String paperId, Model model) {
+        System.out.println(paperId);
+        return FebsUtil.view("test/test/testPage");
+    }
+
     private void resolveUserModel(String username, Model model, Boolean transform) {
         User user = userService.findByName(username);
         model.addAttribute("user", user);

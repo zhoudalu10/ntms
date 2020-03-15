@@ -39,6 +39,13 @@ public class Paper implements Serializable {
     @ExcelField(value = "课程名称")
     private String paperCourseName;
 
+    @TableField(exist = false)
+    private Long paperCourseTeacherId;
+
+    @TableField(exist = false)
+    @ExcelField(value = "任课老师")
+    private String paperCourseTeacherName;
+
     @TableField("PAPER_NAME")
     @NotBlank(message = "{required}")
     @Size(max = 20, message = "{noMoreThan}")

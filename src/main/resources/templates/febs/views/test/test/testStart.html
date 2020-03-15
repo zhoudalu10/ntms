@@ -1,0 +1,166 @@
+<style>
+    p.inline {
+        display: inline;
+    }
+</style>
+<div class="layui-fluid layui-anim febs-anim" id="febs-testStart" lay-title="开始测验">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">注意事项</div>
+                <div class="layui-card-body febs-table-full">
+                    <p>1.考生须使用本人账号进行考试，禁止使用他人账号替考，一经发现按作弊处理。</p>
+                    <p>2.不同试卷考试时间不同，请关注页面时间限制。</p>
+                    <p>3.考试一旦开始无法暂停、重考，误操作导致提前结束考试请联系任课老师。</p>
+                    <p>4.教学管理系统监听标签页、浏览器窗口等操作，请考生认真对待每一次测验，误操作可能导致0分成绩。</p>
+                    <p>5.每份试卷每人限答一次，如有疑问请联系任课老师或系统管理员。</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">选择试卷</div>
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="test-testStart-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline" style="width: 100%">
+                                <label class="layui-form-label layui-form-label-sm">试卷：</label>
+                                <div class="layui-input-inline" style="width: 70%">
+                                    <select name="paperId"
+                                            lay-verify="required"
+                                            xm-select-direction="down"
+                                            xm-select="test-testStart-paper"
+                                            xm-select-skin="default"
+                                            xm-select-radio
+                                            xm-select-search
+                                            xm-select-search-type="dl">
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="text-align: center">
+                            <button class="layui-btn" lay-submit="" lay-filter="test-testStart-form-submit" id="submit">
+                                确定
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card" id="paper-info">
+                <div class="layui-card-header">试卷信息</div>
+                <div class="layui-card-body febs-table-full">
+                    <div><span class="layui-icon layui-icon-rate"></span> 课程名称：
+                        <p class="inline" id="paperCourseName"></p>
+                    </div>
+                    <div><span class="layui-icon layui-icon-username"></span> 任课老师：
+                        <p class="inline" id="paperCourseTeacherName"></p>
+                    </div>
+                    <div><span class="layui-icon layui-icon-survey"></span> 试卷名称：
+                        <p class="inline" id="paperName"></p>
+                    </div>
+                    <div><span class="layui-icon layui-icon-refresh"></span> 测验时间：
+                        <p class="inline" id="paperTestTime"></p>
+                    </div>
+                    <div><span class="layui-icon layui-icon-align-left"></span> 试题数量：
+                        <p class="inline" id="paperQuestionAmount"></p>
+                    </div>
+                    <div><span class="layui-icon layui-icon-username"></span> 创建人：
+                        <p class="inline" id="createUserName"></p>
+                    </div>
+                    <div><span class="layui-icon layui-icon-next"></span> 创建时间：
+                        <p class="inline" id="createTime"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'form', 'formSelects', 'febs'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            formSelects = layui.formSelects,
+            $view = $('#febs-testStart'),
+            $form = $view.find('form'),
+            $paperInfo = $view.find('#paper-info'),
+            currentUserId = currentUser.userId,
+            studentFlag = false;
+        if (currentUser.deptParentId === '11') {
+            studentFlag = true;
+        }
+        formSelects.render();
+        initPaperSelect();
+
+        form.on('submit(test-testStart-form-submit)', function (data) {
+            febs.modal.confirm('开始测验', '点击确定后系统将会记录你该场测验的0分成绩，直到提交试卷后结算分数，确定要开始测验？', function () {
+                formSelects.disabled('test-testStart-paper');
+                $view.find('#submit').attr('disabled', '');
+                febs.navigate('/test/testPage/' + data.field.paperId);
+                return false;
+            });
+
+        });
+
+        function initPaperSelect() {
+            var userId = '';
+            if (studentFlag) {
+                userId = currentUserId;
+            }
+            formSelects.data('test-testStart-paper', 'server', {
+                type: 'get',
+                url: ctx + 'test/testPaper',
+                data: {
+                    userId: userId,
+                },
+                response: {
+                    statusCode: 200
+                },
+                beforeSuccess: function (id, url, searchVal, result) {
+                    var data = result.data;
+                    var tranData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        tranData.push({
+                            name: data[i].paperName,
+                            value: data[i].paperId,
+                            paperCourseName: data[i].paperCourseName,
+                            paperTestTime: data[i].paperTestTime,
+                            createUserName: data[i].createUserName,
+                            createTime: data[i].createTime,
+                            paperCourseTeacherName: data[i].paperCourseTeacherName,
+                            paperQuestionAmount: data[i].paperQuestionAmount
+                        })
+                    }
+                    result.data = tranData;
+                    return result;
+                },
+                error: function (id, url, searchVal, err) {
+                    console.error(err);
+                    febs.alert.error('获取试卷列表失败');
+                }
+            });
+            formSelects.on('test-testStart-paper', function (id, vals, val, isAdd, isDisabled) {
+                if (isAdd) {
+                    $paperInfo.find('#paperCourseName').html(val.paperCourseName);
+                    $paperInfo.find('#paperCourseTeacherName').html(val.paperCourseTeacherName);
+                    $paperInfo.find('#paperName').html(val.name);
+                    $paperInfo.find('#paperTestTime').html(val.paperTestTime + '分钟');
+                    $paperInfo.find('#paperQuestionAmount').html(val.paperQuestionAmount + '题');
+                    $paperInfo.find('#createUserName').html(val.createUserName);
+                    $paperInfo.find('#createTime').html(val.createTime);
+                } else {
+                    $paperInfo.find('#paperCourseName').html('');
+                    $paperInfo.find('#paperCourseTeacherName').html('');
+                    $paperInfo.find('#paperName').html('');
+                    $paperInfo.find('#paperTestTime').html('');
+                    $paperInfo.find('#paperQuestionAmount').html('');
+                    $paperInfo.find('#createUserName').html('');
+                    $paperInfo.find('#createTime').html('');
+                }
+            });
+        }
+    });
+</script>

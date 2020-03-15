@@ -98,4 +98,28 @@ UPDATE T_PAPER P
 SET P.PAPER_STATE = '3'
 WHERE P.PAPER_ID = #{paperId}
     </update>
+    <select id="findUserPaper" parameterType="String" resultType="paper">
+        SELECT DISTINCT P.PAPER_ID paperId,
+        P.PAPER_COURSE_ID paperCourseId,
+        C.COURSE_NAME paperCourseName,
+        P.PAPER_NAME paperName,
+        P.PAPER_TEST_TIME paperTestTime,
+        (SELECT COUNT(*) FROM T_QUESTION_PAPER QP WHERE P.PAPER_ID = QP.PAPER_ID) paperQuestionAmount,
+        P.CREATE_USER_ID createUserId,
+        U3.USERNAME createUserName,
+        P.CREATE_TIME createTime,
+        C.COURSE_TEACHER_ID paperCourseTeacherId,
+        U2.USERNAME paperCourseTeacherName
+        FROM T_PAPER P
+        JOIN T_TIMETABLE T ON P.PAPER_COURSE_ID = T.TIMETABLE_COURSE_ID
+        JOIN T_USER U ON U.DEPT_ID = T.TIMETABLE_CLASS_ID
+        JOIN T_COURSE C ON P.PAPER_COURSE_ID = C.COURSE_ID
+        JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+        JOIN T_USER U3 ON P.CREATE_USER_ID = U3.USER_ID
+        WHERE P.PAPER_STATE = '2'
+        <if test="userId != null and userId != ''">
+            AND U.USER_ID = #{userId}
+            AND P.PAPER_ID NOT IN (SELECT TR.RESULT_PAPER_ID FROM T_TEST_RESULT TR WHERE TR.RESULT_USER_ID = #{userId})
+        </if>
+    </select>
 </mapper>
