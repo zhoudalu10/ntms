@@ -6,6 +6,8 @@ import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.test.entity.Question;
+import cc.mrbird.febs.test.entity.QuestionPaper;
+import cc.mrbird.febs.test.service.QuestionPaperService;
 import cc.mrbird.febs.test.service.QuestionService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
@@ -32,6 +34,9 @@ public class QuestionController extends BaseController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private QuestionPaperService questionPaperService;
 
     @RequestMapping("list")
     @RequiresPermissions("question:view")
@@ -73,6 +78,22 @@ public class QuestionController extends BaseController {
     public void export(QueryRequest queryRequest, Question question, HttpServletResponse response) {
         List<Question> questions = questionService.findQuestionList(question, queryRequest).getRecords();
         ExcelKit.$Export(Question.class, response).downXlsx(questions, false);
+    }
+
+    @RequestMapping("addToPaper")
+    @RequiresPermissions("question:addToPaper")
+    @ControllerEndpoint(operation = "添加到试卷", exceptionMessage = "添加到试卷失败")
+    public FebsResponse addToPaper(@Valid QuestionPaper questionPaper) {
+        questionPaperService.addQuestionPaper(questionPaper);
+        return new FebsResponse().success();
+    }
+
+    @RequestMapping("removeFromPaper")
+    @RequiresPermissions("question:removeFromPaper")
+    @ControllerEndpoint(operation = "从试卷移除", exceptionMessage = "从试卷移除失败")
+    public FebsResponse removeFromPaper(@Valid QuestionPaper questionPaper) {
+        questionPaperService.deleteQuestionPaper(questionPaper);
+        return new FebsResponse().success();
     }
 
 }

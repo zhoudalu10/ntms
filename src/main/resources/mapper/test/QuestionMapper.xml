@@ -5,8 +5,9 @@
     <select id="findQuestionList" parameterType="question" resultType="question">
         SELECT *
         FROM (
-        SELECT
+        SELECT DISTINCT
         Q.QUESTION_ID questionId,
+        Q.QUESTION_COURSE_ID questionCourseId,
         C.COURSE_NAME questionCourseName,
         Q.QUESTION_CONTENT questionContent,
         Q.QUESTION_SCORE questionScore,
@@ -18,6 +19,7 @@
         FROM T_QUESTION Q
         LEFT JOIN T_COURSE C ON Q.QUESTION_COURSE_ID = C.COURSE_ID
         LEFT JOIN T_USER U ON Q.CREATE_USER_ID = U.USER_ID
+        LEFT JOIN T_QUESTION_PAPER QP ON QP.QUESTION_ID = Q.QUESTION_ID
         WHERE 1 = 1
         <if test="question.questionCourseName != null and question.questionCourseName != ''">
             <bind name="bindQuestionCourseName" value="'%' + question.questionCourseName + '%'"/>
@@ -40,6 +42,9 @@
         <if test="question.createUserId != null and question.createUserId != ''">
             AND Q.CREATE_USER_ID = #{question.createUserId}
         </if>
+        <if test="question.bindingPaperId != null and question.bindingPaperId != ''">
+            AND QP.PAPER_ID = #{question.bindingPaperId}
+        </if>
         )
         <if test="question.questionIsBindPaper != null and question.questionIsBindPaper != ''">
             WHERE questionIsBindPaper = #{question.questionIsBindPaper}
@@ -48,6 +53,7 @@
 
     <select id="findById" parameterType="String" resultType="question">
         SELECT Q.QUESTION_ID      questionId,
+        Q.QUESTION_COURSE_ID questionCourseId,
        C.COURSE_NAME      questionCourseName,
        Q.QUESTION_CONTENT questionContent,
        Q.QUESTION_SCORE   questionScore,

@@ -1,0 +1,84 @@
+<style>
+    #question-remove-from-paper {
+        padding: 20px 25px 25px 0;
+    }
+
+    #question-remove-from-paper .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="question-remove-from-paper">
+    <form class="layui-form" action="" lay-filter="question-remove-from-paper-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">试卷：</label>
+            <div class="layui-input-block">
+                <select name="paperId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="question-remove-from-paper"
+                        xm-select-skin=" default"
+                        xm-select-search
+                        xm-select-search-type="dl">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="question-remove-from-paper-form-submit"
+                    id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            $view = $('#question-remove-from-paper'),
+            question = [[${question}]],
+            papers = question.bindingPaperList,
+            questionId = question.questionId,
+            currentUserId = currentUser.userId,
+            papersArr = [];
+        validate = layui.validate;
+        form.verify(validate);
+        form.render();
+        formSelects.render();
+        initPaperSelect();
+
+        form.on('submit(question-remove-from-paper-form-submit)', function (data) {
+            data.field.questionId = questionId;
+            febs.post(ctx + 'question/removeFromPaper', data.field, function (result) {
+                if (result.code === 200) {
+                    layer.closeAll();
+                    febs.alert.success('操作成功');
+                    $('#febs-question').find('#query').click();
+                }
+            });
+            return false;
+        });
+
+
+        function initPaperSelect() {
+            for (var i = 0; i < papers.length; i++) {
+                papersArr.push({
+                    name: papers[i].paperName,
+                    value: papers[i].paperId,
+                    paperQuestionAmount: papers[i].paperQuestionAmount
+                })
+            }
+            formSelects.render('question-remove-from-paper', {
+                template: function (name, value, selected, disabled) {
+                    return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' +
+                        value.paperQuestionAmount + '题</span>';
+                }
+            });
+            formSelects.data('question-remove-from-paper', 'local', {
+                arr: papersArr
+            });
+        }
+    });
+</script>

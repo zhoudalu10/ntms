@@ -128,12 +128,68 @@
                     if (!checkStatus.data.length) {
                         febs.alert.warn('请选择需要删除的试卷');
                     } else {
+                        var paperIsStartTestFlag = false;
+                        layui.each(checkStatus.data, function (key, item) {
+                            if (item.paperState === '2') {
+                                paperIsStartTestFlag = true;
+                            }
+                        });
+                        if (paperIsStartTestFlag) {
+                            febs.alert.warn('测验中的试卷无法删除');
+                            return false;
+                        }
                         febs.modal.confirm('删除试卷', '确定删除该试卷？', function () {
                             var paperIds = [];
                             layui.each(checkStatus.data, function (key, item) {
                                 paperIds.push(item.paperId)
                             });
                             deletePapers(paperIds.join(','));
+                        });
+                    }
+                }
+                if (name === 'startTest') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请至少选择一份试卷');
+                    } else {
+                        var flag = false;
+                        layui.each(checkStatus.data, function (key, item) {
+                            if (item.paperState !== '1') {
+                                flag = true;
+                            }
+                        });
+                        if (flag) {
+                            febs.alert.warn('只能选择组卷中的试卷');
+                            return false;
+                        }
+                        febs.modal.confirm('开始测验', '确定开始该场测验？', function () {
+                            var paperIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                paperIds.push(item.paperId)
+                            });
+                            startTest(paperIds.join(','));
+                        });
+                    }
+                }
+                if (name === 'endTest') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请至少选择一份试卷');
+                    } else {
+                        var flag = false;
+                        layui.each(checkStatus.data, function (key, item) {
+                            if (item.paperState !== '2') {
+                                flag = true;
+                            }
+                        });
+                        if (flag) {
+                            febs.alert.warn('只能选择测验中的试卷');
+                            return false;
+                        }
+                        febs.modal.confirm('结束测验', '确定结束该场测验？', function () {
+                            var paperIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                paperIds.push(item.paperId)
+                            });
+                            endTest(paperIds.join(','));
                         });
                     }
                 }
@@ -153,6 +209,14 @@
                 title: '删除试卷',
                 perms: 'paper:delete'
             }, {
+                name: 'startTest',
+                title: '开始测验',
+                perms: 'paper:startTest'
+            }, {
+                name: 'endTest',
+                title: '结束测验',
+                perms: 'paper:endTest'
+            }, {
                 name: 'export',
                 title: '导出Excel',
                 perms: 'paper:export'
@@ -168,11 +232,19 @@
                 });
             }
             if (layEvent === 'del') {
+                if (data.paperState === '2') {
+                    febs.alert.warn('测验中的试卷无法删除');
+                    return false;
+                }
                 febs.modal.confirm('删除试卷', '确定删除该试卷？', function () {
                     deletePapers(data.paperId);
                 });
             }
             if (layEvent === 'edit') {
+                if (data.paperState !== '1') {
+                    febs.alert.warn('测验中或测验结束的试卷无法修改');
+                    return false;
+                }
                 febs.modal.open('修改试卷', 'test/paper/update/' + data.paperId, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     btn: ['提交', '取消'],
@@ -246,6 +318,20 @@
         function deletePapers(paperIds) {
             febs.get(ctx + 'paper/delete/' + paperIds, null, function () {
                 febs.alert.success('删除试卷成功');
+                $query.click();
+            });
+        }
+
+        function startTest(paperIds) {
+            febs.get(ctx + 'paper/startTest/' + paperIds, null, function () {
+                febs.alert.success('操作成功');
+                $query.click();
+            });
+        }
+
+        function endTest(paperIds) {
+            febs.get(ctx + 'paper/endTest/' + paperIds, null, function () {
+                febs.alert.success('操作成功');
                 $query.click();
             });
         }

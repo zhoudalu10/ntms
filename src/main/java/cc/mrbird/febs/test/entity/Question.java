@@ -66,4 +66,10 @@ public class Question implements Serializable {
 
     @TableField(exist = false)
     private List<Option> optionList;
+
+    @TableField(exist = false)
+    private List<Paper> bindingPaperList;
+
+    @TableField(exist = false)
+    private Long bindingPaperId;
 }

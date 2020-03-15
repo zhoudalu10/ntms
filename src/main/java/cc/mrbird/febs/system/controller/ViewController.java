@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller("systemView")
 public class ViewController extends BaseController {
@@ -352,6 +353,20 @@ public class ViewController extends BaseController {
         model.addAttribute("paper", paper);
         model.addAttribute("createTime", DateUtil.getDateFormat(paper.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
         return FebsUtil.view("test/paper/paperDetail");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/question/addToPaper")
+    @RequiresPermissions("question:addToPaper")
+    public String questionAddToPaper() {
+        return FebsUtil.view("test/question/questionAddToPaper");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/question/removeFromPaper/{questionId}")
+    @RequiresPermissions("question:removeFromPaper")
+    public String questionRemoveFromPaper(@PathVariable String questionId, Model model) {
+        Question question = questionService.findByIdRemovePaperList(questionId);
+        model.addAttribute("question", question);
+        return FebsUtil.view("test/question/questionRemoveFromPaper");
     }
 
     private void resolveUserModel(String username, Model model, Boolean transform) {

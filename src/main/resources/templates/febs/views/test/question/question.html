@@ -55,6 +55,20 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">包含于试卷</label>
+                                        <div class="layui-input-inline">
+                                            <select name="bindingPaperId"
+                                                    lay-verify="required"
+                                                    xm-select-direction="down"
+                                                    xm-select="question-select-paper"
+                                                    xm-select-skin="default"
+                                                    xm-select-radio
+                                                    xm-select-search
+                                                    xm-select-search-type="dl">
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="layui-inline" shiro:hasPermission="test:viewAll">
                                         <label class="layui-form-label layui-form-label-sm">创建人</label>
                                         <div class="layui-input-inline">
@@ -110,7 +124,7 @@
     <span class="layui-badge febs-bg-{{bind.color}}">{{ bind.title }}</span>
 </script>
 <script type="text/html" id="question-option">
-    <span shiro:lacksPermission="question:view,question:update,question:delete">
+    <span shiro:lacksPermission="question:view,question:update,question:delete,question:removeFromPaper">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
     <a lay-event="detail" shiro:hasPermission="question:view"><i
@@ -119,12 +133,15 @@
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
     <a lay-event="del" shiro:hasPermission="question:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="removeFromPaper" shiro:hasPermission="question:removeFromPaper"><i
+            class="layui-icon febs-edit-area febs-orange">&#xe7a1;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
-    layui.use(['dropdown', 'jquery', 'form', 'table', 'febs', 'treeSelect'], function () {
+    layui.use(['dropdown', 'jquery', 'form', 'formSelects', 'table', 'febs', 'treeSelect'], function () {
         var $ = layui.jquery,
             febs = layui.febs,
             form = layui.form,
+            formSelects = layui.formSelects,
             table = layui.table,
             dropdown = layui.dropdown,
             $view = $('#febs-question'),
@@ -135,7 +152,9 @@
             tableIns,
             currentUserId = currentUser.userId;
         form.render();
+        formSelects.render();
         initTable();
+        initPaperSelect();
 
         dropdown.render({
             elem: $view.find('.action-more'),
@@ -177,6 +196,37 @@
                         });
                     }
                 }
+                if (name === 'addToPaper') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要添加到试卷的试题');
+                    } else {
+                        questionIds = [];
+                        var questionCourseIds = new Set();
+                        layui.each(checkStatus.data, function (key, item) {
+                            questionCourseIds.add(item.questionCourseId);
+                            questionIds.push(item.questionId);
+                        });
+                        if (questionCourseIds.size > 1) {
+                            febs.alert.warn('请选择相同课程的试题');
+                            return false;
+                        }
+                        questionCourseId = '';
+                        for (let s of questionCourseIds) {
+                            questionCourseId = s;
+                        }
+                        febs.modal.open('添加到试卷', 'test/question/addToPaper', {
+                            btn: ['提交', '重置'],
+                            area: $(window).width() <= 750 ? ['95%', '95%'] : ['50%', '60%'],
+                            yes: function (index, layero) {
+                                $('#question-add-to-paper').find('#submit').trigger('click');
+                            },
+                            btn2: function () {
+                                $('#question-add-to-paper').find('#reset').trigger('click');
+                                return false;
+                            }
+                        });
+                    }
+                }
                 if (name === 'export') {
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
@@ -196,10 +246,6 @@
                 name: 'addToPaper',
                 title: '添加到试卷',
                 perms: 'question:addToPaper'
-            }, {
-                name: 'removeFromPaper',
-                title: '从试卷移除',
-                perms: 'question:removeFromPaper'
             }, {
                 name: 'export',
                 title: '导出Excel',
@@ -240,6 +286,22 @@
                     }
                 });
             }
+            if (layEvent === 'removeFromPaper') {
+                if (data.questionIsBindPaper === '0') {
+                    febs.alert.warn('该试题未添加到任何试卷');
+                    return;
+                }
+                febs.modal.open('从试卷移除', 'test/question/removeFromPaper/' + data.questionId, {
+                    area: $(window).width() <= 750 ? ['95%', '95%'] : ['50%', '40%'],
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#question-remove-from-paper').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
         });
 
         table.on('sort(questionTable)', function (obj) {
@@ -260,6 +322,7 @@
 
         $reset.on('click', function () {
             $searchForm[0].reset();
+            formSelects.value('question-select-paper', []);
             sortObject.type = 'null';
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
         });
@@ -295,6 +358,10 @@
             if (!hasViewAllPerm) {
                 createUserId = currentUserId;
             }
+            var bindingPaperId = '';
+            if (formSelects.value('question-select-paper', 'val').length > 0) {
+                bindingPaperId = formSelects.value('question-select-paper', 'val')[0];
+            }
             return {
                 questionCourseName: $searchForm.find('input[name="questionCourseName"]').val().trim(),
                 questionContent: $searchForm.find('input[name="questionContent"]').val().trim(),
@@ -302,6 +369,7 @@
                 questionType: $searchForm.find('select[name="questionType"]').val(),
                 questionIsBindPaper: $searchForm.find('select[name="questionIsBindPaper"]').val(),
                 createUserName: $searchForm.find('input[name="createUserName"]').val().trim(),
+                bindingPaperId: bindingPaperId,
                 createUserId: createUserId,
                 invalidate_ie_cache: new Date()
             };
@@ -311,6 +379,46 @@
             febs.get(ctx + 'question/delete/' + questionIds, null, function () {
                 febs.alert.success('删除试题成功');
                 $query.click();
+            });
+        }
+
+        function initPaperSelect() {
+            var createUserId = "";
+            if (!hasViewAllPerm) {
+                createUserId = currentUserId;
+            }
+            formSelects.data('question-select-paper', 'server', {
+                type: 'get',
+                url: ctx + 'paper/listAll',
+                data: {
+                    createUserId: createUserId,
+                },
+                response: {
+                    statusCode: 200
+                },
+                beforeSuccess: function (id, url, searchVal, result) {
+                    var data = result.data;
+                    var tranData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        tranData.push({
+                            name: data[i].paperName,
+                            value: data[i].paperId,
+                            paperQuestionAmount: data[i].paperQuestionAmount
+                        })
+                    }
+                    result.data = tranData;
+                    return result;
+                },
+                error: function (id, url, searchVal, err) {
+                    console.error(err);
+                    febs.alert.error('获取试卷列表失败');
+                }
+            });
+            formSelects.render('question-select-paper', {
+                template: function (name, value, selected, disabled) {
+                    return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' +
+                        value.paperQuestionAmount + '题</span>';
+                }
             });
         }
     })

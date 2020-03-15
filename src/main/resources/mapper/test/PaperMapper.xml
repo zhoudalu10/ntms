@@ -35,6 +35,9 @@
             <bind name="bindCreateUserName" value="'%' + paper.createUserName + '%'"/>
             AND U.USERNAME LIKE #{bindCreateUserName}
         </if>
+        <if test="paper.paperCourseId != null and paper.paperCourseId != ''">
+            AND P.PAPER_COURSE_ID = #{paper.paperCourseId}
+        </if>
     </sql>
 
     <select id="findPaperList" parameterType="paper" resultType="paper">
@@ -62,4 +65,37 @@ FROM T_PAPER P
 WHERE P.PAPER_ID = #{paperId}
     </select>
 
+    <sql id="findByQuestionIdSql">
+        SELECT P.PAPER_ID paperId,
+       P.PAPER_COURSE_ID paperCourseId,
+       P.PAPER_NAME paperName,
+       P.PAPER_TEST_TIME paperTestTime,
+       (SELECT COUNT(*) FROM T_QUESTION_PAPER QP WHERE P.PAPER_ID = QP.PAPER_ID) paperQuestionAmount,
+       P.PAPER_STATE paperState,
+       P.CREATE_USER_ID createUserId,
+       P.CREATE_TIME createTime
+FROM T_PAPER P
+         LEFT JOIN T_QUESTION_PAPER QP ON P.PAPER_ID = QP.PAPER_ID
+WHERE QP.QUESTION_ID = #{questionId}
+    </sql>
+
+    <select id="findByQuestionId" parameterType="String" resultType="paper">
+        <include refid="findByQuestionIdSql"></include>
+    </select>
+
+    <select id="findRemoveListByQuestionId" parameterType="String" resultType="paper">
+        <include refid="findByQuestionIdSql"></include>
+        AND P.PAPER_STATE = '1'
+    </select>
+
+    <update id="startTest" parameterType="String">
+UPDATE T_PAPER P
+SET P.PAPER_STATE = '2'
+WHERE P.PAPER_ID = #{paperId}
+    </update>
+    <update id="endTest" parameterType="String">
+UPDATE T_PAPER P
+SET P.PAPER_STATE = '3'
+WHERE P.PAPER_ID = #{paperId}
+    </update>
 </mapper>

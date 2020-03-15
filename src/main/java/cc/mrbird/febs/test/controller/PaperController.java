@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.course.entity.Course;
 import cc.mrbird.febs.test.entity.Paper;
 import cc.mrbird.febs.test.service.PaperService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -72,5 +73,28 @@ public class PaperController extends BaseController {
     public void export(QueryRequest queryRequest, Paper paper, HttpServletResponse response) {
         List<Paper> papers = paperService.findPaperList(paper, queryRequest).getRecords();
         ExcelKit.$Export(Paper.class, response).downXlsx(papers, false);
+    }
+
+    @RequestMapping("listAll")
+    public FebsResponse paperListAll(Paper paper) {
+        return new FebsResponse().success().data(paperService.findPaperListAll(paper));
+    }
+
+    @RequestMapping("startTest/{paperIds}")
+    @RequiresPermissions("paper:startTest")
+    @ControllerEndpoint(operation = "开始测验", exceptionMessage = "开始测验失败")
+    public FebsResponse startTest(@NotBlank(message = "{required}") @PathVariable String paperIds) {
+        String[] ids = paperIds.split(StringPool.COMMA);
+        paperService.startTest(ids);
+        return new FebsResponse().success();
+    }
+
+    @RequestMapping("endTest/{paperIds}")
+    @RequiresPermissions("paper:endTest")
+    @ControllerEndpoint(operation = "结束测验", exceptionMessage = "结束测验失败")
+    public FebsResponse endTest(@NotBlank(message = "{required}") @PathVariable String paperIds) {
+        String[] ids = paperIds.split(StringPool.COMMA);
+        paperService.endTest(ids);
+        return new FebsResponse().success();
     }
 }

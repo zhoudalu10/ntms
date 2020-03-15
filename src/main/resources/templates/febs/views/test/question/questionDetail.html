@@ -35,8 +35,11 @@
                 <p th:each="option,count:${question.optionList}" th:if="${option.optionIsKey} == '1'"
                    style="display: inline">选项[[${count.count}]] </p>
             </div>
-            <div th:each=" option,count:${question.optionList}"><span class="layui-icon layui-icon-flag"></span>
+            <div th:each="option,count:${question.optionList}"><span class="layui-icon layui-icon-flag"></span>
                 选项[[${count.count}]]：[[${option.optionContent}]]
+            </div>
+            <div th:each="paper:${question.bindingPaperList}"><span class="layui-icon layui-icon-align-left"></span>
+                包含于试卷：[[${paper.paperName}]]
             </div>
         </div>
     </div>

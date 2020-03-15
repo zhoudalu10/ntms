@@ -1,0 +1,108 @@
+<style>
+    #question-add-to-paper {
+        padding: 20px 25px 25px 0;
+    }
+
+    #question-add-to-paper .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="question-add-to-paper">
+    <form class="layui-form" action="" lay-filter="question-add-to-paper-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">试卷：</label>
+            <div class="layui-input-block">
+                <select name="paperId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="question-add-to-paper"
+                        xm-select-skin=" default"
+                        xm-select-search
+                        xm-select-search-type="dl">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="question-add-to-paper-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'validate'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            $view = $('#question-add-to-paper'),
+            currentUserId = currentUser.userId;
+        validate = layui.validate;
+        if (questionIds.length === 0) {
+            febs.alert.warn('请选择试题');
+            return false;
+        }
+        form.verify(validate);
+        form.render();
+        formSelects.render();
+        initPaperSelect();
+
+        form.on('submit(question-add-to-paper-form-submit)', function (data) {
+            data.field.questionId = questionIds.join(',');
+            febs.post(ctx + 'question/addToPaper', data.field, function (result) {
+                if (result.code === 200) {
+                    layer.closeAll();
+                    febs.alert.success('操作成功，已忽略重复添加到相同试卷的试题');
+                    $('#febs-question').find('#query').click();
+                }
+            });
+            return false;
+        });
+
+
+        function initPaperSelect() {
+            var createUserId = "";
+            if (!hasViewAllPerm) {
+                createUserId = currentUserId;
+            }
+            formSelects.data('question-add-to-paper', 'server', {
+                type: 'get',
+                url: ctx + 'paper/listAll',
+                data: {
+                    paperState: '1',
+                    createUserId: createUserId,
+                    paperCourseId: questionCourseId
+                },
+                response: {
+                    statusCode: 200
+                },
+                beforeSuccess: function (id, url, searchVal, result) {
+                    var data = result.data;
+                    var tranData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        tranData.push({
+                            name: data[i].paperName,
+                            value: data[i].paperId,
+                            paperQuestionAmount: data[i].paperQuestionAmount
+                        })
+                    }
+                    result.data = tranData;
+                    return result;
+                },
+                error: function (id, url, searchVal, err) {
+                    console.error(err);
+                    febs.alert.error('获取试卷列表失败');
+                }
+            });
+            formSelects.render('question-add-to-paper', {
+                template: function (name, value, selected, disabled) {
+                    return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' +
+                        value.paperQuestionAmount + '题</span>';
+                }
+            });
+        }
+
+
+    });
+</script>

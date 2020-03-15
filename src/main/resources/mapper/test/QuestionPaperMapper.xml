@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.test.mapper.QuestionPaperMapper">
+    <select id="findQuestionPaper" parameterType="questionPaper" resultType="questionPaper">
+        SELECT QP.QUESTION_ID questionId,
+        QP.PAPER_ID paperId
+        FROM T_QUESTION_PAPER QP
+        WHERE 1 = 1
+        <if test="questionPaper.questionId != null and questionPaper.questionId != ''">
+            AND QP.QUESTION_ID = #{questionPaper.questionId}
+        </if>
+        <if test="questionPaper.paperId != null and questionPaper.paperId != ''">
+            AND QP.PAPER_ID = #{questionPaper.paperId}
+        </if>
+
+    </select>
+
+    <delete id="deleteQuestionPaper" parameterType="questionPaper">
+        DELETE
+        FROM T_QUESTION_PAPER QP
+        WHERE QP.QUESTION_ID = #{questionPaper.questionId}
+        AND QP.PAPER_ID = #{questionPaper.paperId}
+    </delete>
+
+    <delete id="removeByPaperId" parameterType="String">
+        DELETE
+        FROM T_QUESTION_PAPER QP
+        WHERE QP.PAPER_ID = #{paperId}
+    </delete>
+</mapper>

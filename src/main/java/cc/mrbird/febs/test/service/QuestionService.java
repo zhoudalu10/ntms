@@ -15,4 +15,6 @@ public interface QuestionService {
     void updateQuestion(Question question);
 
     void deleteQuestions(String[] ids);
+
+    Question findByIdRemovePaperList(String questionId);
 }

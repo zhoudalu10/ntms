@@ -4,6 +4,8 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.test.entity.Paper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+
 public interface PaperService {
     IPage<Paper> findPaperList(Paper paper, QueryRequest request);
 
@@ -14,4 +16,14 @@ public interface PaperService {
     void updatePaper(Paper paper);
 
     void deletePapers(String[] ids);
+
+    List<Paper> findPaperListAll(Paper paper);
+
+    List<Paper> findByQuestionId(String questionId);
+
+    List<Paper> findRemoveListByQuestionId(String questionId);
+
+    void startTest(String[] ids);
+
+    void endTest(String[] ids);
 }
