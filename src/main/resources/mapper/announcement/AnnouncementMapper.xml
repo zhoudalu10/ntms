@@ -18,7 +18,7 @@
             and a.announcement_title like #{bindAnnouncementTitle}
         </if>
         <if test="announcement.createTimeFrom != null and announcement.createTimeFrom != ''">
-            And a.create_time &gt; to_date(#{announcement.createTimeFrom}, 'yyyy-MM-dd')
+            And a.create_time &gt;= to_date(#{announcement.createTimeFrom}, 'yyyy-MM-dd')
         </if>
         <if test="announcement.createTimeTo != null and announcement.createTimeTo != ''">
             and a.create_time &lt; to_date(#{announcement.createTimeTo}, 'yyyy-MM-dd')

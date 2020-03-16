@@ -3,6 +3,7 @@ package cc.mrbird.febs.test.service.impl;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.test.entity.Option;
 import cc.mrbird.febs.test.entity.Question;
 import cc.mrbird.febs.test.mapper.QuestionMapper;
 import cc.mrbird.febs.test.service.OptionService;
@@ -14,9 +15,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -80,8 +79,20 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     public List<Question> findCompleteQuestionListByPaperId(String paperId) {
         List<Question> questionList = this.baseMapper.findCompleteQuestionListByPaperId(paperId);
         questionList.forEach(question -> {
-            question.setOptionList(optionService.findByQuestionIdWithoutKey(question.getQuestionId()));
+            List<Option> optionList = optionService.findByQuestionIdWithoutKey(question.getQuestionId());
+            Collections.shuffle(optionList);
+            question.setOptionList(optionList);
         });
         return questionList;
+    }
+
+    @Override
+    public Question findKeyOptionId(String questionId) {
+        return this.baseMapper.findKeyOptionId(questionId);
+    }
+
+    @Override
+    public Set<Long> getMultipleChoiceKeySet(String questionId) {
+        return this.baseMapper.getMultipleChoiceKeySet(questionId);
     }
 }

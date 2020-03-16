@@ -30,4 +30,6 @@ public interface PaperService {
     List<Paper> findUserPaper(String userId);
 
     Paper findCompletePaperById(String paperId);
+
+    Float findPaperFullMarks(Long paperId);
 }

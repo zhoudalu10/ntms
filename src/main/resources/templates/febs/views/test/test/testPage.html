@@ -44,7 +44,10 @@
                         [[${paper.createUserName}]]
                     </div>
                     <div><span class="layui-icon layui-icon-next"></span> 创建时间：
-                        [[${paper.createTime}]]
+                        [[${createTime}]]
+                    </div>
+                    <div><span class="layui-icon layui-icon-next"></span> 考试剩余时间：
+                        <p style="display: inline" id="timeLeft"></p>
                     </div>
                 </div>
             </div>
@@ -74,10 +77,15 @@
             bar1: true,
             click: function (type) {
                 if (type === 'top') {
-                    $('#febs-body').scrollTop(0, 0);
+                    febs.modal.confirm('页面回滚到顶部', '确定要回滚到顶部？', function () {
+                        $('#febs-body').scrollTop(0, 0);
+                    });
+
                 }
                 if (type === 'bar1') {
-                    $view.find('#submit').trigger('click');
+                    febs.modal.confirm('交卷', '确定要交卷？', function () {
+                        $view.find('#submit').trigger('click');
+                    });
                 }
             },
             showHeight: 0
@@ -121,8 +129,16 @@
             $form.append(questionStr);
         }
         form.render();
-
+        var timeNow = new Date().getTime();
+        var timeEnd = timeNow + (paper.paperTestTime * 60 * 1000);
+        util.countdown(timeEnd, timeNow, function (date, serverTime, timer) {
+            $view.find('#timeLeft').html(date[1] + '小时' + date[2] + '分' + date[3] + '秒');
+            if (date[1] === 0 && date[2] === 0 && date[3] === 0) {
+                $view.find('#submit').trigger('click');
+            }
+        });
         form.on('submit(test-testPage-form-submit)', function (data) {
+            $('.layui-fixbar').remove();
             data.field.resultUserId = currentUserId;
             data.field.resultPaperId = paper.paperId;
             $.ajax({

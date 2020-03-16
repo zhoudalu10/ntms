@@ -49,7 +49,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="paper:add,paper:update,paper:export">
+                                     shiro:hasAnyPermissions="paper:add,paper:delete,paper:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -281,14 +281,20 @@
         });
 
         function initTable() {
+            var createUserId = "";
+            if (!hasViewAllPerm) {
+                createUserId = currentUserId;
+            }
             tableIns = febs.table.init({
                 elem: $view.find('table'),
                 id: 'paperTable',
                 url: ctx + 'paper/list',
+                where: {
+                    createUserId: createUserId
+                },
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'paperCourseName', title: '课程名称', width: 100, minWidth: 100},
-
                     {field: 'paperName', title: '试卷名称', minWidth: 300},
                     {field: 'paperTestTime', title: '测验时间（分钟）', minWidth: 120},
                     {field: 'paperQuestionAmount', title: '试题数量', width: 90},

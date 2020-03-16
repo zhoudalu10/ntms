@@ -4,6 +4,7 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.test.entity.Paper;
+import cc.mrbird.febs.test.entity.Question;
 import cc.mrbird.febs.test.mapper.PaperMapper;
 import cc.mrbird.febs.test.service.PaperService;
 import cc.mrbird.febs.test.service.QuestionService;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -92,7 +94,14 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Override
     public Paper findCompletePaperById(String paperId) {
         Paper paper = this.findById(paperId);
-        paper.setPaperQuestionList(questionService.findCompleteQuestionListByPaperId(paperId));
+        List<Question> questionList = questionService.findCompleteQuestionListByPaperId(paperId);
+        Collections.shuffle(questionList);
+        paper.setPaperQuestionList(questionList);
         return paper;
+    }
+
+    @Override
+    public Float findPaperFullMarks(Long paperId) {
+        return this.baseMapper.findPaperFullMarks(paperId);
     }
 }

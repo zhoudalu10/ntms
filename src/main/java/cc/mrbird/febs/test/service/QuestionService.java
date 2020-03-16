@@ -5,6 +5,7 @@ import cc.mrbird.febs.test.entity.Question;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
+import java.util.Set;
 
 public interface QuestionService {
 
@@ -21,4 +22,8 @@ public interface QuestionService {
     Question findByIdRemovePaperList(String questionId);
 
     List<Question> findCompleteQuestionListByPaperId(String paperId);
+
+    Question findKeyOptionId(String questionId);
+
+    Set<Long> getMultipleChoiceKeySet(String key);
 }

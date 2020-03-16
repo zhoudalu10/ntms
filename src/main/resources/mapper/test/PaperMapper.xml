@@ -125,4 +125,11 @@ WHERE P.PAPER_ID = #{paperId}
             AND P.PAPER_ID NOT IN (SELECT TR.RESULT_PAPER_ID FROM T_TEST_RESULT TR WHERE TR.RESULT_USER_ID = #{userId})
         </if>
     </select>
+
+    <select id="findPaperFullMarks" parameterType="Long" resultType="Float">
+        SELECT SUM(Q.QUESTION_SCORE)
+FROM T_QUESTION Q
+         JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+WHERE QP.PAPER_ID = #{paperId}
+    </select>
 </mapper>

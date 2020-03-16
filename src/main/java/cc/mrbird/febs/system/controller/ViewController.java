@@ -15,8 +15,10 @@ import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.service.IUserService;
 import cc.mrbird.febs.test.entity.Paper;
 import cc.mrbird.febs.test.entity.Question;
+import cc.mrbird.febs.test.entity.TestResult;
 import cc.mrbird.febs.test.service.PaperService;
 import cc.mrbird.febs.test.service.QuestionService;
+import cc.mrbird.febs.test.service.TestResultService;
 import cc.mrbird.febs.timetable.entity.Timetable;
 import cc.mrbird.febs.timetable.service.TimetableService;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -32,7 +34,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller("systemView")
 public class ViewController extends BaseController {
@@ -60,6 +63,9 @@ public class ViewController extends BaseController {
 
     @Autowired
     private PaperService paperService;
+
+    @Autowired
+    private TestResultService testResultService;
 
     @GetMapping("login")
     @ResponseBody
@@ -378,9 +384,23 @@ public class ViewController extends BaseController {
     @GetMapping(FebsConstant.VIEW_PREFIX + "test/testPage/{paperId}")
     @RequiresPermissions("test:testStart")
     public String testPage(@PathVariable String paperId, Model model) {
+        TestResult testResult = new TestResult();
+        testResult.setResultUserId(FebsUtil.getCurrentUser().getUserId());
+        testResult.setResultPaperId(Long.parseLong(paperId));
+        if (testResultService.judgePaper(testResult) > 0) {
+            return FebsUtil.view("error/403");
+        }
+        testResultService.insertZeroMarks(testResult);
         Paper paper = paperService.findCompletePaperById(paperId);
         model.addAttribute("paper", paper);
+        model.addAttribute("createTime", DateUtil.getDateFormat(paper.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
         return FebsUtil.view("test/test/testPage");
+    }
+
+    @GetMapping(FebsConstant.VIEW_PREFIX + "test/testResult")
+    @RequiresPermissions("testResult:view")
+    public String testResult() {
+        return FebsUtil.view("test/testResult/testResult");
     }
 
     private void resolveUserModel(String username, Model model, Boolean transform) {

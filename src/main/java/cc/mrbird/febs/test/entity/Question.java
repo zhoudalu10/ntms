@@ -72,4 +72,7 @@ public class Question implements Serializable {
 
     @TableField(exist = false)
     private Long bindingPaperId;
+
+    @TableField(exist = false)
+    private Long keyOptionId;
 }

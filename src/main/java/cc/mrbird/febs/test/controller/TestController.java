@@ -3,6 +3,7 @@ package cc.mrbird.febs.test.controller;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.test.service.PaperService;
+import cc.mrbird.febs.test.service.TestResultService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class TestController extends BaseController {
     @Autowired
     private PaperService paperService;
 
+    @Autowired
+    private TestResultService testResultService;
+
     @RequestMapping("testPaper")
     @RequiresPermissions("test:testStart")
     public FebsResponse testPaper(String userId) {
@@ -32,7 +36,7 @@ public class TestController extends BaseController {
     @RequestMapping("submitPaper")
     @RequiresPermissions("test:testStart")
     public FebsResponse testSubmit(@RequestBody @Valid Map<String, Object> map) {
-        System.out.println(map);
+        testResultService.calculationResults(map);
         return new FebsResponse().success();
     }
 }

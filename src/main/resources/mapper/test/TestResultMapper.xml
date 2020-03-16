@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.test.mapper.TestResultMapper">
+    <select id="judgePaper" parameterType="testResult" resultType="Integer">
+        SELECT COUNT(*)
+FROM T_TEST_RESULT TR
+WHERE TR.RESULT_USER_ID = #{testResult.resultUserId}
+  AND TR.RESULT_PAPER_ID = #{testResult.resultPaperId}
+    </select>
+
+    <update id="updateResult" parameterType="testResult">
+        UPDATE T_TEST_RESULT TR
+SET TR.RESULT_SCORE = #{testResult.resultScore}
+WHERE TR.RESULT_USER_ID = #{testResult.resultUserId}
+  AND TR.RESULT_PAPER_ID = #{testResult.resultPaperId}
+    </update>
+
+    <select id="findTestResultList" parameterType="testResult" resultType="testResult">
+        SELECT TR.RESULT_ID resultId,
+        TR.RESULT_USER_ID resultUserId,
+        U.USERNAME resultUserName,
+        P.PAPER_NAME resultPaperName,
+        C.COURSE_NAME resultCourseName,
+        U2.USERNAME resultCourseTeacherName,
+        TR.RESULT_SCORE resultScore,
+        TR.CREATE_TIME createTime
+        FROM T_TEST_RESULT TR
+        LEFT JOIN T_USER U ON TR.RESULT_USER_ID = U.USER_ID
+        LEFT JOIN T_PAPER P ON TR.RESULT_PAPER_ID = P.PAPER_ID
+        LEFT JOIN T_COURSE C ON P.PAPER_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+        WHERE 1 = 1
+        <if test="testResult.resultUserId != null and testResult.resultUserId != ''">
+            AND TR.RESULT_USER_ID = #{testResult.resultUserId}
+        </if>
+        <if test="testResult.resultUserName != null and testResult.resultUserName != ''">
+            <bind name="bindResultUserName" value="'%' + testResult.resultUserName + '%'"/>
+            AND U.USERNAME LIKE #{bindResultUserName}
+        </if>
+        <if test="testResult.resultPaperName != null and testResult.resultPaperName != ''">
+            <bind name="bindResultPaperName" value="'%' + testResult.resultPaperName + '%'"/>
+            AND P.PAPER_NAME LIKE #{bindResultPaperName}
+        </if>
+        <if test="testResult.resultCourseName != null and testResult.resultCourseName != ''">
+            <bind name="bindResultCourseName" value="'%' + testResult.resultCourseName + '%'"/>
+            AND C.COURSE_NAME LIKE #{bindResultCourseName}
+        </if>
+        <if test="testResult.resultCourseTeacherName != null and testResult.resultCourseTeacherName != ''">
+            <bind name="bindResultCourseTeacherName" value="'%' + testResult.resultCourseTeacherName + '%'"/>
+            AND U2.USERNAME LIKE #{bindResultCourseTeacherName}
+        </if>
+        <if test="testResult.createTimeFrom != null and testResult.createTimeFrom != ''">
+            AND TR.CREATE_TIME &gt;= TO_DATE(#{testResult.createTimeFrom}, 'yyyy-MM-dd')
+        </if>
+        <if test="testResult.createTimeTo != null and testResult.createTimeTo != ''">
+            AND TR.CREATE_TIME &lt; TO_DATE(#{testResult.createTimeTo}, 'yyyy-MM-dd')
+        </if>
+        <if test="testResult.resultScoreFrom != null and testResult.resultScoreFrom != ''">
+            AND TR.RESULT_SCORE &gt;= #{testResult.resultScoreFrom}
+        </if>
+        <if test="testResult.resultScoreTo != null and testResult.resultScoreTo != ''">
+            AND TR.RESULT_SCORE &lt;= #{testResult.resultScoreTo}
+        </if>
+    </select>
+</mapper>
