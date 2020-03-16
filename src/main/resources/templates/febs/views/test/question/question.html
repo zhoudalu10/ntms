@@ -358,6 +358,10 @@
             if (!hasViewAllPerm) {
                 createUserId = currentUserId;
             }
+            var createUserName = '';
+            if (hasViewAllPerm) {
+                createUserName = $searchForm.find('input[name="createUserName"]').val().trim();
+            }
             var bindingPaperId = '';
             if (formSelects.value('question-select-paper', 'val').length > 0) {
                 bindingPaperId = formSelects.value('question-select-paper', 'val')[0];
@@ -368,7 +372,7 @@
                 questionScore: $searchForm.find("select[name='questionScore']").val(),
                 questionType: $searchForm.find('select[name="questionType"]').val(),
                 questionIsBindPaper: $searchForm.find('select[name="questionIsBindPaper"]').val(),
-                createUserName: $searchForm.find('input[name="createUserName"]').val().trim(),
+                createUserName: createUserName,
                 bindingPaperId: bindingPaperId,
                 createUserId: createUserId,
                 invalidate_ie_cache: new Date()

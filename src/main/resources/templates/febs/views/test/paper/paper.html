@@ -315,15 +315,19 @@
         }
 
         function getQueryParams() {
-            var createUserId = "";
+            var createUserId = '';
             if (!hasViewAllPerm) {
                 createUserId = currentUserId;
+            }
+            var createUserName = '';
+            if (hasViewAllPerm) {
+                createUserName = $searchForm.find('input[name="createUserName"]').val().trim();
             }
             return {
                 paperCourseName: $searchForm.find('input[name="paperCourseName"]').val().trim(),
                 paperName: $searchForm.find('input[name="paperName"]').val().trim(),
                 paperState: $searchForm.find("select[name='paperState']").val(),
-                createUserName: $searchForm.find('input[name="createUserName"]').val().trim(),
+                createUserName: createUserName,
                 createUserId: createUserId,
                 invalidate_ie_cache: new Date()
             };

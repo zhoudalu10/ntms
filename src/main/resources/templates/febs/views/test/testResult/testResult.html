@@ -222,6 +222,11 @@
             if (!hasViewAllTestResultPerm) {
                 resultUserId = currentUserId;
             }
+            var resultUserName = '';
+            if (hasViewAllTestResultPerm) {
+                resultUserName = $searchForm.find('input[name="resultUserName"]').val().trim();
+            }
+
             createTimeFrom = null;
             createTimeTo = null;
             var createTime = $searchForm.find('input[name="createTime"]').val();
@@ -242,7 +247,7 @@
                 resultScoreTo: resultScoreTo,
                 createTimeFrom: createTimeFrom,
                 createTimeTo: createTimeTo,
-                resultUserName: $searchForm.find('input[name="resultUserName"]').val().trim(),
+                resultUserName: resultUserName,
                 resultPaperName: $searchForm.find('input[name="resultPaperName"]').val().trim(),
                 resultCourseName: $searchForm.find('input[name="resultCourseName"]').val().trim(),
                 resultCourseTeacherName: $searchForm.find('input[name="resultCourseTeacherName"]').val().trim(),
