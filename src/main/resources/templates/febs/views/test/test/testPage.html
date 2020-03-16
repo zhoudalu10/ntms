@@ -73,14 +73,12 @@
         $('#febs-body').on('scroll', function () {
             $testInfo.offset({top: infoOffSet});
         });
+
         util.fixbar({
-            bar1: true,
+            bar1: '&#x1005;',
             click: function (type) {
                 if (type === 'top') {
-                    febs.modal.confirm('页面回滚到顶部', '确定要回滚到顶部？', function () {
-                        $('#febs-body').scrollTop(0, 0);
-                    });
-
+                    $('#febs-body').scrollTop(0, 0);
                 }
                 if (type === 'bar1') {
                     febs.modal.confirm('交卷', '确定要交卷？', function () {
@@ -128,7 +126,28 @@
             }
             $form.append(questionStr);
         }
+        $form.append('<div class="layui-form-item" style="text-align: center">\n' +
+            '                        <div class="layui-btn-group">\n' +
+            '                            <button type="button" class="layui-btn" id="test-testPage-submit">\n' +
+            '                                <i class="layui-icon">&#x1005;</i> 提交试卷\n' +
+            '                            </button>\n' +
+            '                            <button type="button" class="layui-btn" id="test-testPage-top">\n' +
+            '                                <i class="layui-icon">&#xe604;</i> 回到顶部\n' +
+            '                            </button>\n' +
+            '                        </div>\n' +
+            '                    </div>');
+
         form.render();
+
+        $view.find('#test-testPage-submit').on('click', function () {
+            febs.modal.confirm('交卷', '确定要交卷？', function () {
+                $view.find('#submit').trigger('click');
+            });
+        });
+        $view.find('#test-testPage-top').on('click', function () {
+            $('#febs-body').scrollTop(0, 0);
+        });
+
         var timeNow = new Date().getTime();
         var timeEnd = timeNow + (paper.paperTestTime * 60 * 1000);
         util.countdown(timeEnd, timeNow, function (date, serverTime, timer) {
@@ -137,6 +156,16 @@
                 $view.find('#submit').trigger('click');
             }
         });
+
+        $view.on('copy', function () {
+            onCopy();
+        });
+
+
+        $(window).on('blur resize', function () {
+            onBlur();
+        });
+
         form.on('submit(test-testPage-form-submit)', function (data) {
             $('.layui-fixbar').remove();
             data.field.resultUserId = currentUserId;
@@ -157,6 +186,27 @@
             });
             return false;
         });
+        var copyTimes = 0;
+
+        function onCopy() {
+            copyTimes++;
+            if (copyTimes > 1) {
+                $view.find('#submit').trigger('click');
+            } else {
+                febs.alert.warn('别复制了，再让我发现就帮你交卷啦！');
+            }
+        }
+
+        var blurTimes = 0;
+
+        function onBlur() {
+            blurTimes++;
+            if (blurTimes > 1) {
+                $view.find('#submit').trigger('click');
+            } else {
+                febs.alert.warn('别乱动窗口，再让我发现就帮你交卷啦！');
+            }
+        }
 
     });
 

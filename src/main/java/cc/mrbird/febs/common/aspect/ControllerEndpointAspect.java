@@ -4,6 +4,7 @@ import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.monitor.service.ILogService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -17,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
 
+@Slf4j
 @Aspect
 @Component
 public class ControllerEndpointAspect extends AspectSupport {
@@ -48,6 +50,7 @@ public class ControllerEndpointAspect extends AspectSupport {
             }
             return result;
         } catch (Throwable throwable) {
+            log.error(String.valueOf(throwable));
             String exceptionMessage = annotation.exceptionMessage();
             String message = throwable.getMessage();
             String error = FebsUtil.containChinese(message) ? exceptionMessage + "，" + message : exceptionMessage;

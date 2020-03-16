@@ -29,4 +29,6 @@ public interface TimetableMapper extends BaseMapper<Timetable> {
     Timetable findById(@Param("timetableId") String timetableId);
 
     List<Timetable> findMyTimetableList(@Param("timetable") Timetable timetable);
+
+    void deleteByCourseId(@Param("courseId") String courseId);
 }

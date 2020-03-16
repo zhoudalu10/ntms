@@ -95,4 +95,18 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     public Set<Long> getMultipleChoiceKeySet(String questionId) {
         return this.baseMapper.getMultipleChoiceKeySet(questionId);
     }
+
+    @Override
+    public void deleteByCourseId(String courseId) {
+        List<Question> questionList = this.findByCourseId(courseId);
+        questionList.forEach(question -> {
+            optionService.deleteOptionsByQuestionId(question.getQuestionId().toString());
+            removeById(question.getQuestionId());
+        });
+    }
+
+    @Override
+    public List<Question> findByCourseId(String courseId) {
+        return this.baseMapper.findByCourseId(courseId);
+    }
 }

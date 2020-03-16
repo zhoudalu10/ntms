@@ -32,4 +32,6 @@ public interface PaperService {
     Paper findCompletePaperById(String paperId);
 
     Float findPaperFullMarks(Long paperId);
+
+    void deleteByCourseId(String courseId);
 }

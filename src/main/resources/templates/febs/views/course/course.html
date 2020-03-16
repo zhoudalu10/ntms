@@ -161,7 +161,7 @@
                     if (!checkStatus.data.length) {
                         febs.alert.warn('请选择需要删除的课程');
                     } else {
-                        febs.modal.confirm('删除课程', '确定删除该课程？', function () {
+                        febs.modal.confirm('删除课程', '课程关联的课程安排、试题、试卷会一并删除，确定要删除该课程？', function () {
                             var courseIds = [];
                             layui.each(checkStatus.data, function (key, item) {
                                 courseIds.push(item.courseId)
@@ -201,7 +201,7 @@
                 });
             }
             if (layEvent === 'del') {
-                febs.modal.confirm('删除课程', '确定删除该课程？', function () {
+                febs.modal.confirm('删除课程', '课程关联的课程安排、试题、试卷会一并删除，确定要删除该课程？', function () {
                     deleteCourses(data.courseId);
                 });
             }

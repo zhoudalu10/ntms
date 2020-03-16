@@ -132,4 +132,10 @@ FROM T_QUESTION Q
          JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
 WHERE QP.PAPER_ID = #{paperId}
     </select>
+
+    <delete id="deleteByCourseId" parameterType="String">
+        DELETE
+FROM T_PAPER P
+WHERE P.PAPER_COURSE_ID = #{courseId}
+    </delete>
 </mapper>

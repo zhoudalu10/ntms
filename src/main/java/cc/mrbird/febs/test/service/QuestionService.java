@@ -26,4 +26,8 @@ public interface QuestionService {
     Question findKeyOptionId(String questionId);
 
     Set<Long> getMultipleChoiceKeySet(String key);
+
+    void deleteByCourseId(String courseId);
+
+    List<Question> findByCourseId(String courseId);
 }

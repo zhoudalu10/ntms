@@ -6,9 +6,13 @@ import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.course.entity.Course;
 import cc.mrbird.febs.course.mapper.CourseMapper;
 import cc.mrbird.febs.course.service.CourseService;
+import cc.mrbird.febs.test.service.PaperService;
+import cc.mrbird.febs.test.service.QuestionService;
+import cc.mrbird.febs.timetable.service.TimetableService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -16,6 +20,15 @@ import java.util.List;
 
 @Service
 public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> implements CourseService {
+
+    @Autowired
+    private TimetableService timetableService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private PaperService paperService;
 
     @Override
     public IPage<Course> findCourseList(Course course, QueryRequest request) {
@@ -37,6 +50,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public void deleteCourses(String[] ids) {
         List<String> list = Arrays.asList(ids);
+        list.forEach(courseId -> {
+            timetableService.deleteByCourseId(courseId);
+            questionService.deleteByCourseId(courseId);
+            paperService.deleteByCourseId(courseId);
+        });
         removeByIds(list);
     }
 

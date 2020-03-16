@@ -104,4 +104,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     public Float findPaperFullMarks(Long paperId) {
         return this.baseMapper.findPaperFullMarks(paperId);
     }
+
+    @Override
+    public void deleteByCourseId(String courseId) {
+        this.baseMapper.deleteByCourseId(courseId);
+    }
 }

@@ -91,4 +91,19 @@ FROM T_OPTION O
 WHERE O.OPTION_ISKEY = '1'
   AND O.OPTION_QUESTION_ID = #{questionId}
     </select>
+
+    <select id="findByCourseId" parameterType="String" resultType="question">
+        SELECT Q.QUESTION_ID      questionId,
+        Q.QUESTION_COURSE_ID questionCourseId,
+       C.COURSE_NAME      questionCourseName,
+       Q.QUESTION_CONTENT questionContent,
+       Q.QUESTION_SCORE   questionScore,
+       Q.QUESTION_TYPE    questionType,
+       U.USERNAME         createUserName,
+       Q.CREATE_TIME      createTime
+FROM T_QUESTION Q
+         LEFT JOIN T_COURSE C ON Q.QUESTION_COURSE_ID = C.COURSE_ID
+         LEFT JOIN T_USER U ON Q.CREATE_USER_ID = U.USER_ID
+WHERE C.COURSE_ID = #{courseId}
+    </select>
 </mapper>

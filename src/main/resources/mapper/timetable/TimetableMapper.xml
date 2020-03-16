@@ -251,4 +251,9 @@ WHERE 1 = 1
   AND T.TIMETABLE_YEAR = #{timetable.timetableYear}
   AND T.TIMETABLE_TERM = #{timetable.timetableTerm}
     </select>
+    <delete id="deleteByCourseId" parameterType="String">
+        DELETE
+        FROM T_TIMETABLE T
+        WHERE T.TIMETABLE_COURSE_ID = #{courseId}
+    </delete>
 </mapper>

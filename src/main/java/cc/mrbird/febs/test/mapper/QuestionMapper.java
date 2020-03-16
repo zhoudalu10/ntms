@@ -20,4 +20,6 @@ public interface QuestionMapper extends BaseMapper<Question> {
     Question findKeyOptionId(@Param("questionId") String questionId);
 
     Set<Long> getMultipleChoiceKeySet(@Param("questionId") String questionId);
+
+    List<Question> findByCourseId(@Param("courseId") String courseId);
 }

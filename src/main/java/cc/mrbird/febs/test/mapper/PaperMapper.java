@@ -27,4 +27,6 @@ public interface PaperMapper extends BaseMapper<Paper> {
     List<Paper> findUserPaper(@Param("userId") String userId);
 
     Float findPaperFullMarks(@Param("paperId") Long paperId);
+
+    void deleteByCourseId(@Param("courseId") String courseId);
 }

@@ -18,4 +18,6 @@ public interface TimetableService {
     Timetable findById(String timetableId);
 
     List<Timetable> findMyTimetableList(Timetable timetable);
+
+    void deleteByCourseId(String courseId);
 }

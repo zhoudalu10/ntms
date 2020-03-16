@@ -81,6 +81,11 @@ public class TimetableServiceImpl extends ServiceImpl<TimetableMapper, Timetable
         return this.baseMapper.findMyTimetableList(timetable);
     }
 
+    @Override
+    public void deleteByCourseId(String courseId) {
+        this.baseMapper.deleteByCourseId(courseId);
+    }
+
     private boolean judgeSameClassSameTimeState(Timetable timetable) {
         List<Timetable> timetables = this.baseMapper.judgeSameClassSameTimeState(timetable);
         return timetables.size() == 0;

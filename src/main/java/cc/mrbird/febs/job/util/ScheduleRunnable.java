@@ -9,11 +9,6 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 
-/**
- * 执行定时任务
- *
- * @author MrBird
- */
 @Slf4j
 public class ScheduleRunnable implements Runnable {
 
