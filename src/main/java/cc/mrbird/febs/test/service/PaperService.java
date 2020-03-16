@@ -28,4 +28,6 @@ public interface PaperService {
     void endTest(String[] ids);
 
     List<Paper> findUserPaper(String userId);
+
+    Paper findCompletePaperById(String paperId);
 }

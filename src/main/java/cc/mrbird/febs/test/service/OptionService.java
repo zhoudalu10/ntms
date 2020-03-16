@@ -12,4 +12,6 @@ public interface OptionService {
     void updateOption(Option option);
 
     void deleteOptionsByQuestionId(String questionId);
+
+    List<Option> findByQuestionIdWithoutKey(Long questionId);
 }

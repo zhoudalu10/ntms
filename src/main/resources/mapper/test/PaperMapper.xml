@@ -58,10 +58,13 @@
        P.PAPER_STATE                                                             paperState,
        P.CREATE_USER_ID                                                          createUserId,
        U.USERNAME                                                                createUserName,
-       P.CREATE_TIME                                                             createTime
+       P.CREATE_TIME                                                             createTime,
+       C.COURSE_TEACHER_ID paperCourseTeacherId,
+       U2.USERNAME paperCourseTeacherName
 FROM T_PAPER P
          LEFT JOIN T_USER U ON P.CREATE_USER_ID = U.USER_ID
          LEFT JOIN T_COURSE C ON P.PAPER_COURSE_ID = C.COURSE_ID
+         LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
 WHERE P.PAPER_ID = #{paperId}
     </select>
 

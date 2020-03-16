@@ -65,4 +65,14 @@ FROM T_QUESTION Q
          LEFT JOIN T_USER U ON Q.CREATE_USER_ID = U.USER_ID
 WHERE Q.QUESTION_ID = #{questionId}
     </select>
+
+    <select id="findCompleteQuestionListByPaperId" parameterType="String" resultType="question">
+        SELECT Q.QUESTION_ID questionId,
+       Q.QUESTION_CONTENT questionContent,
+       Q.QUESTION_SCORE questionScore,
+       Q.QUESTION_TYPE questionType
+FROM T_QUESTION Q
+         JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+WHERE QP.PAPER_ID = #{paperId}
+    </select>
 </mapper>

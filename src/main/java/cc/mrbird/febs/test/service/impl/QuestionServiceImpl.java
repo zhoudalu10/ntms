@@ -75,4 +75,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         question.setBindingPaperList(paperService.findRemoveListByQuestionId(questionId));
         return question;
     }
+
+    @Override
+    public List<Question> findCompleteQuestionListByPaperId(String paperId) {
+        List<Question> questionList = this.baseMapper.findCompleteQuestionListByPaperId(paperId);
+        questionList.forEach(question -> {
+            question.setOptionList(optionService.findByQuestionIdWithoutKey(question.getQuestionId()));
+        });
+        return questionList;
+    }
 }

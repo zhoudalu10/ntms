@@ -314,7 +314,7 @@ layui
                     $(menuBtnClas).each(function () {
                         var url = $(this).attr('lay-url');
                         if (url === conf.entry) return true;
-                        tab.del(url)
+                        tab.del(url, '/index')
                     })
                 },
                 delOther: function () {

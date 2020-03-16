@@ -97,9 +97,9 @@
 
         form.on('submit(test-testStart-form-submit)', function (data) {
             febs.modal.confirm('开始测验', '点击确定后系统将会记录你该场测验的0分成绩，直到提交试卷后结算分数，确定要开始测验？', function () {
-                formSelects.disabled('test-testStart-paper');
-                $view.find('#submit').attr('disabled', '');
                 febs.navigate('/test/testPage/' + data.field.paperId);
+                febs.view.tab.delOther();
+                febs.view.tab.del('/test/testStart', '/test/testPage');
                 return false;
             });
 

@@ -11,4 +11,6 @@ public interface OptionMapper extends BaseMapper<Option> {
     List<Option> findByQuestionId(@Param("questionId") String questionId);
 
     void deleteOptionsByQuestionId(@Param("questionId") String questionId);
+
+    List<Option> findByQuestionIdWithoutKey(@Param("questionId") Long questionId);
 }

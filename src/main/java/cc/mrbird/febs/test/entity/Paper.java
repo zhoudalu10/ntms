@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @TableName("T_PAPER")
@@ -78,5 +79,6 @@ public class Paper implements Serializable {
     @ExcelField(value = "试题数量")
     private String paperQuestionAmount;
 
-
+    @TableField(exist = false)
+    private List<Question> paperQuestionList;
 }

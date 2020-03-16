@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.test.entity.Paper;
 import cc.mrbird.febs.test.mapper.PaperMapper;
 import cc.mrbird.febs.test.service.PaperService;
+import cc.mrbird.febs.test.service.QuestionService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -21,6 +22,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Autowired
     private QuestionPaperServiceImpl questionPaperService;
+
+    @Autowired
+    private QuestionService questionService;
 
     @Override
     public IPage<Paper> findPaperList(Paper paper, QueryRequest request) {
@@ -83,5 +87,12 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Override
     public List<Paper> findUserPaper(String userId) {
         return this.baseMapper.findUserPaper(userId);
+    }
+
+    @Override
+    public Paper findCompletePaperById(String paperId) {
+        Paper paper = this.findById(paperId);
+        paper.setPaperQuestionList(questionService.findCompleteQuestionListByPaperId(paperId));
+        return paper;
     }
 }

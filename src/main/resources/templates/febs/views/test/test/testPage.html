@@ -1,1 +1,147 @@
-<div>hello world</div>
+<style>
+    #febs-testPage-info {
+        position: fixed;
+        z-index: 999999;
+        width: 100%;
+    }
+
+</style>
+<div class="layui-fluid layui-anim febs-anim" id="febs-testPage" lay-title="测验">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md9">
+            <div class="layui-card">
+                <div class="layui-card-header">测验试题</div>
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="test-testPage-form">
+                        <div class="layui-form-item febs-hide">
+                            <button class="layui-btn" lay-submit="" lay-filter="test-testPage-form-submit"
+                                    id="submit"></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card" id="febs-testPage-info">
+                <div class="layui-card-header">测验信息</div>
+                <div class="layui-card-body febs-table-full">
+                    <div><span class="layui-icon layui-icon-rate"></span> 课程名称：
+                        [[${paper.paperCourseName}]]
+                    </div>
+                    <div><span class="layui-icon layui-icon-username"></span> 任课老师：
+                        [[${paper.paperCourseTeacherName}]]
+                    </div>
+                    <div><span class="layui-icon layui-icon-survey"></span> 试卷名称：
+                        [[${paper.paperName}]]
+                    </div>
+                    <div><span class="layui-icon layui-icon-refresh"></span> 测验时间：
+                        [[${paper.paperTestTime}]]分钟
+                    </div>
+                    <div><span class="layui-icon layui-icon-align-left"></span> 试题数量：
+                        [[${paper.paperQuestionAmount}]]题
+                    </div>
+                    <div><span class="layui-icon layui-icon-username"></span> 创建人：
+                        [[${paper.createUserName}]]
+                    </div>
+                    <div><span class="layui-icon layui-icon-next"></span> 创建时间：
+                        [[${paper.createTime}]]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script data-th-inline="javascript" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'form', 'formSelects', 'febs', 'util'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            view = febs.view,
+            form = layui.form,
+            util = layui.util,
+            $view = $('#febs-testPage'),
+            $form = $view.find('form'),
+            formSelects = layui.formSelects,
+            currentUserId = currentUser.userId,
+            paper = [[${paper}]],
+            $questionBody = $view.find('.layui-col-md9').find('.layui-card-body'),
+            questionList = paper.paperQuestionList,
+            $testInfo = $view.find('#febs-testPage-info');
+        var infoOffSet = $testInfo.offset().top;
+        $('#febs-body').on('scroll', function () {
+            $testInfo.offset({top: infoOffSet});
+        });
+        util.fixbar({
+            bar1: true,
+            click: function (type) {
+                if (type === 'top') {
+                    $('#febs-body').scrollTop(0, 0);
+                }
+                if (type === 'bar1') {
+                    $view.find('#submit').trigger('click');
+                }
+            },
+            showHeight: 0
+        });
+        for (var i = 0; i < questionList.length; i++) {
+            var questionStr = '';
+            switch (questionList[i].questionType) {
+                case '1':
+                    questionStr += '<div class="layui-form-item question-body-singleChoice">';
+                    questionStr += '<p>(单选)' + (i + 1) + '.' + questionList[i].questionContent + '(' + questionList[i].questionScore + '分)</p>';
+                    for (var j = 0; j < questionList[i].optionList.length; j++) {
+                        questionStr += '<div class="option-body">';
+                        questionStr += '<input type="radio" name="' + questionList[i].questionId + '" value="' + questionList[i].optionList[j].optionId + '" title="' + questionList[i].optionList[j].optionContent + '">';
+                        questionStr += '</div>';
+                    }
+                    questionStr += '</div>';
+                    break;
+                case '2':
+                    questionStr += '<div class="layui-form-item question-body-judgement">';
+                    questionStr += '<p>(判断)' + (i + 1) + '.' + questionList[i].questionContent + '(' + questionList[i].questionScore + '分)</p>';
+                    for (var j = 0; j < questionList[i].optionList.length; j++) {
+                        questionStr += '<div class="option-body">';
+                        questionStr += '<input type="radio" name="' + questionList[i].questionId + '" value="' + questionList[i].optionList[j].optionId + '" title="' + questionList[i].optionList[j].optionContent + '">';
+                        questionStr += '</div>';
+                    }
+                    questionStr += '</div>';
+                    break;
+                case '3':
+                    questionStr += '<div class="layui-form-item question-body-multipleChoice">';
+                    questionStr += '<p>(多选)' + (i + 1) + '.' + questionList[i].questionContent + '(' + questionList[i].questionScore + '分)</p>';
+                    for (var j = 0; j < questionList[i].optionList.length; j++) {
+                        questionStr += '<div class="option-body">';
+                        questionStr += '<input type="checkbox" name="' + questionList[i].questionId + '[' + questionList[i].optionList[j].optionId + ']" value="' + questionList[i].optionList[j].optionId + '" title="' + questionList[i].optionList[j].optionContent + '" lay-skin="primary">';
+                        questionStr += '</div>';
+                    }
+                    questionStr += '</div>';
+                    break;
+                default:
+                    break;
+            }
+            $form.append(questionStr);
+        }
+        form.render();
+
+        form.on('submit(test-testPage-form-submit)', function (data) {
+            data.field.resultUserId = currentUserId;
+            data.field.resultPaperId = paper.paperId;
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json;charset=UTF-8',
+                url: ctx + 'test/submitPaper',
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 200) {
+                        febs.navigate('/index');
+                        febs.view.tab.delAll();
+                        febs.alert.success('提交试卷成功，请到测验记录查询成绩');
+                    }
+                }
+            });
+            return false;
+        });
+
+    });
+
+</script>

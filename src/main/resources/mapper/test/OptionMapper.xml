@@ -14,4 +14,13 @@ WHERE O.OPTION_QUESTION_ID = #{questionId}
         DELETE FROM T_OPTION O
         WHERE O.OPTION_QUESTION_ID = #{questionId}
     </delete>
+
+    <select id="findByQuestionIdWithoutKey" parameterType="Long" resultType="option">
+        SELECT O.OPTION_ID      optionId,
+        O.OPTION_QUESTION_ID optionQuestionId,
+       O.OPTION_CONTENT optionContent
+FROM T_OPTION O
+WHERE O.OPTION_QUESTION_ID = #{questionId}
+    </select>
+
 </mapper>

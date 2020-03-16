@@ -30,4 +30,9 @@ public class OptionServiceImpl extends ServiceImpl<OptionMapper, Option> impleme
     public void deleteOptionsByQuestionId(String questionId) {
         this.baseMapper.deleteOptionsByQuestionId(questionId);
     }
+
+    @Override
+    public List<Option> findByQuestionIdWithoutKey(Long questionId) {
+        return this.baseMapper.findByQuestionIdWithoutKey(questionId);
+    }
 }

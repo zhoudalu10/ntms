@@ -378,7 +378,8 @@ public class ViewController extends BaseController {
     @GetMapping(FebsConstant.VIEW_PREFIX + "test/testPage/{paperId}")
     @RequiresPermissions("test:testStart")
     public String testPage(@PathVariable String paperId, Model model) {
-        System.out.println(paperId);
+        Paper paper = paperService.findCompletePaperById(paperId);
+        model.addAttribute("paper", paper);
         return FebsUtil.view("test/test/testPage");
     }
 
