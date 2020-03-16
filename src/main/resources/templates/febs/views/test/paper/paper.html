@@ -152,13 +152,21 @@
                         febs.alert.warn('请至少选择一份试卷');
                     } else {
                         var flag = false;
+                        var questionAmountFlag = false;
                         layui.each(checkStatus.data, function (key, item) {
                             if (item.paperState !== '1') {
                                 flag = true;
                             }
+                            if (item.paperQuestionAmount == '0') {
+                                questionAmountFlag = true;
+                            }
                         });
                         if (flag) {
                             febs.alert.warn('只能选择组卷中的试卷');
+                            return false;
+                        }
+                        if (questionAmountFlag) {
+                            febs.alert.warn('不能选择空试卷');
                             return false;
                         }
                         febs.modal.confirm('开始测验', '确定开始该场测验？', function () {
