@@ -15,7 +15,6 @@ import java.util.stream.IntStream;
 
 /**
  * FEBS工具类
- *
  */
 @Slf4j
 public class FebsUtil {

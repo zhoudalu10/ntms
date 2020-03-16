@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.constraints.NotBlank;
 
-/**
- * @author MrBird
- */
 @Controller("jobView")
 @RequestMapping(FebsConstant.VIEW_PREFIX + "job")
 public class ViewController {

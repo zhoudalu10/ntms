@@ -8,9 +8,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
-/**
- * @author MrBird
- */
 public interface IEximportService extends IService<Eximport> {
     /**
      * 查询（分页）

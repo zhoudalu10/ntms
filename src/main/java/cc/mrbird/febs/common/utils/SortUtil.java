@@ -9,8 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 处理排序工具类
- * 
- * @author MrBird
  */
 public class SortUtil {
     /**

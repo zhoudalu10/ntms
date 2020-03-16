@@ -8,9 +8,6 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-/**
- * @author MrBird
- */
 public interface RoleMapper extends BaseMapper<Role> {
 
     /**

@@ -11,13 +11,10 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author MrBird
- */
 @Data
-@TableName("t_menu")
+@TableName("T_MENU")
 @Excel("菜单信息表")
-@KeySequence(value = "seq_t_menu")
+@KeySequence(value = "SEQ_T_MENU")
 public class Menu implements Serializable {
 
     private static final long serialVersionUID = 8571011372410167901L;

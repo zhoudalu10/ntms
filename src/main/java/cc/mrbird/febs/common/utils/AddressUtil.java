@@ -11,9 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-/**
- * @author MrBird
- */
 @Slf4j
 public class AddressUtil {
 

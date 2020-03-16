@@ -6,8 +6,6 @@ import org.jsoup.safety.Whitelist;
 
 /**
  * Xss过滤工具
- *
- * @author MrBird
  */
 public class JsoupUtil {
 

@@ -14,9 +14,6 @@ import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-/**
- * @author MrBird
- */
 @Slf4j
 public class FileUtil {
 

@@ -10,9 +10,6 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author MrBird
- */
 @Data
 @TableName("T_JOB_LOG")
 @Excel("调度日志信息表")
@@ -60,93 +57,6 @@ public class JobLog implements Serializable {
     private Date createTime;
 
     private transient String createTimeFrom;
+
     private transient String createTimeTo;
-
-    public Long getLogId() {
-        return logId;
-    }
-
-    public void setLogId(Long logId) {
-        this.logId = logId;
-    }
-
-    public Long getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(Long jobId) {
-        this.jobId = jobId;
-    }
-
-    public String getBeanName() {
-        return beanName;
-    }
-
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
-    }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
-    }
-
-    public String getParams() {
-        return params;
-    }
-
-    public void setParams(String params) {
-        this.params = params;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public Long getTimes() {
-        return times;
-    }
-
-    public void setTimes(Long times) {
-        this.times = times;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateTimeFrom() {
-        return createTimeFrom;
-    }
-
-    public void setCreateTimeFrom(String createTimeFrom) {
-        this.createTimeFrom = createTimeFrom;
-    }
-
-    public String getCreateTimeTo() {
-        return createTimeTo;
-    }
-
-    public void setCreateTimeTo(String createTimeTo) {
-        this.createTimeTo = createTimeTo;
-    }
 }

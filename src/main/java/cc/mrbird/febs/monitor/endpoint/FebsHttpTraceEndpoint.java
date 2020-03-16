@@ -6,9 +6,6 @@ import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 
 import java.util.List;
 
-/**
- * @author MrBird
- */
 @FebsEndPoint
 public class FebsHttpTraceEndpoint {
 

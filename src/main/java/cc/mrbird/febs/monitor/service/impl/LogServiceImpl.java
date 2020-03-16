@@ -29,9 +29,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 
-/**
- * @author MrBird
- */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class LogServiceImpl extends ServiceImpl<LogMapper, SystemLog> implements ILogService {

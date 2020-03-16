@@ -22,9 +22,6 @@ import java.util.stream.Collectors;
 import static cc.mrbird.febs.monitor.endpoint.FebsMetricsEndpoint.FebsMetricResponse;
 import static cc.mrbird.febs.monitor.endpoint.FebsMetricsEndpoint.Sample;
 
-/**
- * @author MrBird
- */
 @Helper
 public class FebsActuatorHelper {
 

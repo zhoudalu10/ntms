@@ -11,8 +11,6 @@ import java.util.Properties;
 
 /**
  * 定时任务配置
- *
- * @author MrBird
  */
 @Configuration
 public class ScheduleConfigure {

@@ -7,9 +7,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
-/**
- * @author MrBird
- */
 public interface IUserService extends IService<User> {
 
     /**

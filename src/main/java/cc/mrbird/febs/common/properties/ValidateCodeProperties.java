@@ -3,9 +3,6 @@ package cc.mrbird.febs.common.properties;
 import cc.mrbird.febs.common.entity.ImageType;
 import lombok.Data;
 
-/**
- * @author MrBird
- */
 @Data
 public class ValidateCodeProperties {
 

@@ -17,9 +17,6 @@ import java.util.List;
 
 import static cc.mrbird.febs.monitor.endpoint.FebsMetricsEndpoint.FebsMetricResponse;
 
-/**
- * @author MrBird
- */
 @Controller("monitorView")
 @RequestMapping(FebsConstant.VIEW_PREFIX + "monitor")
 public class ViewController {

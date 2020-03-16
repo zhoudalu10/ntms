@@ -4,9 +4,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * @author MrBird
- */
 @Data
 public class JvmInfo implements Serializable {
 

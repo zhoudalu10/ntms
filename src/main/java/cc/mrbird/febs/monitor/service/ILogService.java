@@ -12,9 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
-/**
- * @author MrBird
- */
 public interface ILogService extends IService<SystemLog> {
 
     /**

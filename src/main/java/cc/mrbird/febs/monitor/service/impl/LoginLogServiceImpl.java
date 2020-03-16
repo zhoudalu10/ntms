@@ -25,9 +25,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author MrBird
- */
 @Service("loginLogService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> implements ILoginLogService {
