@@ -142,7 +142,7 @@
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'user/excel', params, '公告表.xlsx');
+                    febs.download(ctx + 'announcement/excel', params, '公告表.xlsx');
                 }
             },
             options: [{

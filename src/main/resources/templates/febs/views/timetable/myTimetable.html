@@ -188,6 +188,8 @@
             formSelects.on('myTimetable-select-class', function (id, vals, val, isAdd, isDisabled) {
                 if (isAdd) {
                     initTimetableData(val.value);
+                } else {
+                    unInitTimetableData();
                 }
             });
         }
@@ -260,6 +262,13 @@
                     });
                 }
             );
+        }
+
+        function unInitTimetableData() {
+            var courseList = [['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '']];
+            Timetable.setOption({
+                timetables: courseList
+            });
         }
     });
 </script>
