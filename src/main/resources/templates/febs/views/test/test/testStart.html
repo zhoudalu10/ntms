@@ -79,6 +79,12 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    testViewNoCourseRestrictions = false;
+</script>
+<script type="text/javascript" shiro:hasPermission="test:viewNoCourseRestrictions">
+    testViewNoCourseRestrictions = true;
+</script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'form', 'formSelects', 'febs'], function () {
         var $ = layui.jquery,
@@ -88,11 +94,7 @@
             $view = $('#febs-testStart'),
             $form = $view.find('form'),
             $paperInfo = $view.find('#paper-info'),
-            currentUserId = currentUser.userId,
-            studentFlag = false;
-        if (currentUser.deptParentId == '11') {
-            studentFlag = true;
-        }
+            currentUserId = currentUser.userId;
         formSelects.render();
         initPaperSelect();
 
@@ -108,7 +110,7 @@
 
         function initPaperSelect() {
             var userId = '';
-            if (studentFlag) {
+            if (!testViewNoCourseRestrictions) {
                 userId = currentUserId;
             }
             formSelects.data('test-testStart-paper', 'server', {

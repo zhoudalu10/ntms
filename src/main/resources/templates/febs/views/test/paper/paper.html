@@ -62,10 +62,10 @@
     </div>
 </div>
 <script type="text/javascript">
-    hasViewAllPerm = false;
+    paperViewAllPerm = false;
 </script>
 <script type="text/javascript" shiro:hasPermission="test:viewAll">
-    hasViewAllPerm = true;
+    paperViewAllPerm = true;
 </script>
 <script type="text/html" id="paper-status">
     {{#
@@ -290,7 +290,7 @@
 
         function initTable() {
             var createUserId = "";
-            if (!hasViewAllPerm) {
+            if (!paperViewAllPerm) {
                 createUserId = currentUserId;
             }
             tableIns = febs.table.init({
@@ -316,11 +316,11 @@
 
         function getQueryParams() {
             var createUserId = '';
-            if (!hasViewAllPerm) {
+            if (!paperViewAllPerm) {
                 createUserId = currentUserId;
             }
             var createUserName = '';
-            if (hasViewAllPerm) {
+            if (paperViewAllPerm) {
                 createUserName = $searchForm.find('input[name="createUserName"]').val().trim();
             }
             return {

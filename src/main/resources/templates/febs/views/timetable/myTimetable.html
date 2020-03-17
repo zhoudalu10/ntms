@@ -140,6 +140,12 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    timetableViewNoClassRestrictions = false;
+</script>
+<script type="text/javascript" shiro:hasPermission="myTimetable:all">
+    timetableViewNoClassRestrictions = true;
+</script>
 <script src="/timetables/Timetables.min.js"></script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'form', 'formSelects', 'table', 'febs', 'treeSelect'], function () {
@@ -156,7 +162,7 @@
         form.render();
 
         initTimetable();
-        if (currentUser.deptParentId === classParentDeptId) {
+        if (!timetableViewNoClassRestrictions) {
             initTimetableData();
         } else {
             formSelects.data('myTimetable-select-class', 'server', {
@@ -228,7 +234,7 @@
 
         function initTimetableData(value) {
             var classId;
-            if (currentUser.deptParentId === classParentDeptId) {
+            if (!timetableViewNoClassRestrictions) {
                 classId = currentUser.deptId;
             } else {
                 if (value === undefined) {

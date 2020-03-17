@@ -68,22 +68,22 @@
     </div>
 </div>
 <script type="text/javascript">
-    viewNoOwnerRestrictions = false;
+    noteViewNoOwnerRestrictions = false;
 </script>
 <script type="text/javascript" shiro:hasPermission="note:viewNoOwnerRestrictions">
-    viewNoOwnerRestrictions = true;
+    noteViewNoOwnerRestrictions = true;
 </script>
 <script type="text/javascript">
-    viewNoCourseRestrictions = false;
+    noteViewNoCourseRestrictions = false;
 </script>
 <script type="text/javascript" shiro:hasPermission="note:viewNoCourseRestrictions">
-    viewNoCourseRestrictions = true;
+    noteViewNoCourseRestrictions = true;
 </script>
 <script type="text/javascript">
-    viewNoHideRestrictions = false;
+    noteViewNoHideRestrictions = false;
 </script>
 <script type="text/javascript" shiro:hasPermission="note:viewNoHideRestrictions">
-    viewNoHideRestrictions = true;
+    noteViewNoHideRestrictions = true;
 </script>
 <script type="text/html" id="note-status">
     {{#
@@ -248,15 +248,15 @@
 
         function initTable() {
             var createUserId = '';
-            if (!viewNoOwnerRestrictions) {
+            if (!noteViewNoOwnerRestrictions) {
                 createUserId = currentUserId;
             }
             var noteStudentClassId = '';
-            if (!viewNoCourseRestrictions) {
+            if (!noteViewNoCourseRestrictions) {
                 noteStudentClassId = deptId;
             }
             var noteState = '';
-            if (!viewNoHideRestrictions) {
+            if (!noteViewNoHideRestrictions) {
                 noteState = '1';
             }
             tableIns = febs.table.init({
@@ -291,17 +291,17 @@
             }
             var createUserId = '';
             var createUserName = '';
-            if (!viewNoOwnerRestrictions) {
+            if (!noteViewNoOwnerRestrictions) {
                 createUserId = currentUserId;
             } else {
                 createUserName = $searchForm.find('input[name="createUserName"]').val().trim();
             }
             var noteStudentClassId = '';
-            if (!viewNoCourseRestrictions) {
+            if (!noteViewNoCourseRestrictions) {
                 noteStudentClassId = deptId;
             }
             var noteState;
-            if (!viewNoHideRestrictions) {
+            if (!noteViewNoHideRestrictions) {
                 noteState = '1';
             } else {
                 noteState = $searchForm.find("select[name='noteState']").val();
