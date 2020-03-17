@@ -123,6 +123,18 @@
     }}
     <span class="layui-badge febs-bg-{{bind.color}}">{{ bind.title }}</span>
 </script>
+<script type="text/html" id="question-score">
+    {{#
+    var score = {
+    1: {title: '1分', color: 'lime'},
+    2: {title: '2分', color: 'cyan'},
+    3: {title: '3分', color: 'blue'},
+    4: {title: '4分', color: 'geekblue'},
+    5: {title: '5分', color: 'purple'}
+    }[d.questionScore];
+    }}
+    <span class="layui-badge febs-bg-{{score.color}}">{{ score.title }}</span>
+</script>
 <script type="text/html" id="question-option">
     <span shiro:lacksPermission="question:view,question:update,question:delete,question:removeFromPaper">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
@@ -341,14 +353,14 @@
                 },
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'questionCourseName', title: '课程名称', width: 100, minWidth: 100},
-                    {field: 'questionContent', title: '题目内容', width: 500},
-                    {field: 'questionScore', title: '分值', width: 50, unresize: true, align: 'center'},
-                    {title: '试题类型', templet: '#question-type', width: 90, unresize: true, align: 'center'},
+                    {field: 'questionCourseName', title: '课程名称', width: 100},
+                    {field: 'questionContent', title: '题目内容'},
+                    {title: '分值', templet: '#question-score', align: 'center', width: 100, unresize: true},
+                    {title: '试题类型', templet: '#question-type', align: 'center', width: 100, unresize: true},
                     {title: '已添加到试卷', templet: '#question-bind', width: 120, unresize: true, align: 'center'},
-                    {field: 'createUserName', title: '创建人', width: 100, maxWidth: 120},
-                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
-                    {title: '操作', toolbar: '#question-option', minWidth: 140}
+                    {field: 'createUserName', title: '创建人', width: 100},
+                    {field: 'createTime', title: '创建时间', sort: true, width: 180, unresize: true},
+                    {title: '操作', toolbar: '#question-option', width: 140, unresize: true}
                 ]]
             });
         }

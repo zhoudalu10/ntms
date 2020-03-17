@@ -35,7 +35,8 @@
                             </div>
                         </div>
                     </form>
-                    <span class="febs-alert-base febs-alert-success">共追踪到 <strong id="count">0</strong> 条近期HTTP请求记录</span>
+                    <span class="febs-alert-base febs-alert-success">共追踪到 <strong
+                            id="count">0</strong> 条近期HTTP请求记录</span>
                     <table lay-filter="httptraceTable" lay-data="{id: 'httptraceTable'}"></table>
                 </div>
             </div>
@@ -114,11 +115,11 @@
                 id: 'httptraceTable',
                 url: ctx + 'febs/actuator/httptrace',
                 cols: [[
-                    {field: 'requestTime', title: '请求时间', minWidth: 180},
-                    {title: '请求方法', templet: "#httptrace-method"},
-                    {field: 'url', title: '请求URL', minWidth: 380},
-                    {title: '响应状态', templet: '#httptrace-status'},
-                    {title: '请求耗时', templet: '#httptrace-time'}
+                    {title: '请求方法', templet: "#httptrace-method", align: 'center', width: 100, unresize: true},
+                    {field: 'requestTime', title: '请求时间', width: 180, unresize: true},
+                    {title: '响应状态', templet: '#httptrace-status', align: 'center', width: 100, unresize: true},
+                    {title: '请求耗时', templet: '#httptrace-time', align: 'center', width: 100, unresize: true},
+                    {field: 'url', title: '请求URL', minWidth: 380}
                 ]],
                 done: function (r) {
                     $view.find('#count').text(r.count);

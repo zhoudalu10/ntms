@@ -302,14 +302,14 @@
                 },
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'paperCourseName', title: '课程名称', width: 100, minWidth: 100},
-                    {field: 'paperName', title: '试卷名称', minWidth: 300},
-                    {field: 'paperTestTime', title: '测验时间（分钟）', minWidth: 120},
-                    {field: 'paperQuestionAmount', title: '试题数量', width: 90},
-                    {title: '试卷状态', templet: '#paper-status', width: 90},
-                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
-                    {field: 'createUserName', title: '创建人', minWidth: 200},
-                    {title: '操作', toolbar: '#paper-option', minWidth: 140}
+                    {field: 'paperCourseName', title: '课程名称', width: 100},
+                    {field: 'paperName', title: '试卷名称'},
+                    {field: 'paperTestTime', title: '测验时间（分钟）', width: 160},
+                    {field: 'paperQuestionAmount', title: '试题数量', width: 100},
+                    {title: '试卷状态', templet: '#paper-status', align: 'center', width: 100, unresize: true},
+                    {field: 'createTime', title: '创建时间', sort: true, width: 180, unresize: true},
+                    {field: 'createUserName', title: '创建人', width: 100},
+                    {title: '操作', toolbar: '#paper-option', width: 140, unresize: true}
                 ]]
             });
         }

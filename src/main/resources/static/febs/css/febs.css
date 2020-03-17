@@ -1,5 +1,5 @@
 body {
-    font-family: Chinese Quote, -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif
+    font-family: Chinese Quote, -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
 body, html, #app, .layui-body {
@@ -69,7 +69,7 @@ body, html, #app-header .layui-nav .layui-nav-item a:not(.layui-nav-child-href),
 }
 
 .layui-table {
-    color: #595d68
+    color: #606266;
 }
 
 #app-header .layui-nav-bar, .layui-bg-black {
@@ -95,7 +95,7 @@ body, html, #app-header .layui-nav .layui-nav-item a:not(.layui-nav-child-href),
 
 #app-sidebar, #app-sidebar .layui-nav-itemed .layui-nav-child {
     box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
-    background-color: #393e46
+    background-color: #272c33
 }
 
 .febs-sidebar-shrink #app-sidebar .layui-nav-itemed, #app-sidebar .layui-nav-tree .layui-nav-child dd.layui-this, #app-sidebar .layui-nav-tree .layui-nav-child dd.layui-this a, #app-sidebar .layui-nav-tree .layui-this, #app-sidebar .layui-nav-tree .layui-this > a, .layui-nav-tree .layui-this > a:hover {
@@ -111,7 +111,7 @@ body, html, #app-header .layui-nav .layui-nav-item a:not(.layui-nav-child-href),
 }
 
 .layui-table thead tr, .layui-table tbody tr:hover, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool {
-    background-color: #f6f6f6 !important
+    background-color: #f8f8f8 !important
 }
 
 .layui-table-click {
@@ -119,7 +119,7 @@ body, html, #app-header .layui-nav .layui-nav-item a:not(.layui-nav-child-href),
 }
 
 .layui-table tbody tr:hover, .layui-table thead tr, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table-total, .layui-table-total tr, .layui-table[lay-even] tr:nth-child(even) {
-    background-color: #f6f6f6 !important
+    background-color: #f8f8f8 !important
 }
 
 .layui-badge-rim, .layui-colla-content, .layui-colla-item, .layui-collapse, .layui-elem-field, .layui-form-pane .layui-form-item[pane], .layui-form-pane .layui-form-label, .layui-input, .layui-layedit, .layui-layedit-tool, .layui-quote-nm, .layui-select, .layui-tab-bar, .layui-tab-card, .layui-tab-title, .layui-tab-title .layui-this:after, .layui-textarea {
@@ -3543,10 +3543,6 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
     width: 56px
 }
 
-.layui-form-label-m {
-    width: 70px
-}
-
 .layui-form-radio > i {
     font-size: 20px !important
 }
@@ -3565,7 +3561,11 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
 }
 
 .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row] {
-    border-color: #f6f6f6
+    border-color: #f2f2f2
+}
+
+.layui-table-header {
+    border-bottom: none;
 }
 
 .layui-laypage a, .layui-laypage span {
@@ -3844,7 +3844,7 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
 }
 
 .layui-nav-itemed > .layui-nav-child {
-    background-color: #393e46 !important
+    background-color: #272c33 !important
 }
 
 .febs-theme-white {

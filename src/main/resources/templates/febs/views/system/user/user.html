@@ -271,13 +271,13 @@
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'username', title: '用户名', minWidth: 100},
-                    {title: '性别', templet: '#user-sex'},
+                    {title: '性别', templet: '#user-sex', align: 'center', width: 100, unresize: true},
                     {field: 'deptName', title: '部门'},
                     {field: 'mobile', title: '手机', minWidth: 165},
                     {field: 'email', title: '邮箱', minWidth: 180},
-                    {title: '状态', templet: '#user-status'},
-                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
-                    {title: '操作', toolbar: '#user-option', minWidth: 140}
+                    {title: '状态', templet: '#user-status', align: 'center', width: 100, unresize: true},
+                    {field: 'createTime', title: '创建时间', sort: true, width: 180, unresize: true},
+                    {title: '操作', toolbar: '#user-option', width: 140, unresize: true}
                 ]]
             });
         }

@@ -1,5 +1,5 @@
 <style>
-    #febs-job-log .layui-form-label{
+    #febs-job-log .layui-form-label {
         width: 60px;
     }
 </style>
@@ -188,11 +188,11 @@
                     {field: 'beanName', title: 'Bean名称'},
                     {field: 'methodName', title: '方法名称', maxWidth: 200},
                     {field: 'params', title: '方法参数', maxWidth: 180},
-                    {title: '状态', templet: '#jobLog-status'},
+                    {title: '状态', templet: '#jobLog-status', align: 'center', width: 100, unresize: true},
                     {field: 'error', title: '异常信息', maxWidth: 200},
-                    {title: '耗时', templet: '#jobLog-times'},
-                    {field: 'createTime', title: '执行时间', minWidth: 180, sort: true},
-                    {title: '操作', toolbar: '#jobLog-option', minWidth: 140}
+                    {title: '耗时', templet: '#jobLog-times', align: 'center', width: 100, unresize: true},
+                    {field: 'createTime', title: '执行时间', sort: true, width: 180, unresize: true},
+                    {title: '操作', toolbar: '#jobLog-option', width: 140, unresize: true}
                 ]]
             });
         }

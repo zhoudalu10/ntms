@@ -8,13 +8,6 @@
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">课程名称</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="courseName" autocomplete="off"
-                                                   class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">年级</label>
                                         <div class="layui-input-inline">
                                             <select name="courseGrade">
@@ -34,6 +27,13 @@
                                                 <option value="1">上学期</option>
                                                 <option value="2">下学期</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">课程名称</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="courseName" autocomplete="off"
+                                                   class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -248,13 +248,13 @@
                 url: ctx + 'course/list',
                 cols: [[
                     {type: 'checkbox'},
+                    {templet: '#course-courseGrade', title: '年级', align: 'center', width: 100, unresize: true},
+                    {templet: '#course-courseTerm', title: '学期', align: 'center', width: 100, unresize: true},
                     {field: 'courseName', title: '课程名称', minWidth: 100},
-                    {templet: '#course-courseGrade', title: '年级'},
-                    {templet: '#course-courseTerm', title: '学期'},
-                    {field: 'courseTeacherName', title: '任课老师'},
-                    {field: 'coursePeriod', title: '课时数'},
-                    {title: '课程状态', templet: '#course-status'},
-                    {title: '操作', toolbar: '#course-option', minWidth: 140}
+                    {field: 'courseTeacherName', title: '任课老师', width: 120},
+                    {field: 'coursePeriod', title: '课时数', width: 120},
+                    {title: '状态', templet: '#course-status', align: 'center', width: 100, unresize: true},
+                    {title: '操作', toolbar: '#course-option', width: 140, unresize: true}
                 ]]
             });
         }

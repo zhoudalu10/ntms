@@ -16,7 +16,8 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">操作时间</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="createTime" id="log-createTime" class="layui-input">
+                                            <input type="text" name="createTime" id="log-createTime"
+                                                   class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -171,13 +172,21 @@
                     {type: 'checkbox'},
                     {field: 'username', title: '操作人'},
                     {field: 'operation', title: '操作描述'},
-                    {field: 'time', title: '耗时', templet: "#log-time", sort: true},
+                    {
+                        field: 'time',
+                        title: '耗时',
+                        templet: "#log-time",
+                        sort: true,
+                        align: 'center',
+                        width: 100,
+                        unresize: true
+                    },
                     {field: 'method', title: '操作方法'},
                     {field: 'params', title: '方法参数'},
                     {field: 'ip', title: 'IP地址'},
                     {field: 'location', title: '操作地点'},
-                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
-                    {title: '操作', toolbar: '#log-option'}
+                    {field: 'createTime', title: '创建时间', sort: true, width: 180, unresize: true},
+                    {title: '操作', toolbar: '#log-option', width: 140, unresize: true}
                 ]]
             });
         }

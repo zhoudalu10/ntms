@@ -15,6 +15,13 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">任课老师</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="timetableCourseTeacherName" autocomplete="off"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">星期</label>
                                         <div class="layui-input-inline">
                                             <select name="timetableWeekday">
@@ -87,13 +94,6 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">任课老师</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="timetableCourseTeacherName" autocomplete="off"
-                                                   class="layui-input">
-                                        </div>
-                                    </div>
-                                    <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">状态</label>
                                         <div class="layui-input-inline">
                                             <select name="timetableState">
@@ -142,7 +142,7 @@
 <script type="text/html" id="timetable-timetableIndex">
     {{#
     var timetableIndex = {
-    1: {title: '第一节', color: 'green'},
+    1: {title: '第一节', color: 'geekblue'},
     2: {title: '第二节', color: 'magenta'},
     3: {title: '第三节', color: 'orange'},
     4: {title: '第四节', color: 'red'},
@@ -303,15 +303,15 @@
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'timetableCourseName', title: '课程名称', minWidth: 100},
-                    {templet: '#timetable-timetableWeekday', title: '星期'},
-                    {templet: '#timetable-timetableIndex', title: '课序'},
-                    {field: 'timetableClassName', title: '班级', minWidth: 200},
+                    {field: 'timetableCourseTeacherName', title: '任课老师', width: 120},
+                    {templet: '#timetable-timetableWeekday', title: '星期', align: 'center', width: 100, unresize: true},
+                    {templet: '#timetable-timetableIndex', title: '课序', align: 'center', width: 100, unresize: true},
+                    {field: 'timetableClassName', title: '班级', minWidth: 160},
                     {field: 'timetableClassroomName', title: '教室'},
                     {field: 'timetableYear', title: '年份'},
-                    {templet: '#timetable-timetableTerm', title: '学期'},
-                    {field: 'timetableCourseTeacherName', title: '任课老师'},
-                    {title: '状态', templet: '#timetable-status'},
-                    {title: '操作', toolbar: '#timetable-option', minWidth: 140}
+                    {templet: '#timetable-timetableTerm', title: '学期', align: 'center', width: 100, unresize: true},
+                    {title: '状态', templet: '#timetable-status', align: 'center', width: 100, unresize: true},
+                    {title: '操作', toolbar: '#timetable-option', width: 140, unresize: true}
                 ]]
             });
         }
