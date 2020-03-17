@@ -1,27 +1,27 @@
-<div class="layui-fluid layui-anim febs-anim" id="febs-announcement" lay-title="公告管理">
+<div class="layui-fluid layui-anim febs-anim" id="febs-note" lay-title="课堂笔记">
     <div class="layui-row febs-container">
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body febs-table-full">
-                    <form class="layui-form layui-table-form" lay-filter="announcement-table-form">
+                    <form class="layui-form layui-table-form" lay-filter="note-table-form">
                         <div class="layui-row">
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">公告标题</label>
+                                        <label class="layui-form-label layui-form-label-sm">课程名称</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="announcementTitle" autocomplete="off"
+                                            <input type="text" name="noteCourseName" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">创建时间</label>
+                                        <label class="layui-form-label layui-form-label-sm">笔记标题</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="createTime" id="announcement-createTime"
+                                            <input type="text" name="noteTitle" autocomplete="off"
                                                    class="layui-input">
                                         </div>
                                     </div>
-                                    <div class="layui-inline">
+                                    <div class="layui-inline" shiro:hasPermission="note:viewNoOwnerRestrictions">
                                         <label class="layui-form-label layui-form-label-sm">创建人</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="createUserName" autocomplete="off"
@@ -29,9 +29,16 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">公告状态</label>
+                                        <label class="layui-form-label layui-form-label-sm">创建时间</label>
                                         <div class="layui-input-inline">
-                                            <select name="announcementState">
+                                            <input type="text" name="createTime" id="note-createTime"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline" shiro:hasPermission="note:viewNoHideRestrictions">
+                                        <label class="layui-form-label layui-form-label-sm">笔记状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="noteState">
                                                 <option value=""></option>
                                                 <option value="0">展示</option>
                                                 <option value="1">隐藏</option>
@@ -48,36 +55,63 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="announcement:add,announcement:delete,announcement:export">
+                                     shiro:hasAnyPermissions="note:add,note:delete,note:export">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
                         </div>
                     </form>
-                    <table lay-filter="announcementTable" lay-data="{id: 'announcementTable'}"></table>
+                    <table lay-filter="noteTable" lay-data="{id: 'noteTable'}"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script type="text/html" id="announcement-status">
+<script type="text/javascript">
+    viewNoOwnerRestrictions = false;
+</script>
+<script type="text/javascript" shiro:hasPermission="note:viewNoOwnerRestrictions">
+    viewNoOwnerRestrictions = true;
+</script>
+<script type="text/javascript">
+    viewNoCourseRestrictions = false;
+</script>
+<script type="text/javascript" shiro:hasPermission="note:viewNoCourseRestrictions">
+    viewNoCourseRestrictions = true;
+</script>
+<script type="text/javascript">
+    viewNoHideRestrictions = false;
+</script>
+<script type="text/javascript" shiro:hasPermission="note:viewNoHideRestrictions">
+    viewNoHideRestrictions = true;
+</script>
+<script type="text/html" id="note-status">
     {{#
     var status = {
     1: {title: '展示', color: 'green'},
     0: {title: '隐藏', color: 'volcano'}
-    }[d.announcementState];
+    }[d.noteState];
     }}
     <span class="layui-badge febs-tag-{{status.color}}">{{ status.title }}</span>
 </script>
-<script type="text/html" id="announcement-option">
-    <span shiro:lacksPermission="announcement:view,announcement:update,announcement:delete">
+<script type="text/html" id="note-noteIsBindFile">
+    {{#
+    var noteIsBindFile = {
+    1: {title: '有', color: 'green'},
+    0: {title: '无', color: 'volcano'}
+    }[d.noteState];
+    }}
+    <span class="layui-badge febs-tag-{{noteIsBindFile.color}}">{{ noteIsBindFile.title }}</span>
+</script>
+<script type="text/html" id="note-option">
+    <span shiro:lacksPermission="note:view,note:update,note:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="detail" shiro:hasPermission="announcement:view"><i
+    <a lay-event="detail" shiro:hasPermission="note:view"><i
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
-    <a lay-event="edit" shiro:hasPermission="announcement:update"><i
+    <a lay-event="edit" shiro:hasPermission="note:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
-    <a lay-event="del" shiro:hasPermission="announcement:delete"><i
+    <a lay-event="del" shiro:hasPermission="note:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
@@ -87,23 +121,24 @@
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
-            treeSelect = layui.treeSelect,
             dropdown = layui.dropdown,
-            $view = $('#febs-announcement'),
+            $view = $('#febs-note'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
             sortObject = {field: 'createTime', type: null},
             tableIns,
             createTimeFrom,
-            createTimeTo;
+            createTimeTo,
+            currentUserId = currentUser.userId,
+            deptId = currentUser.deptId;
 
         form.render();
 
         initTable();
 
         laydate.render({
-            elem: '#announcement-createTime',
+            elem: '#note-createTime',
             range: true,
             trigger: 'click'
         });
@@ -111,30 +146,30 @@
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
-                var checkStatus = table.checkStatus('announcementTable');
+                var checkStatus = table.checkStatus('noteTable');
                 if (name === 'add') {
-                    febs.modal.open('新增公告', 'announcement/add', {
+                    febs.modal.open('新增笔记', 'note/add', {
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         yes: function (index, layero) {
-                            $('#announcement-add').find('#submit').trigger('click');
+                            $('#note-add').find('#submit').trigger('click');
                         },
                         btn2: function () {
-                            $('#announcement-add').find('#reset').trigger('click');
+                            $('#note-add').find('#reset').trigger('click');
                             return false;
                         }
                     });
                 }
                 if (name === 'delete') {
                     if (!checkStatus.data.length) {
-                        febs.alert.warn('请选择需要删除的公告');
+                        febs.alert.warn('请选择需要删除的笔记');
                     } else {
-                        febs.modal.confirm('删除公告', '确定删除该公告？', function () {
-                            var announcementIds = [];
+                        febs.modal.confirm('删除笔记', '确定删除该笔记？', function () {
+                            var noteIds = [];
                             layui.each(checkStatus.data, function (key, item) {
-                                announcementIds.push(item.announcementId)
+                                noteIds.push(item.noteId)
                             });
-                            deleteAnnouncements(announcementIds.join(','));
+                            deleteNotes(noteIds.join(','));
                         });
                     }
                 }
@@ -142,43 +177,43 @@
                     var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
                     params.pageSize = $view.find(".layui-laypage-limits option:selected").val();
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
-                    febs.download(ctx + 'announcement/excel', params, '公告表.xlsx');
+                    febs.download(ctx + 'note/excel', params, '笔记表.xlsx');
                 }
             },
             options: [{
                 name: 'add',
-                title: '新增公告',
-                perms: 'announcement:add'
+                title: '新增笔记',
+                perms: 'note:add'
             }, {
                 name: 'delete',
-                title: '删除公告',
-                perms: 'announcement:delete'
+                title: '删除笔记',
+                perms: 'note:delete'
             }, {
                 name: 'export',
                 title: '导出Excel',
-                perms: 'announcement:export'
+                perms: 'note:export'
             }]
         });
 
-        table.on('tool(announcementTable)', function (obj) {
+        table.on('tool(noteTable)', function (obj) {
             var data = obj.data,
                 layEvent = obj.event;
             if (layEvent === 'detail') {
-                febs.modal.view('公告信息', 'announcement/detail/' + data.announcementId, {
+                febs.modal.view('笔记信息', 'note/detail/' + data.noteId, {
                     area: $(window).width() <= 750 ? '95%' : '660px'
                 });
             }
             if (layEvent === 'del') {
-                febs.modal.confirm('删除公告', '确定删除该公告？', function () {
-                    deleteAnnouncements(data.announcementId);
+                febs.modal.confirm('删除笔记', '确定删除该笔记？', function () {
+                    deleteNotes(data.noteId);
                 });
             }
             if (layEvent === 'edit') {
-                febs.modal.open('修改公告', 'announcement/update/' + data.announcementId, {
+                febs.modal.open('修改笔记', 'note/update/' + data.noteId, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     btn: ['提交', '取消'],
                     yes: function (index, layero) {
-                        $('#announcement-update').find('#submit').trigger('click');
+                        $('#note-update').find('#submit').trigger('click');
                     },
                     btn2: function () {
                         layer.closeAll();
@@ -187,7 +222,7 @@
             }
         });
 
-        table.on('sort(announcementTable)', function (obj) {
+        table.on('sort(noteTable)', function (obj) {
             sortObject = obj;
             tableIns.reload({
                 initSort: obj,
@@ -212,17 +247,36 @@
         });
 
         function initTable() {
+            var createUserId = '';
+            if (!viewNoOwnerRestrictions) {
+                createUserId = currentUserId;
+            }
+            var noteStudentClassId = '';
+            if (!viewNoCourseRestrictions) {
+                noteStudentClassId = deptId;
+            }
+            var noteState = '';
+            if (!viewNoHideRestrictions) {
+                noteState = '1';
+            }
             tableIns = febs.table.init({
                 elem: $view.find('table'),
-                id: 'announcementTable',
-                url: ctx + 'announcement/list',
+                id: 'noteTable',
+                url: ctx + 'note/list',
+                where: {
+                    createUserId: createUserId,
+                    noteStudentClassId: noteStudentClassId,
+                    noteState: noteState
+                },
                 cols: [[
                     {type: 'checkbox'},
-                    {field: 'createUserName', title: '创建人', width: 120},
-                    {field: 'announcementTitle', title: '公告标题', minWidth: 300},
-                    {title: '状态', templet: '#announcement-status', align: 'center', width: 100, unresize: true},
+                    {field: 'noteCourseName', title: '课程名称', width: 100},
+                    {field: 'noteTitle', title: '笔记标题'},
+                    {field: 'createUserName', title: '创建人', width: 100},
+                    {title: '附件', templet: '#note-noteIsBindFile', align: 'center', width: 100, unresize: true},
                     {field: 'createTime', title: '创建时间', sort: true, width: 180, unresize: true},
-                    {title: '操作', toolbar: '#announcement-option', width: 140, unresize: true}
+                    {title: '状态', templet: '#note-status', align: 'center', width: 100, unresize: true},
+                    {title: '操作', toolbar: '#note-option', width: 140, unresize: true}
                 ]]
             });
         }
@@ -235,19 +289,39 @@
                 createTimeFrom = createTime.split(' - ')[0];
                 createTimeTo = createTime.split(' - ')[1];
             }
+            var createUserId = '';
+            var createUserName = '';
+            if (!viewNoOwnerRestrictions) {
+                createUserId = currentUserId;
+            } else {
+                createUserName = $searchForm.find('input[name="createUserName"]').val().trim();
+            }
+            var noteStudentClassId = '';
+            if (!viewNoCourseRestrictions) {
+                noteStudentClassId = deptId;
+            }
+            var noteState;
+            if (!viewNoHideRestrictions) {
+                noteState = '1';
+            } else {
+                noteState = $searchForm.find("select[name='noteState']").val();
+            }
             return {
                 createTimeFrom: createTimeFrom,
                 createTimeTo: createTimeTo,
-                announcementTitle: $searchForm.find('input[name="announcementTitle"]').val().trim(),
-                announcementState: $searchForm.find("select[name='announcementState']").val(),
-                createUserName: $searchForm.find("input[name='createUserName']").val().trim(),
+                noteCourseName: $searchForm.find('input[name="noteCourseName"]').val().trim(),
+                noteTitle: $searchForm.find('input[name="noteTitle"]').val().trim(),
+                createUserName: createUserName,
+                noteState: noteState,
+                createUserId: createUserId,
+                noteStudentClassId: noteStudentClassId,
                 invalidate_ie_cache: new Date()
             };
         }
 
-        function deleteAnnouncements(announcementIds) {
-            febs.get(ctx + 'announcement/delete/' + announcementIds, null, function () {
-                febs.alert.success('删除公告成功');
+        function deleteNotes(noteIds) {
+            febs.get(ctx + 'note/delete/' + noteIds, null, function () {
+                febs.alert.success('删除笔记成功');
                 $query.click();
             });
         }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.note.mapper.NoteMapper">
+    <select id="findNoteList" parameterType="note" resultType="note">
+        SELECT *
+        FROM (
+        SELECT N.NOTE_ID noteId,
+        N.NOTE_COURSE_ID noteCourseId,
+        C.COURSE_NAME noteCourseName,
+        N.NOTE_TITLE noteTitle,
+        N.NOTE_CONTENT noteContent,
+        N.CREATE_USER_ID createUserId,
+        U.USERNAME createUserName,
+        N.CREATE_TIME createTime,
+        N.NOTE_STATE noteState,
+        DECODE((SELECT COUNT(*) FROM T_NOTE_FILE NF WHERE N.NOTE_ID = NF.FILE_NOTE_ID), 0, 0, 1) noteIsBindFile
+        FROM T_NOTE N
+        LEFT JOIN T_COURSE C ON N.NOTE_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_USER U ON N.CREATE_USER_ID = U.USER_ID
+        WHERE 1 = 1
+        <if test="note.noteCourseName != null and note.noteCourseName != ''">
+            <bind name="bindNoteCourseName" value="'%' + note.noteCourseName + '%'"/>
+            AND C.COURSE_NAME LIKE #{bindNoteCourseName}
+        </if>
+        <if test="note.noteTitle != null and note.noteTitle != ''">
+            <bind name="bindNoteTitle" value="'%' + note.noteTitle + '%'"/>
+            AND N.NOTE_TITLE LIKE #{bindNoteTitle}
+        </if>
+        <if test="note.createUserName != null and note.createUserName != ''">
+            <bind name="bindCreateUserName" value="'%' + note.createUserName + '%'"/>
+            AND U.USERNAME LIKE #{bindCreateUserName}
+        </if>
+        <if test="note.createTimeFrom != null and note.createTimeFrom != ''">
+            AND N.CREATE_TIME &gt;= TO_DATE(#{note.createTimeFrom}, 'yyyy-MM-dd')
+        </if>
+        <if test="note.createTimeTo != null and note.createTimeTo != ''">
+            AND N.CREATE_TIME &lt; TO_DATE(#{note.createTimeTo}, 'yyyy-MM-dd')
+        </if>
+        <if test="note.noteState != null and note.noteState != ''">
+            AND N.NOTE_STATE = #{note.noteState}
+        </if>
+        <if test="note.createUserId != null and note.createUserId != ''">
+            AND N.CREATE_USER_ID = #{note.createUserId}
+        </if>
+        <if test="note.noteStudentClassId != null and note.noteStudentClassId != ''">
+            AND N.NOTE_COURSE_ID IN (SELECT T.TIMETABLE_COURSE_ID FROM T_TIMETABLE T WHERE T.TIMETABLE_CLASS_ID =
+            #{note.noteStudentClassId})
+        </if>
+        )
+        <if test="note.noteIsBindFile != null and note.noteIsBindFile != ''">
+            WHERE noteIsBindFile = #{note.noteIsBindFile}
+        </if>
+    </select>
+</mapper>
