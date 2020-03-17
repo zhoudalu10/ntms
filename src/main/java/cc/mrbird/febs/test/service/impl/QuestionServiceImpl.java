@@ -14,11 +14,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements QuestionService {
 
     @Autowired
@@ -35,6 +38,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
+    @Transactional
     public void addQuestion(Question question) {
         question.setCreateTime(new Date());
         save(question);
@@ -53,6 +57,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
+    @Transactional
     public void updateQuestion(Question question) {
         updateById(question);
         question.getOptionList().forEach(option -> {
@@ -61,6 +66,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
+    @Transactional
     public void deleteQuestions(String[] ids) {
         List<String> list = Arrays.asList(ids);
         this.removeByIds(list);
@@ -97,6 +103,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
+    @Transactional
     public void deleteByCourseId(String courseId) {
         List<Question> questionList = this.findByCourseId(courseId);
         questionList.forEach(question -> {

@@ -19,10 +19,13 @@ import org.apache.commons.collections.SetUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class TestResultServiceImpl extends ServiceImpl<TestResultMapper, TestResult> implements TestResultService {
 
     @Autowired
@@ -32,6 +35,7 @@ public class TestResultServiceImpl extends ServiceImpl<TestResultMapper, TestRes
     private QuestionService questionService;
 
     @Override
+    @Transactional
     public void calculationResults(Map<String, Object> map) {
         TestResult testResult = new TestResult();
         testResult.setResultUserId(MapUtils.getLong(map, "resultUserId"));
@@ -81,6 +85,7 @@ public class TestResultServiceImpl extends ServiceImpl<TestResultMapper, TestRes
     }
 
     @Override
+    @Transactional
     public void insertZeroMarks(TestResult testResult) {
         testResult.setCreateTime(new Date());
         testResult.setResultScore(0);
@@ -95,6 +100,7 @@ public class TestResultServiceImpl extends ServiceImpl<TestResultMapper, TestRes
     }
 
     @Override
+    @Transactional
     public void deleteTestResults(String[] ids) {
         List<String> list = Arrays.asList(ids);
         this.removeByIds(list);

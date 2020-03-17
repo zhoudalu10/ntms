@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements PaperService {
 
     @Autowired
@@ -36,6 +39,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
+    @Transactional
     public void addPaper(Paper paper) {
         paper.setCreateTime(new Date());
         paper.setPaperState(Paper.STATE_PROGRESS);
@@ -48,11 +52,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
+    @Transactional
     public void updatePaper(Paper paper) {
         updateById(paper);
     }
 
     @Override
+    @Transactional
     public void deletePapers(String[] ids) {
         List<String> list = Arrays.asList(ids);
         this.removeByIds(list);
@@ -75,12 +81,14 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
+    @Transactional
     public void startTest(String[] ids) {
         List<String> list = Arrays.asList(ids);
         list.forEach(paperId -> this.baseMapper.startTest(paperId));
     }
 
     @Override
+    @Transactional
     public void endTest(String[] ids) {
         List<String> list = Arrays.asList(ids);
         list.forEach(paperId -> this.baseMapper.endTest(paperId));
@@ -106,6 +114,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
+    @Transactional
     public void deleteByCourseId(String courseId) {
         this.baseMapper.deleteByCourseId(courseId);
     }

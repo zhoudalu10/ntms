@@ -10,12 +10,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class AnnouncementServiceImpl extends ServiceImpl<AnnouncementMapper, Announcement> implements AnnouncementService {
 
     @Override
@@ -26,6 +29,7 @@ public class AnnouncementServiceImpl extends ServiceImpl<AnnouncementMapper, Ann
     }
 
     @Override
+    @Transactional
     public void addAnnouncement(Announcement announcement) {
         announcement.setCreateTime(new Date());
         save(announcement);
@@ -37,11 +41,13 @@ public class AnnouncementServiceImpl extends ServiceImpl<AnnouncementMapper, Ann
     }
 
     @Override
+    @Transactional
     public void updateAnnouncement(Announcement announcement) {
         updateById(announcement);
     }
 
     @Override
+    @Transactional
     public void deleteAnnouncements(String[] ids) {
         List<String> list = Arrays.asList(ids);
         this.removeByIds(list);

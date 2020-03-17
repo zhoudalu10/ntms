@@ -10,11 +10,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ClassroomServiceImpl extends ServiceImpl<ClassroomMapper, Classroom> implements ClassroomService {
 
     @Override
@@ -25,16 +28,19 @@ public class ClassroomServiceImpl extends ServiceImpl<ClassroomMapper, Classroom
     }
 
     @Override
+    @Transactional
     public void addClassroom(Classroom classroom) {
         save(classroom);
     }
 
     @Override
+    @Transactional
     public void updateClassroom(Classroom classroom) {
         updateById(classroom);
     }
 
     @Override
+    @Transactional
     public void deleteClassrooms(String[] ids) {
         List<String> list = Arrays.asList(ids);
         this.removeByIds(list);

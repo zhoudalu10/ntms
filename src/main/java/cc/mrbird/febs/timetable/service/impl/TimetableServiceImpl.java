@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class TimetableServiceImpl extends ServiceImpl<TimetableMapper, Timetable> implements TimetableService {
 
     @Override
@@ -33,6 +36,7 @@ public class TimetableServiceImpl extends ServiceImpl<TimetableMapper, Timetable
     }
 
     @Override
+    @Transactional
     public TimetableAddState addTimetable(Timetable timetable) {
         timetable.setTimetableIndexList(new ArrayList<>(Arrays.asList(timetable.getTimetableIndex().split(StringPool.COMMA))));
 
@@ -66,6 +70,7 @@ public class TimetableServiceImpl extends ServiceImpl<TimetableMapper, Timetable
     }
 
     @Override
+    @Transactional
     public void deleteTimetables(String[] ids) {
         List<String> list = Arrays.asList(ids);
         removeByIds(list);
@@ -82,6 +87,7 @@ public class TimetableServiceImpl extends ServiceImpl<TimetableMapper, Timetable
     }
 
     @Override
+    @Transactional
     public void deleteByCourseId(String courseId) {
         this.baseMapper.deleteByCourseId(courseId);
     }
