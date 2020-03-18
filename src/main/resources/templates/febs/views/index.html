@@ -425,7 +425,7 @@
                     const announcement = $view.find('#announcement-' + i);
                     announcement.html(announcements[i].announcementTitle).on('click', function () {
                         febs.modal.view('公告信息', 'announcement/detail/' + announcements[i].announcementId, {
-                            area: $(window).width() <= 750 ? '95%' : '660px'
+                            area: $(window).width() <= 750 ? '95%' : ['40%', '70%']
                         });
                     });
                     $view.find('#announcement-time-' + i).html(announcements[i].createTime);

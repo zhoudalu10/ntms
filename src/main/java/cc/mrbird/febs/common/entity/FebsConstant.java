@@ -35,6 +35,4 @@ public class FebsConstant {
     public static final Long COURSE_TEACHER_ROLE_ID = 83L;
 
     public static final Long CLASS_DEPT_ID = 11L;
-
-    public static final String NOTE_FILE_UPLOAD_PATH = FebsConstant.class.getResource("/").getFile() + "upload/";
 }

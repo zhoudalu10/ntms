@@ -165,7 +165,7 @@
                 layEvent = obj.event;
             if (layEvent === 'detail') {
                 febs.modal.view('公告信息', 'announcement/detail/' + data.announcementId, {
-                    area: $(window).width() <= 750 ? '95%' : '660px'
+                    area: $(window).width() <= 750 ? '95%' : ['40%', '70%']
                 });
             }
             if (layEvent === 'del') {

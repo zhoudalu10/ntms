@@ -1,6 +1,5 @@
 package cc.mrbird.febs.note.service.impl;
 
-import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.note.entity.NoteFile;
 import cc.mrbird.febs.note.mapper.NoteFileMapper;
@@ -8,6 +7,8 @@ import cc.mrbird.febs.note.service.NoteFileService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -15,14 +16,17 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class NoteFileServiceImpl extends ServiceImpl<NoteFileMapper, NoteFile> implements NoteFileService {
 
     @Override
+    @Transactional
     public void addNoteFile(NoteFile noteFile) {
         save(noteFile);
     }
 
     @Override
+    @Transactional
     public NoteFile uploadFiles(MultipartFile file) {
         NoteFile noteFile = new NoteFile();
         if (file.isEmpty()) {
@@ -42,7 +46,8 @@ public class NoteFileServiceImpl extends ServiceImpl<NoteFileMapper, NoteFile> i
         int size = (int) file.getSize();
         log.info(fileName + "-->" + size);
         StringBuffer filePathName = new StringBuffer();
-        filePathName.append(FebsConstant.NOTE_FILE_UPLOAD_PATH);
+        filePathName.append(FebsUtil.getJarFilePath());
+        filePathName.append("/upload/");
         filePathName.append(fileName);
         filePathName.append("_");
         filePathName.append(FebsUtil.getCurrentUser().getUserId());
@@ -57,6 +62,7 @@ public class NoteFileServiceImpl extends ServiceImpl<NoteFileMapper, NoteFile> i
         try {
             file.transferTo(dest);
         } catch (Exception e) {
+            log.error(e.getMessage());
             noteFile.setNoteFileUploadState(NoteFile.FILE_SAVE_ERROR);
             return noteFile;
         }
@@ -79,6 +85,7 @@ public class NoteFileServiceImpl extends ServiceImpl<NoteFileMapper, NoteFile> i
     }
 
     @Override
+    @Transactional
     public void deleteByNoteId(String noteId) {
         this.baseMapper.deleteByNoteId(noteId);
     }

@@ -6,22 +6,27 @@
 
     #febs-announcement-detail .announcement-info div {
         margin: 10px 15px;
-        max-width: 19rem;
+    }
+
+    #febs-announcement-detail {
+        text-align: center;
+    }
+
+    #announcement-info-wrapper {
+        width: 80%;
     }
 </style>
 <div class="layui-fluid" id="febs-announcement-detail" lay-title="公告信息">
     <div id="announcement-info-wrapper">
         <div class="announcement-info">
-            <div><span class="layui-icon layui-icon-rate"></span> 公告标题：
+            <div style="font-size: 18px">
                 [[${announcement.announcementTitle}]]
             </div>
-            <div><span class="layui-icon layui-icon-username"></span> 创建人：
-                [[${announcement.createUserName}]]
+            <hr>
+            <div>[[${announcement.createUserName}]] | [[${createTime}]]
             </div>
-            <div><span class="layui-icon layui-icon-next"></span> 创建时间：
-                [[${createTime}]]
-            </div>
-            <div><span class="layui-icon layui-icon-align-left"></span> 公告内容：
+            <hr>
+            <div style="text-align: left">
                 [[${announcement.announcementContent}]]
             </div>
         </div>

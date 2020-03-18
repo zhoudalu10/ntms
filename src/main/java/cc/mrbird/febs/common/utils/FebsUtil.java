@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.boot.system.ApplicationHome;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -103,5 +105,11 @@ public class FebsUtil {
 
     public static String view(String viewName) {
         return FebsConstant.VIEW_PREFIX + viewName;
+    }
+
+    public static String getJarFilePath() {
+        ApplicationHome home = new ApplicationHome(FebsUtil.class);
+        File jarFile = home.getSource();
+        return jarFile.getParentFile().toString();
     }
 }

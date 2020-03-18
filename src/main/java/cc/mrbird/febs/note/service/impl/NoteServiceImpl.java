@@ -14,6 +14,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -22,6 +24,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements NoteService {
 
     @Autowired
@@ -45,6 +48,7 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
+    @Transactional
     public void addNote(Note note) {
         note.setCreateTime(new Date());
         save(note);
@@ -55,11 +59,13 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
     }
 
     @Override
+    @Transactional
     public void updateNote(Note note) {
         updateById(note);
     }
 
     @Override
+    @Transactional
     public void deleteNotes(String[] ids) {
         List<String> list = Arrays.asList(ids);
         this.removeByIds(list);
