@@ -6,13 +6,23 @@ import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.note.mapper.NoteMapper;
 import cc.mrbird.febs.note.service.NoteService;
+import cc.mrbird.febs.note.service.NoteToNoteFileService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
+
+@Slf4j
 @Service
 public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements NoteService {
+
+    @Autowired
+    private NoteToNoteFileService noteToNoteFileService;
 
     @Override
     public IPage<Note> findNoteList(Note note, QueryRequest request) {
@@ -28,7 +38,12 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
 
     @Override
     public void addNote(Note note) {
-
+        note.setCreateTime(new Date());
+        save(note);
+        note.getNoteToNoteFileList().forEach(noteToNoteFile -> {
+            noteToNoteFile.setNoteId(note.getNoteId());
+            noteToNoteFileService.addNoteToNoteFile(noteToNoteFile);
+        });
     }
 
     @Override

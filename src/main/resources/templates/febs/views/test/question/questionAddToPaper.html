@@ -42,8 +42,8 @@
             formSelects = layui.formSelects,
             form = layui.form,
             $view = $('#question-add-to-paper'),
-            currentUserId = currentUser.userId;
-        validate = layui.validate;
+            currentUserId = currentUser.userId,
+            validate = layui.validate;
         if (questionIds.length === 0) {
             febs.alert.warn('请选择试题');
             return false;

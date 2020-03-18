@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @TableName("T_NOTE")
@@ -72,5 +73,9 @@ public class Note implements Serializable {
     @TableField(exist = false)
     private String noteStudentClassId;
 
+    @TableField(exist = false)
+    private List<NoteToNoteFile> noteToNoteFileList;
 
+    @TableField(exist = false)
+    private List<NoteFile> noteFileList;
 }

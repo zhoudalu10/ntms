@@ -99,7 +99,7 @@
     var noteIsBindFile = {
     1: {title: '有', color: 'green'},
     0: {title: '无', color: 'volcano'}
-    }[d.noteState];
+    }[d.noteIsBindFile];
     }}
     <span class="layui-badge febs-tag-{{noteIsBindFile.color}}">{{ noteIsBindFile.title }}</span>
 </script>
@@ -150,7 +150,7 @@
                 if (name === 'add') {
                     febs.modal.open('新增笔记', 'note/add', {
                         btn: ['提交', '重置'],
-                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        area: $(window).width() <= 750 ? ['95%', '95%'] : ['50%', '90%'],
                         yes: function (index, layero) {
                             $('#note-add').find('#submit').trigger('click');
                         },

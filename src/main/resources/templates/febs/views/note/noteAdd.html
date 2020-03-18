@@ -1,0 +1,178 @@
+<style>
+    #note-add {
+        padding: 20px 25px 25px 0;
+    }
+
+    #note-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+</style>
+<div class="layui-fluid" id="note-add">
+    <form class="layui-form" action="" lay-filter="note-add-form">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">课程：</label>
+            <div class="layui-input-block">
+                <select name="noteCourseId"
+                        lay-verify="required"
+                        xm-select-direction="down"
+                        xm-select="note-add-course"
+                        xm-select-skin="default"
+                        xm-select-radio
+                        xm-select-search
+                        xm-select-search-type="dl">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">笔记标题：</label>
+            <div class="layui-input-block">
+                <input type="text" name="noteTitle" maxlength="30"
+                       lay-verify="range|required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">笔记内容：</label>
+            <div class="layui-input-block">
+                <textarea name="noteContent" maxlength="1000" class="layui-textarea"
+                          lay-verify="range" style="height: 500px"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">笔记状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="noteState" value="1" title="展示" checked="">
+                <input type="radio" name="noteState" value="0" title="隐藏">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">附件：</label>
+            <div class="layui-input-block">
+                <div class="layui-upload-drag" id="note-add-upload">
+                    <i class="layui-icon"></i>
+                    <p>点击上传，或将文件拖拽到此处</p>
+                    <div class="layui-hide" id="uploadDemoView">
+                        <hr>
+                        <img data-th-src="@{febs/images/filedemo.jpeg}" alt="" style="max-width: 196px">
+                        <hr>
+                        <img alt="" style="max-width: 196px">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="note-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'upload'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            $view = $('#note-add'),
+            currentUserId = currentUser.userId,
+            validate = layui.validate,
+            upload = layui.upload,
+            fileList = [];
+
+
+        form.verify(validate);
+        form.render();
+        formSelects.render();
+
+        initCourseSelect();
+        initUpload();
+
+        $view.find('#reset').on('click', function () {
+            fileList = [];
+            $view.find('#uploadDemoView').addClass('layui-hide');
+        });
+
+        form.on('submit(note-add-form-submit)', function (data) {
+            data.field.createUserId = currentUser.userId + '';
+            data.field.noteToNoteFileList = fileList;
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json;charset=UTF-8',
+                url: ctx + 'note/add',
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 200) {
+                        layer.closeAll();
+                        febs.alert.success('新增笔记成功！');
+                        $('#febs-note').find('#query').click();
+                    }
+                }
+            });
+            return false;
+        });
+
+        function initCourseSelect() {
+            var courseTeacherId = "";
+            if (!noteViewNoCourseRestrictions) {
+                courseTeacherId = currentUserId;
+            }
+
+            formSelects.data('note-add-course', 'server', {
+                type: 'get',
+                url: ctx + 'course/listAll',
+                data: {
+                    courseState: '1',
+                    courseTeacherId: courseTeacherId
+                },
+                response: {
+                    statusCode: 200
+                },
+                beforeSuccess: function (id, url, searchVal, result) {
+                    var data = result.data;
+                    var tranData = [];
+                    for (var i = 0; i < data.length; i++) {
+                        tranData.push({
+                            name: data[i].courseName,
+                            value: data[i].courseId,
+                            courseGrade: data[i].courseGrade
+                        })
+                    }
+                    result.data = tranData;
+                    return result;
+                },
+                error: function (id, url, searchVal, err) {
+                    console.error(err);
+                    febs.alert.error('获取课程列表失败');
+                }
+            });
+            formSelects.render('note-add-course', {
+                template: function (name, value, selected, disabled) {
+                    return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">大' +
+                        (value.courseGrade == 1 ? '一' : (value.courseGrade == 2 ? '二' : (value.courseGrade == 3 ? '三' : '四'))) + '</span>';
+                }
+            });
+        }
+
+        function initUpload() {
+            upload.render({
+                elem: '#note-add-upload',
+                url: ctx + 'note/upload',
+                size: 5120,
+                accept: 'file',
+                done: function (res, index) {
+                    if (res.code === 200) {
+                        $view.find('#uploadDemoView').removeClass('layui-hide').find('img').attr('alt', res.data.noteFileName);
+                        fileList = [];
+                        fileList.push({
+                            fileId: res.data.fileId
+                        });
+                    }
+                }
+            });
+        }
+    });
+</script>

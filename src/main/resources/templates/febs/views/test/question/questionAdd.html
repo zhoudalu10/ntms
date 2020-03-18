@@ -133,15 +133,15 @@
             $questionOptionContent1 = $option.find('input[name="questionOptionContent-1"]'),
             $questionOptionContent2 = $option.find('input[name="questionOptionContent-2"]'),
             $btnGroup = $option.find('.layui-btn-group'),
-            currentUserId = currentUser.userId;
+            currentUserId = currentUser.userId,
+            validate = layui.validate;
+
         var optionKey = [
             {name: '选项1', value: 1},
             {name: '选项2', value: 2},
             {name: '选项3', value: 3},
             {name: '选项4', value: 4}
         ];
-        validate = layui.validate;
-
         form.verify(validate);
         form.render();
         formSelects.render();

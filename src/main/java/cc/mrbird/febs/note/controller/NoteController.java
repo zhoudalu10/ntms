@@ -6,6 +6,8 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.note.entity.NoteFile;
+import cc.mrbird.febs.note.service.NoteFileService;
 import cc.mrbird.febs.note.service.NoteService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -32,6 +35,9 @@ public class NoteController extends BaseController {
 
     @Autowired
     private NoteService noteService;
+
+    @Autowired
+    private NoteFileService noteFileService;
 
     @RequestMapping("list")
     @RequiresPermissions("note:view")
@@ -73,5 +79,25 @@ public class NoteController extends BaseController {
     public void export(QueryRequest queryRequest, Note note, HttpServletResponse response) {
         List<Note> notes = noteService.findNoteList(note, queryRequest).getRecords();
         ExcelKit.$Export(Note.class, response).downXlsx(notes, false);
+    }
+
+    @RequestMapping("upload")
+    @RequiresPermissions("note:add")
+    @ControllerEndpoint(operation = "上传笔记附件", exceptionMessage = "上传笔记附件失败")
+    public FebsResponse uploadFiles(MultipartFile file) {
+        NoteFile noteFile = noteFileService.uploadFiles(file);
+        switch (noteFile.getNoteFileUploadState()) {
+            case NoteFile.FILE_IS_EMPTY:
+                return new FebsResponse().fail().message("文件不能为空");
+            case NoteFile.FILE_NAME_IS_EMPTY:
+                return new FebsResponse().fail().message("文件名不能为空");
+            case NoteFile.FILE_SAVE_ERROR:
+                return new FebsResponse().fail().message("文件保存失败");
+            case NoteFile.SUCCESS:
+                return new FebsResponse().success().data(noteFile);
+            default:
+                return new FebsResponse().fail().message("未知错误");
+
+        }
     }
 }
