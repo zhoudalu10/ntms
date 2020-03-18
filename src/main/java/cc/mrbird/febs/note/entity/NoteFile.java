@@ -2,6 +2,7 @@ package cc.mrbird.febs.note.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+
 import java.io.Serializable;
 
 @Data
@@ -18,6 +19,8 @@ public class NoteFile implements Serializable {
     public static final String FILE_NAME_IS_EMPTY = "2";
 
     public static final String FILE_SAVE_ERROR = "3";
+
+    public static final String FILE_NAME_TOO_LONG = "4";
 
     @TableId(value = "FILE_ID", type = IdType.INPUT)
     private Long fileId;

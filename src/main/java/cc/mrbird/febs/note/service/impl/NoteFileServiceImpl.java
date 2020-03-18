@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -24,13 +25,16 @@ public class NoteFileServiceImpl extends ServiceImpl<NoteFileMapper, NoteFile> i
     @Override
     public NoteFile uploadFiles(MultipartFile file) {
         NoteFile noteFile = new NoteFile();
-
         if (file.isEmpty()) {
             noteFile.setNoteFileUploadState(NoteFile.FILE_IS_EMPTY);
             return noteFile;
         }
         if (file.getOriginalFilename() == null) {
             noteFile.setNoteFileUploadState(NoteFile.FILE_NAME_IS_EMPTY);
+            return noteFile;
+        }
+        if (file.getOriginalFilename().length() > 20) {
+            noteFile.setNoteFileUploadState(NoteFile.FILE_NAME_TOO_LONG);
             return noteFile;
         }
         String[] originalFilename = file.getOriginalFilename().split("\\.");
@@ -62,5 +66,20 @@ public class NoteFileServiceImpl extends ServiceImpl<NoteFileMapper, NoteFile> i
         addNoteFile(noteFile);
         noteFile.setNoteFileUploadState(NoteFile.SUCCESS);
         return noteFile;
+    }
+
+    @Override
+    public List<NoteFile> findNoteFileListByNoteId(String noteId) {
+        return this.baseMapper.findNoteFileListByNoteId(noteId);
+    }
+
+    @Override
+    public String findNoteFilePathById(String fileId) {
+        return this.baseMapper.findNoteFilePathById(fileId);
+    }
+
+    @Override
+    public void deleteByNoteId(String noteId) {
+        this.baseMapper.deleteByNoteId(noteId);
     }
 }

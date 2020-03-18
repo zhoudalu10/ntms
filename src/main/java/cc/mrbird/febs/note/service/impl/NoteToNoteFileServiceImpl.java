@@ -14,4 +14,9 @@ public class NoteToNoteFileServiceImpl extends ServiceImpl<NoteToNoteFileMapper,
     public void addNoteToNoteFile(NoteToNoteFile noteToNoteFile) {
         save(noteToNoteFile);
     }
+
+    @Override
+    public void deleteByNoteId(String noteId) {
+        this.baseMapper.deleteByNoteId(noteId);
+    }
 }

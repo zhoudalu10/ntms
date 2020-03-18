@@ -52,4 +52,21 @@
             WHERE noteIsBindFile = #{note.noteIsBindFile}
         </if>
     </select>
+
+    <select id="findById" parameterType="String" resultType="note">
+        SELECT N.NOTE_ID noteId,
+        N.NOTE_COURSE_ID noteCourseId,
+        C.COURSE_NAME noteCourseName,
+        N.NOTE_TITLE noteTitle,
+        N.NOTE_CONTENT noteContent,
+        N.CREATE_USER_ID createUserId,
+        U.USERNAME createUserName,
+        N.CREATE_TIME createTime,
+        N.NOTE_STATE noteState,
+        DECODE((SELECT COUNT(*) FROM T_NOTE_TO_NOTE_FILE NTNF WHERE N.NOTE_ID = NTNF.NOTE_ID), 0, 0, 1) noteIsBindFile
+        FROM T_NOTE N
+        LEFT JOIN T_COURSE C ON N.NOTE_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_USER U ON N.CREATE_USER_ID = U.USER_ID
+        WHERE N.NOTE_ID = #{noteId}
+    </select>
 </mapper>

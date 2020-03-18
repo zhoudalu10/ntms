@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class NoteController extends BaseController {
     @RequestMapping("update")
     @RequiresPermissions("note:update")
     @ControllerEndpoint(operation = "修改笔记", exceptionMessage = "修改笔记失败")
-    public FebsResponse updateNote(@RequestBody @Valid Note note) {
+    public FebsResponse updateNote(@Valid Note note) {
         if (note.getNoteId() == null)
             throw new FebsException("笔记ID为空");
         noteService.updateNote(note);
@@ -93,11 +94,56 @@ public class NoteController extends BaseController {
                 return new FebsResponse().fail().message("文件名不能为空");
             case NoteFile.FILE_SAVE_ERROR:
                 return new FebsResponse().fail().message("文件保存失败");
+            case NoteFile.FILE_NAME_TOO_LONG:
+                return new FebsResponse().fail().message("文件名过长");
             case NoteFile.SUCCESS:
                 return new FebsResponse().success().data(noteFile);
             default:
                 return new FebsResponse().fail().message("未知错误");
 
+        }
+    }
+
+    @RequestMapping("download/{fileId}")
+    @RequiresPermissions("note:view")
+    @ControllerEndpoint(operation = "下载笔记附件", exceptionMessage = "下载笔记附件失败")
+    public void downloadFiles(@NotBlank(message = "{required}") @PathVariable String fileId, HttpServletResponse response) {
+        String filePath = noteFileService.findNoteFilePathById(fileId);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            return;
+        }
+        response.setContentType("application/force-download");
+        response.addHeader("Content-Disposition", "attachment;fileName=" + file.getName());
+        byte[] buffer = new byte[1024];
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        try {
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            OutputStream os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

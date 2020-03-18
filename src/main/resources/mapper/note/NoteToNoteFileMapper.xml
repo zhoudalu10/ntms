@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.note.mapper.NoteToNoteFileMapper">
+    <delete id="deleteByNoteId" parameterType="String">
+DELETE
+FROM T_NOTE_TO_NOTE_FILE TNTNF
+WHERE TNTNF.NOTE_ID = #{noteId}
+    </delete>
+</mapper>

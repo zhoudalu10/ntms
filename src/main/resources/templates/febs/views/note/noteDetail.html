@@ -1,0 +1,52 @@
+<style>
+    #febs-note-detail #note-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-note-detail .note-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+</style>
+<div class="layui-fluid" id="febs-note-detail" lay-title="笔记信息">
+    <div id="note-info-wrapper">
+        <div class="note-info">
+            <div><span class="layui-icon layui-icon-rate"></span> 课程：
+                [[${note.noteCourseName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-survey"></span> 笔记标题：
+                [[${note.noteTitle}]]
+            </div>
+            <div><span class="layui-icon layui-icon-align-left"></span> 笔记内容：
+                <p>[[${note.noteContent}]]</p>
+            </div>
+            <div><span class="layui-icon layui-icon-username"></span> 创建人：
+                [[${note.createUserName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-next"></span> 创建时间：
+                [[${createTime}]]
+            </div>
+
+        </div>
+    </div>
+</div>
+<script data-th-inline="javascript">
+    layui.use(['febs'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            $noteDetail = $('#febs-note-detail'),
+            note = [[${note}]],
+            fileList = note.noteFileList;
+        for (var i = 0; i < fileList.length; i++) {
+            $noteDetail.find('.note-info').append('<div><span class="layui-icon layui-icon-align-left"></span>\n' +
+                '                附件：\n' +
+                '                <a href="" fileId="' + fileList[i].fileId + '" class="file-a" onclick="return false;">' + fileList[i].noteFileName + '</a>\n' +
+                '            </div>');
+        }
+        $('.file-a').on('click', function () {
+            var fileId = $(this).attr('fileId');
+            febs.download(ctx + 'note/download/' + fileId, null, $(this).html());
+        })
+    })
+</script>

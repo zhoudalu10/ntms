@@ -5,4 +5,6 @@ import cc.mrbird.febs.note.entity.NoteToNoteFile;
 public interface NoteToNoteFileService {
 
     void addNoteToNoteFile(NoteToNoteFile noteToNoteFile);
+
+    void deleteByNoteId(String noteId);
 }

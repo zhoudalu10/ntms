@@ -1,0 +1,90 @@
+<style>
+    #note-update {
+        padding: 20px 25px 25px 0;
+    }
+</style>
+<div class="layui-fluid" id="note-update">
+    <form class="layui-form" action="" lay-filter="note-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">笔记id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="noteId" data-th-value="${note.noteId}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">课程：</label>
+            <div class="layui-input-block">
+                <input type="text" name="noteCourseName"
+                       data-th-id="${note.noteCourseName}"
+                       autocomplete="off" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">笔记标题：</label>
+            <div class="layui-input-block">
+                <input type="text" name="noteTitle" maxlength="30"
+                       lay-verify="range|required"
+                       data-th-id="${note.noteTitle}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">笔记内容：</label>
+            <div class="layui-input-block">
+                <textarea name="noteContent" maxlength="1000" class="layui-textarea"
+                          data-th-id="${note.noteContent}"
+                          lay-verify="range" style="height: 500px"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">笔记状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="noteState" value="1" title="展示">
+                <input type="radio" name="noteState" value="0" title="隐藏">
+            </div>
+        </div>
+
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="note-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'validate'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            note = [[${note}]],
+            $view = $('#note-update'),
+            validate = layui.validate;
+        form.verify(validate);
+        form.render();
+
+        initNoteValue();
+
+        function initNoteValue() {
+            form.val("note-update-form", {
+                "noteId": note.noteId,
+                "noteCourseName": note.noteCourseName,
+                "noteTitle": note.noteTitle,
+                "noteContent": note.noteContent,
+                "noteState": note.noteState
+            });
+        }
+
+        form.on('submit(note-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, note)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'note/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('笔记修改成功');
+                $('#febs-note').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

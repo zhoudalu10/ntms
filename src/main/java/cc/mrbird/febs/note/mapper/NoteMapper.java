@@ -9,4 +9,6 @@ import org.apache.ibatis.annotations.Param;
 public interface NoteMapper extends BaseMapper<Note> {
 
     IPage<Note> findNoteList(Page<Note> page, @Param("note") Note note);
+
+    Note findById(@Param("noteId") String noteId);
 }

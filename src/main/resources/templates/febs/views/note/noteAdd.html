@@ -9,7 +9,6 @@
 </style>
 <div class="layui-fluid" id="note-add">
     <form class="layui-form" action="" lay-filter="note-add-form">
-
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">课程：</label>
             <div class="layui-input-block">
@@ -170,6 +169,8 @@
                         fileList.push({
                             fileId: res.data.fileId
                         });
+                    } else {
+                        febs.alert.error(res.message);
                     }
                 }
             });

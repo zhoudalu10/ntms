@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.note.mapper.NoteFileMapper">
+
+    <select id="findNoteFileListByNoteId" parameterType="String" resultType="noteFile">
+        SELECT NF.FILE_ID fileId,
+       NF.FILE_NAME noteFileName,
+       NF.FILE_PATH filePath
+FROM T_NOTE_FILE NF
+         JOIN T_NOTE_TO_NOTE_FILE TNTNF ON NF.FILE_ID = TNTNF.FILE_ID
+WHERE TNTNF.NOTE_ID = #{noteId}
+    </select>
+    <select id="findNoteFilePathById" resultType="String" parameterType="String">
+        SELECT FILE_PATH FROM T_NOTE_FILE WHERE FILE_ID = #{fileId}
+    </select>
+    <delete id="deleteByNoteId" parameterType="String">
+DELETE
+FROM T_NOTE_FILE TF
+WHERE TF.FILE_ID IN (SELECT FILE_ID FROM T_NOTE_TO_NOTE_FILE WHERE NOTE_ID = #{noteId})
+    </delete>
+</mapper>

@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.note.mapper.NoteMapper;
+import cc.mrbird.febs.note.service.NoteFileService;
 import cc.mrbird.febs.note.service.NoteService;
 import cc.mrbird.febs.note.service.NoteToNoteFileService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -14,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 
 @Slf4j
@@ -23,6 +26,9 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
 
     @Autowired
     private NoteToNoteFileService noteToNoteFileService;
+
+    @Autowired
+    private NoteFileService noteFileService;
 
     @Override
     public IPage<Note> findNoteList(Note note, QueryRequest request) {
@@ -33,7 +39,9 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
 
     @Override
     public Note findById(String noteId) {
-        return null;
+        Note note = this.baseMapper.findById(noteId);
+        note.setNoteFileList(noteFileService.findNoteFileListByNoteId(noteId));
+        return note;
     }
 
     @Override
@@ -48,11 +56,16 @@ public class NoteServiceImpl extends ServiceImpl<NoteMapper, Note> implements No
 
     @Override
     public void updateNote(Note note) {
-
+        updateById(note);
     }
 
     @Override
     public void deleteNotes(String[] ids) {
-
+        List<String> list = Arrays.asList(ids);
+        this.removeByIds(list);
+        list.forEach(noteId -> {
+            noteFileService.deleteByNoteId(noteId);
+            noteToNoteFileService.deleteByNoteId(noteId);
+        });
     }
 }
