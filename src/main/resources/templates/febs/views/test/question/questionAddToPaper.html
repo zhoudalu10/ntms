@@ -68,7 +68,7 @@
 
         function initPaperSelect() {
             var createUserId = "";
-            if (!hasViewAllPerm) {
+            if (!testViewAllPerm) {
                 createUserId = currentUserId;
             }
             formSelects.data('question-add-to-paper', 'server', {

@@ -99,10 +99,10 @@
     </div>
 </div>
 <script type="text/javascript">
-    questionViewAllPerm = false;
+    testViewAllPerm = false;
 </script>
 <script type="text/javascript" shiro:hasPermission="test:viewAll">
-    questionViewAllPerm = true;
+    testViewAllPerm = true;
 </script>
 <script type="text/html" id="question-type">
     {{#
@@ -341,7 +341,7 @@
 
         function initTable() {
             var createUserId = "";
-            if (!questionViewAllPerm) {
+            if (!testViewAllPerm) {
                 createUserId = currentUserId;
             }
             tableIns = febs.table.init({
@@ -368,7 +368,7 @@
         function getQueryParams() {
             var createUserId = "";
             var createUserName = '';
-            if (!questionViewAllPerm) {
+            if (!testViewAllPerm) {
                 createUserId = currentUserId;
             } else {
                 createUserName = $searchForm.find('input[name="createUserName"]').val().trim();
@@ -399,7 +399,7 @@
 
         function initPaperSelect() {
             var createUserId = "";
-            if (!questionViewAllPerm) {
+            if (!testViewAllPerm) {
                 createUserId = currentUserId;
             }
             formSelects.data('question-select-paper', 'server', {
