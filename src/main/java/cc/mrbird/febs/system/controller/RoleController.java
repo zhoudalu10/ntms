@@ -72,4 +72,18 @@ public class RoleController extends BaseController {
         ExcelKit.$Export(Role.class, response).downXlsx(roles, false);
     }
 
+    @GetMapping("setDefault/{roleId}")
+    @RequiresPermissions("role:default")
+    @ControllerEndpoint(operation = "设置默认角色", exceptionMessage = "设置默认角色失败")
+    public FebsResponse setDefaultRole(@NotBlank(message = "{required}") @PathVariable String roleId) {
+        this.roleService.setDefaultRole(roleId);
+        return new FebsResponse().success();
+    }
+
+    @GetMapping("getDefault")
+    @RequiresPermissions("role:view")
+    public FebsResponse getDefaultRole() {
+        return new FebsResponse().success().data(this.roleService.getDefaultRole());
+    }
+
 }

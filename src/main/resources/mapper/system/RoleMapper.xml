@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.system.mapper.RoleMapper">
     <resultMap id="roleMap" type="cc.mrbird.febs.system.entity.Role">
-        <result column="ROLE_ID" jdbcType="DECIMAL" property="roleId" />
-        <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
-        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
-        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
-        <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+        <result column="ROLE_ID" jdbcType="DECIMAL" property="roleId"/>
+        <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName"/>
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime"/>
     </resultMap>
 
     <select id="findUserRole" resultMap="roleMap">
@@ -21,11 +21,11 @@
     </select>
 
     <select id="findRolePage" parameterType="role" resultType="role">
-        SELECT r.role_id                      roleId,
-        r.role_name                    roleName,
+        SELECT r.role_id roleId,
+        r.role_name roleName,
         r.remark,
-        r.create_time                  createTime,
-        r.modify_time                  modifyTime,
+        r.create_time createTime,
+        r.modify_time modifyTime,
         to_char(wm_concat(rm.menu_id)) menuIds
         FROM t_role r
         LEFT JOIN t_role_menu rm ON (r.role_id = rm.role_id)
@@ -34,5 +34,24 @@
             AND r.role_name like #{role.roleName}
         </if>
         GROUP BY r.role_id, r.role_name, r.remark, r.create_time, r.modify_time
+    </select>
+
+    <update id="setDefaultRole" parameterType="String">
+        UPDATE T_ROLE_DEFAULT
+SET ROLE_DEFAULT_ID = #{roleId}
+WHERE 1 = 1
+    </update>
+
+    <select id="getDefaultRole" resultType="String">
+        SELECT R.ROLE_NAME
+        FROM T_ROLE R
+         JOIN T_ROLE_DEFAULT RD ON RD.ROLE_DEFAULT_ID = R.ROLE_ID
+        WHERE ROWNUM = 1
+    </select>
+
+    <select id="getDefaultRoleId" resultType="Long">
+        SELECT RD.ROLE_DEFAULT_ID
+        FROM T_ROLE_DEFAULT RD
+        WHERE ROWNUM = 1
     </select>
 </mapper>

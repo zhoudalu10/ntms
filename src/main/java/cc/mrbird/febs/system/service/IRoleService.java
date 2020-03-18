@@ -64,4 +64,10 @@ public interface IRoleService extends IService<Role> {
      * @param roleIds 待删除角色的 id
      */
     void deleteRoles(String roleIds);
+
+    void setDefaultRole(String roleId);
+
+    String getDefaultRole();
+
+    Long getDefaultRoleId();
 }

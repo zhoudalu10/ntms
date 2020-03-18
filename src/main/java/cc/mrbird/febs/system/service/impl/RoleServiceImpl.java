@@ -93,6 +93,21 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         this.userRoleService.deleteUserRolesByRoleId(list);
     }
 
+    @Override
+    public void setDefaultRole(String roleId) {
+        this.baseMapper.setDefaultRole(roleId);
+    }
+
+    @Override
+    public String getDefaultRole() {
+        return this.baseMapper.getDefaultRole();
+    }
+
+    @Override
+    public Long getDefaultRoleId() {
+        return this.baseMapper.getDefaultRoleId();
+    }
+
     private void saveRoleMenus(Role role) {
         if (StringUtils.isNotBlank(role.getMenuIds())) {
             String[] menuIds = role.getMenuIds().split(StringPool.COMMA);

@@ -10,6 +10,7 @@ import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.system.entity.User;
 import cc.mrbird.febs.system.entity.UserRole;
 import cc.mrbird.febs.system.mapper.UserMapper;
+import cc.mrbird.febs.system.service.IRoleService;
 import cc.mrbird.febs.system.service.IUserRoleService;
 import cc.mrbird.febs.system.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -35,8 +36,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private IUserRoleService userRoleService;
+
     @Autowired
     private ShiroRealm shiroRealm;
+
+    @Autowired
+    private IRoleService roleService;
 
     @Override
     public User findByName(String username) {
@@ -138,7 +143,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         UserRole ur = new UserRole();
         ur.setUserId(user.getUserId());
-        ur.setRoleId(FebsConstant.REGISTER_ROLE_ID);
+        ur.setRoleId(roleService.getDefaultRoleId());
         this.userRoleService.save(ur);
     }
 

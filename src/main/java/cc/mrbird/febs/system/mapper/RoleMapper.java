@@ -26,4 +26,10 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return IPage<User>
      */
     IPage<Role> findRolePage(Page page, @Param("role") Role role);
+
+    void setDefaultRole(@Param("roleId") String roleId);
+
+    String getDefaultRole();
+
+    Long getDefaultRoleId();
 }

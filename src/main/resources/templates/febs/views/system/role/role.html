@@ -13,6 +13,13 @@
                                             <input type="text" name="roleName" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">默认角色</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="roleDefault" autocomplete="off" class="layui-input"
+                                                   disabled>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="layui-col-md3 layui-col-sm12 layui-col-xs12 table-action-area">
@@ -161,6 +168,21 @@
                     params.pageNum = $view.find(".layui-laypage-em").next().html();
                     febs.download(ctx + 'role/excel', params, '角色信息表.xlsx');
                 }
+                if (name === 'default') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要设置的角色');
+                    } else if (checkStatus.data.length > 1) {
+                        febs.alert.warn('只能设置一个默认角色');
+                    } else {
+                        febs.modal.confirm('设置默认角色', '确定要将该角色设置为默认角色？', function () {
+                            var roleIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                roleIds.push(item.roleId);
+                            });
+                            setDefaultRole(roleIds[0]);
+                        });
+                    }
+                }
             },
             options: [{
                 name: 'add',
@@ -170,6 +192,10 @@
                 name: 'delete',
                 title: '删除角色',
                 perms: 'role:delete'
+            }, {
+                name: 'default',
+                title: '设为默认角色',
+                perms: 'role:default'
             }, {
                 name: 'export',
                 title: '导出Excel',
@@ -228,6 +254,7 @@
                     {title: '操作', toolbar: '#role-option', width: 100, unresize: true}
                 ]]
             });
+            findDefaultRole();
         }
 
         function getQueryParams() {
@@ -238,6 +265,7 @@
         }
 
         function resetRoleForm() {
+            findDefaultRole();
             $view.find('#reset-form').trigger('click');
             $header.text('新增角色');
             menuTree.setChecked([], true);
@@ -280,6 +308,19 @@
                     $query.trigger('click');
                 });
             }
+        };
+
+        function setDefaultRole(roleId) {
+            febs.get(ctx + 'role/setDefault/' + roleId, null, function () {
+                febs.alert.success('设置默认角色成功');
+                $query.trigger('click');
+            })
+        }
+
+        function findDefaultRole() {
+            febs.get(ctx + 'role/getDefault', null, function (result) {
+                $view.find('input[name=roleDefault]').val(result.data);
+            })
         }
     });
 </script>
