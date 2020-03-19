@@ -85,4 +85,7 @@ public class Paper implements Serializable {
 
     @TableField(exist = false)
     private Map<String, Object> paperAnalysis;
+
+    @TableField(exist = false)
+    private List<TestResultAnalysis> testResultAnalysisList;
 }

@@ -8,6 +8,7 @@ import cc.mrbird.febs.test.entity.Question;
 import cc.mrbird.febs.test.mapper.PaperMapper;
 import cc.mrbird.febs.test.service.PaperService;
 import cc.mrbird.febs.test.service.QuestionService;
+import cc.mrbird.febs.test.service.TestResultAnalysisService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -16,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
@@ -30,6 +28,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private TestResultAnalysisService testResultAnalysisService;
 
     @Override
     public IPage<Paper> findPaperList(Paper paper, QueryRequest request) {
@@ -48,7 +49,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
     @Override
     public Paper findById(String paperId) {
-        return this.baseMapper.findById(paperId);
+        Paper paper = this.baseMapper.findById(paperId);
+        paper.setPaperAnalysis(testResultAnalysisService.findPaperAnalysisByPaperId(paper.getPaperId()));
+        return paper;
     }
 
     @Override
@@ -117,5 +120,15 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     @Transactional
     public void deleteByCourseId(String courseId) {
         this.baseMapper.deleteByCourseId(courseId);
+    }
+
+    @Override
+    public Paper findAnalysisById(String paperId) {
+        Paper paper = this.baseMapper.findById(paperId);
+        Map<String, Object> analysisMap = testResultAnalysisService.findPaperAnalysisByPaperId(paper.getPaperId());
+        analysisMap.putAll(testResultAnalysisService.findPaperResultAnalysisByPaperId(paper.getPaperId()));
+        paper.setPaperAnalysis(analysisMap);
+        paper.setTestResultAnalysisList(testResultAnalysisService.findMostWrongQuestion(paper.getPaperId()));
+        return paper;
     }
 }

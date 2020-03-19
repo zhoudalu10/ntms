@@ -2,11 +2,11 @@
     #febs-paper-detail #paper-info-wrapper {
         margin: 0 0 1rem 0;
         display: inline-block;
+        width: 100%;
     }
 
     #febs-paper-detail .paper-info div {
         margin: 10px 15px;
-        max-width: 19rem;
     }
 
 </style>
@@ -34,6 +34,127 @@
             <div><span class="layui-icon layui-icon-next"></span> 创建时间：
                 [[${createTime}]]
             </div>
+            <div id="chart-paper-detail" style="width: 80%"></div>
         </div>
     </div>
 </div>
+<script data-th-inline="javascript">
+    layui.use(['apexcharts', 'febs'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            $noteDetail = $('#febs-paper-detail'),
+            paper = [[${paper}]],
+            paperAnalysis = paper.paperAnalysis;
+
+
+        var amountData = [paperAnalysis.COUNTSINGLE, paperAnalysis.COUNTJUDGEMENT, paperAnalysis.COUNTMULTIPLE];
+        var scoreData = [(paperAnalysis.SUMSINGLE / paperAnalysis.SUMALL * 100).toFixed(2),
+            (paperAnalysis.SUMJUDGEMENT / paperAnalysis.SUMALL * 100).toFixed(2),
+            (paperAnalysis.SUMMULTIPLE / paperAnalysis.SUMALL * 100).toFixed(2)
+        ];
+        var xaxis = ['单选', '判断', '多选'];
+        var option = {
+            chart: {
+                height: 320,
+                type: 'bar',
+                stacked: false,
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            series: [{
+                name: '试题数量',
+                type: 'column',
+                data: amountData
+            }, {
+                name: '试题分数',
+                type: 'column',
+                data: scoreData
+            }],
+            stroke: {
+                width: [1, 1, 4]
+            },
+            title: {
+                text: '试题分布',
+                align: 'left',
+                offsetX: 110
+            },
+            xaxis: {
+                categories: xaxis,
+            },
+            yaxis: [
+                {
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#008FFB'
+                    },
+                    labels: {
+                        style: {
+                            color: '#008FFB'
+                        }
+                    },
+                    title: {
+                        text: "试题数量",
+                        style: {
+                            color: '#008FFB'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                {
+                    seriesName: 'Income',
+                    opposite: true,
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#00E396'
+                    },
+                    labels: {
+                        style: {
+                            color: '#00E396'
+                        }
+                    },
+                    title: {
+                        text: "试题分数",
+                        style: {
+                            color: '#00E396'
+                        }
+                    }
+                }
+            ],
+            tooltip: {
+                fixed: {
+                    enabled: true,
+                    position: 'topLeft',
+                    offsetY: 30,
+                    offsetX: 60
+                }
+            },
+            legend: {
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            grid: {
+                row: {
+                    colors: ['transparent', 'transparent'],
+                    opacity: 0.2
+                },
+                borderColor: '#f1f3fa'
+            }
+        };
+        new ApexCharts(
+            document.querySelector("#chart-paper-detail"),
+            option
+        ).render();
+    })
+</script>

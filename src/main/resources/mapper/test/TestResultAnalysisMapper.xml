@@ -21,4 +21,108 @@ VALUES (#{testResultAnalysis.paperId},
         #{testResultAnalysis.resultIsCorrect},
         #{testResultAnalysis.resultId})
     </insert>
+
+    <select id="findPaperAnalysisByPaperId" parameterType="Long" resultType="Map">
+        SELECT (SELECT NVL(SUM(Q.QUESTION_SCORE), 0)
+        FROM T_QUESTION Q
+                 JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+        WHERE QP.PAPER_ID = #{paperId})      sumAll,
+       (SELECT NVL(SUM(Q.QUESTION_SCORE), 0)
+        FROM T_QUESTION Q
+                 JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+        WHERE QP.PAPER_ID = #{paperId}
+          AND Q.QUESTION_TYPE = '1') sumSingle,
+       (SELECT NVL(SUM(Q.QUESTION_SCORE), 0)
+        FROM T_QUESTION Q
+                 JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+        WHERE QP.PAPER_ID = #{paperId}
+          AND Q.QUESTION_TYPE = '2') sumJudgement,
+       (SELECT NVL(SUM(Q.QUESTION_SCORE), 0)
+        FROM T_QUESTION Q
+                 JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+        WHERE QP.PAPER_ID = #{paperId}
+          AND Q.QUESTION_TYPE = '3') sumMultiple,
+       (SELECT COUNT(*)
+        FROM T_QUESTION Q
+                 JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+        WHERE QP.PAPER_ID = #{paperId})      countAll,
+       (SELECT COUNT(*)
+        FROM T_QUESTION Q
+                 JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+        WHERE QP.PAPER_ID = #{paperId}
+          AND Q.QUESTION_TYPE = '1') countSingle,
+       (SELECT COUNT(*)
+        FROM T_QUESTION Q
+                 JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+        WHERE QP.PAPER_ID = #{paperId}
+          AND Q.QUESTION_TYPE = '2') countJudgement,
+       (SELECT COUNT(*)
+        FROM T_QUESTION Q
+                 JOIN T_QUESTION_PAPER QP ON Q.QUESTION_ID = QP.QUESTION_ID
+        WHERE QP.PAPER_ID = #{paperId}
+          AND Q.QUESTION_TYPE = '3') countMultiple
+        FROM DUAL
+    </select>
+
+    <select id="findPaperResultAnalysisByPaperId" parameterType="Long" resultType="Map">
+        SELECT (SELECT COUNT(*)
+        FROM T_TEST_RESULT TR
+        WHERE TR.RESULT_PAPER_ID = #{paperId})      countAnswer,
+       (SELECT COUNT(*)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+          AND TTRA.RESULT_IS_CORRECT = '1') countCorrectAll,
+
+       (SELECT COUNT(*)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '1')     countCorrectSingle,
+
+       (SELECT COUNT(*)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '2')     countCorrectJudgement,
+
+       (SELECT COUNT(*)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '3')     countCorrectMultiple,
+
+       (SELECT SUM(TTRA.QUESTION_SCORE)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+          AND TTRA.RESULT_IS_CORRECT = '1') sumCorrectAll,
+
+       (SELECT SUM(TTRA.QUESTION_SCORE)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '1')     sumCorrectSingle,
+
+       (SELECT SUM(TTRA.QUESTION_SCORE)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '2')     sumCorrectJudgement,
+
+       (SELECT SUM(TTRA.QUESTION_SCORE)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '3')     sumCorrectMultiple
+FROM DUAL
+    </select>
+
+    <select id="findMostWrongQuestion" parameterType="Long" resultType="testResultAnalysis">
+        SELECT TTRA.QUESTION_CONTENT questionContent
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.PAPER_ID = #{paperId}
+        AND TTRA.RESULT_IS_CORRECT = '0'
+        AND ROWNUM &lt;= 3
+        GROUP BY TTRA.QUESTION_CONTENT
+        ORDER BY COUNT(*) DESC
+    </select>
 </mapper>

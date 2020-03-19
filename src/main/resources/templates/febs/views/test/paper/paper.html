@@ -78,7 +78,7 @@
     <span class="layui-badge febs-tag-{{status.color}}">{{ status.title }}</span>
 </script>
 <script type="text/html" id="paper-option">
-    <span shiro:lacksPermission="paper:view,paper:update,paper:delete">
+    <span shiro:lacksPermission="paper:view,paper:update,paper:delete,paper:analysis">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
     <a lay-event="detail" shiro:hasPermission="paper:view"><i
@@ -87,6 +87,8 @@
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
     <a lay-event="del" shiro:hasPermission="paper:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="analysis" shiro:hasPermission="paper:analysis"><i
+            class="layui-icon febs-edit-area febs-orange">&#xe7a3;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs'], function () {
@@ -262,6 +264,15 @@
                     btn2: function () {
                         layer.closeAll();
                     }
+                });
+            }
+            if (layEvent === 'analysis') {
+                // if (data.paperState !== '3') {
+                //     febs.alert.warn('测验未结束');
+                //     return false;
+                // }
+                febs.modal.view('试卷分析', 'test/paper/analysis/' + data.paperId, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
                 });
             }
         });

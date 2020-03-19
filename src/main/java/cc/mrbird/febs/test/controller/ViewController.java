@@ -89,6 +89,15 @@ public class ViewController extends BaseController {
         return FebsUtil.view("test/paper/paperDetail");
     }
 
+    @GetMapping("paper/analysis/{paperId}")
+    @RequiresPermissions("paper:analysis")
+    public String paperAnalysis(@PathVariable String paperId, Model model) {
+        Paper paper = paperService.findAnalysisById(paperId);
+        model.addAttribute("paper", paper);
+        model.addAttribute("createTime", DateUtil.getDateFormat(paper.getCreateTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
+        return FebsUtil.view("test/paper/paperAnalysis");
+    }
+
     @GetMapping("question/addToPaper")
     @RequiresPermissions("question:addToPaper")
     public String questionAddToPaper() {

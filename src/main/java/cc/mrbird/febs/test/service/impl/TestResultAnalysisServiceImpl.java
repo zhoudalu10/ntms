@@ -6,6 +6,9 @@ import cc.mrbird.febs.test.service.TestResultAnalysisService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class TestResultAnalysisServiceImpl extends ServiceImpl<TestResultAnalysisMapper, TestResultAnalysis> implements TestResultAnalysisService {
 
@@ -13,5 +16,20 @@ public class TestResultAnalysisServiceImpl extends ServiceImpl<TestResultAnalysi
     @Override
     public void saveTestResultAnalysis(TestResultAnalysis testResultAnalysis) {
         this.baseMapper.saveTestResultAnalysis(testResultAnalysis);
+    }
+
+    @Override
+    public Map<String, Object> findPaperAnalysisByPaperId(Long paperId) {
+        return this.baseMapper.findPaperAnalysisByPaperId(paperId);
+    }
+
+    @Override
+    public Map<String, Object> findPaperResultAnalysisByPaperId(Long paperId) {
+        return this.baseMapper.findPaperResultAnalysisByPaperId(paperId);
+    }
+
+    @Override
+    public List<TestResultAnalysis> findMostWrongQuestion(Long paperId) {
+        return this.baseMapper.findMostWrongQuestion(paperId);
     }
 }

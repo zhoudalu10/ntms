@@ -22,4 +22,6 @@ public interface QuestionMapper extends BaseMapper<Question> {
     Set<Long> getMultipleChoiceKeySet(@Param("questionId") String questionId);
 
     List<Question> findByCourseId(@Param("courseId") String courseId);
+
+    List<Question> findMostWrongQuestion(@Param("paperId") Long paperId);
 }

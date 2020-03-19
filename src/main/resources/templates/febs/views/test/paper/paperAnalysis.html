@@ -1,0 +1,325 @@
+<style>
+    #febs-paper-analysis #paper-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+        width: 100%;
+    }
+
+    #febs-paper-analysis .paper-info div {
+        margin: 10px 15px;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-paper-analysis" lay-title="试卷分析">
+    <div id="paper-info-wrapper">
+        <div class="paper-info">
+            <div id="chart-paper-analysis-amount" style="width: 80%"></div>
+            <div id="chart-paper-analysis-score" style="width: 80%"></div>
+            <div><span class="layui-icon layui-icon-refresh"></span> 错题Top3：
+            </div>
+            <div id="febs-paper-analysis-wrong">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script data-th-inline="javascript">
+    layui.use(['apexcharts', 'febs'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            $view = $('#febs-paper-analysis'),
+            paper = [[${paper}]],
+            paperAnalysis = paper.paperAnalysis,
+            testResultAnalysisList = paper.testResultAnalysisList;
+        var amountAllData = [paperAnalysis.COUNTALL, paperAnalysis.COUNTSINGLE, paperAnalysis.COUNTJUDGEMENT, paperAnalysis.COUNTMULTIPLE];
+        var amountAvgData = [];
+        if (paperAnalysis.COUNTCORRECTALL !== 0 && paperAnalysis.COUNTANSWER !== 0) {
+            amountAvgData.push((paperAnalysis.COUNTCORRECTALL / paperAnalysis.COUNTANSWER).toFixed(2));
+        } else {
+            amountAvgData.push(0.00);
+        }
+        if (paperAnalysis.COUNTCORRECTSINGLE !== 0 && paperAnalysis.COUNTANSWER !== 0) {
+            amountAvgData.push((paperAnalysis.COUNTCORRECTSINGLE / paperAnalysis.COUNTANSWER).toFixed(2));
+        } else {
+            amountAvgData.push(0.00);
+        }
+        if (paperAnalysis.COUNTCORRECTJUDGEMENT !== 0 && paperAnalysis.COUNTANSWER !== 0) {
+            amountAvgData.push((paperAnalysis.COUNTCORRECTJUDGEMENT / paperAnalysis.COUNTANSWER).toFixed(2));
+        } else {
+            amountAvgData.push(0.00);
+        }
+        if (paperAnalysis.COUNTCORRECTMULTIPLE !== 0 && paperAnalysis.COUNTANSWER !== 0) {
+            amountAvgData.push((paperAnalysis.COUNTCORRECTMULTIPLE / paperAnalysis.COUNTANSWER).toFixed(2));
+        } else {
+            amountAvgData.push(0.00);
+        }
+        var accuracyRate = [];
+        if (amountAvgData[0] !== 0 && amountAllData[0] !== 0) {
+            accuracyRate.push((amountAvgData[0] / amountAllData[0] * 100).toFixed(2))
+        } else {
+            accuracyRate.push(0.00);
+        }
+        if (amountAvgData[1] !== 0 && amountAllData[1] !== 0) {
+            accuracyRate.push((amountAvgData[1] / amountAllData[1] * 100).toFixed(2))
+        } else {
+            accuracyRate.push(0.00);
+        }
+        if (amountAvgData[2] !== 0 && amountAllData[2] !== 0) {
+            accuracyRate.push((amountAvgData[2] / amountAllData[2] * 100).toFixed(2))
+        } else {
+            accuracyRate.push(0.00);
+        }
+        if (amountAvgData[3] !== 0 && amountAllData[3] !== 0) {
+            accuracyRate.push((amountAvgData[3] / amountAllData[3] * 100).toFixed(2))
+        } else {
+            accuracyRate.push(0.00);
+        }
+
+        var scoreAllData = [
+            100.00,
+            (paperAnalysis.SUMSINGLE / paperAnalysis.SUMALL * 100).toFixed(2),
+            (paperAnalysis.SUMJUDGEMENT / paperAnalysis.SUMALL * 100).toFixed(2),
+            (paperAnalysis.SUMMULTIPLE / paperAnalysis.SUMALL * 100).toFixed(2)
+        ];
+        var scoreAvgData = [];
+        if (paperAnalysis.SUMALL !== 0 && paperAnalysis.COUNTANSWER !== 0) {
+            scoreAvgData.push((paperAnalysis.SUMCORRECTALL / paperAnalysis.SUMALL * 100 / paperAnalysis.COUNTANSWER).toFixed(2))
+        } else {
+            scoreAvgData.push(0.00);
+        }
+        if (paperAnalysis.SUMSINGLE !== 0 && paperAnalysis.COUNTANSWER !== 0) {
+            scoreAvgData.push((paperAnalysis.SUMCORRECTSINGLE / paperAnalysis.SUMSINGLE * 100 / paperAnalysis.COUNTANSWER).toFixed(2))
+        } else {
+            scoreAvgData.push(0.00);
+        }
+        if (paperAnalysis.SUMJUDGEMENT !== 0 && paperAnalysis.COUNTANSWER !== 0) {
+            scoreAvgData.push((paperAnalysis.SUMCORRECTJUDGEMENT / paperAnalysis.SUMJUDGEMENT * 100 / paperAnalysis.COUNTANSWER).toFixed(2))
+        } else {
+            scoreAvgData.push(0.00);
+        }
+        if (paperAnalysis.SUMMULTIPLE !== 0 && paperAnalysis.COUNTANSWER !== 0) {
+            scoreAvgData.push((paperAnalysis.SUMCORRECTMULTIPLE / paperAnalysis.SUMMULTIPLE * 100 / paperAnalysis.COUNTANSWER).toFixed(2))
+        } else {
+            scoreAvgData.push(0.00);
+        }
+
+
+        var xaxis = ['总计', '单选', '判断', '多选'];
+        var amountOption = {
+            chart: {
+                height: 320,
+                type: 'line',
+                stacked: false,
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            series: [{
+                name: '试题数量',
+                type: 'column',
+                data: amountAllData
+            }, {
+                name: '平均正确题数',
+                type: 'column',
+                data: amountAvgData
+            }, {
+                name: '平均正确率',
+                type: 'line',
+                data: accuracyRate
+            }],
+            stroke: {
+                width: [1, 1, 4]
+            },
+            title: {
+                text: '正确率统计',
+                align: 'left',
+                offsetX: 110
+            },
+            xaxis: {
+                categories: xaxis,
+            },
+            yaxis: [
+                {
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#008FFB'
+                    },
+                    labels: {
+                        style: {
+                            color: '#008FFB'
+                        }
+                    },
+                    title: {
+                        text: "试题数量",
+                        style: {
+                            color: '#008FFB'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                {
+                    seriesName: '平均正确题数',
+                    opposite: true,
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#00E396'
+                    },
+                    labels: {
+                        style: {
+                            color: '#00E396'
+                        }
+                    },
+                    title: {
+                        text: "平均正确题数",
+                        style: {
+                            color: '#00E396'
+                        }
+                    }
+                },
+                {
+                    seriesName: '平均正确率',
+                    opposite: true,
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#FEB019'
+                    },
+                    labels: {
+                        style: {
+                            color: '#FEB019'
+                        }
+                    },
+                    title: {
+                        text: "平均正确率",
+                        style: {
+                            color: '#FEB019'
+                        }
+                    }
+                }
+            ],
+            tooltip: {
+                fixed: {
+                    enabled: false,
+                    position: 'topLeft',
+                    offsetY: 30,
+                    offsetX: 60
+                }
+            },
+            legend: {
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            grid: {
+                row: {
+                    colors: ['transparent', 'transparent'],
+                    opacity: 0.2
+                },
+                borderColor: '#f1f3fa'
+            }
+        };
+
+        var scoreOption = {
+            chart: {
+                height: 320,
+                type: 'bar',
+                stacked: false,
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            series: [{
+                name: '总分',
+                type: 'column',
+                data: scoreAllData
+            }, {
+                name: '平均分',
+                type: 'column',
+                data: scoreAvgData
+            }],
+            stroke: {
+                width: [1, 1, 4]
+            },
+            title: {
+                text: '平均分统计',
+                align: 'left',
+                offsetX: 110
+            },
+            xaxis: {
+                categories: xaxis,
+            },
+            yaxis: [
+                {
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#008FFB'
+                    },
+                    labels: {
+                        style: {
+                            color: '#008FFB'
+                        }
+                    },
+                    title: {
+                        text: "分数",
+                        style: {
+                            color: '#008FFB'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            ],
+            tooltip: {
+                fixed: {
+                    enabled: false,
+                    position: 'topLeft',
+                    offsetY: 30,
+                    offsetX: 60
+                }
+            },
+            legend: {
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            grid: {
+                row: {
+                    colors: ['transparent', 'transparent'],
+                    opacity: 0.2
+                },
+                borderColor: '#f1f3fa'
+            }
+        };
+        new ApexCharts(
+            document.querySelector("#chart-paper-analysis-amount"),
+            amountOption
+        ).render();
+
+        new ApexCharts(
+            document.querySelector("#chart-paper-analysis-score"),
+            scoreOption
+        ).render();
+
+        for (var i = 0; i < testResultAnalysisList.length; i++) {
+            $view.find('#febs-paper-analysis-wrong').append('<p>' + testResultAnalysisList[i].questionContent + '</p>');
+        }
+    })
+</script>
