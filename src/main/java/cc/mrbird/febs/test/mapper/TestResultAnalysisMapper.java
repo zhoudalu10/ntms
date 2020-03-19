@@ -20,4 +20,6 @@ public interface TestResultAnalysisMapper extends BaseMapper<TestResultAnalysis>
     Map<String, Object> findAnalysisByResultId(@Param("resultId") String resultId);
 
     List<TestResultAnalysis> findAllWrongQuestionByResultId(@Param("resultId") String resultId);
+
+    void deleteByResultId(@Param("resultId") String resultId);
 }

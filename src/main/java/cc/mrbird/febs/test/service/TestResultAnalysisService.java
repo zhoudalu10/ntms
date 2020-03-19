@@ -18,4 +18,6 @@ public interface TestResultAnalysisService {
     Map<String, Object> findAnalysisByResultId(String resultId);
 
     List<TestResultAnalysis> findAllWrongQuestionByResultId(String resultId);
+
+    void deleteByResultId(String resultId);
 }

@@ -42,4 +42,9 @@ public class TestResultAnalysisServiceImpl extends ServiceImpl<TestResultAnalysi
     public List<TestResultAnalysis> findAllWrongQuestionByResultId(String resultId) {
         return this.baseMapper.findAllWrongQuestionByResultId(resultId);
     }
+
+    @Override
+    public void deleteByResultId(String resultId) {
+        this.baseMapper.deleteByResultId(resultId);
+    }
 }

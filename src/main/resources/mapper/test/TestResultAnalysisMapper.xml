@@ -181,4 +181,10 @@ FROM T_TEST_RESULT_ANALYSIS TTRA
 WHERE TTRA.RESULT_ID = #{resultId}
   AND TTRA.RESULT_IS_CORRECT = '0'
     </select>
+
+    <delete id="deleteByResultId" parameterType="String">
+        DELETE
+FROM T_TEST_RESULT_ANALYSIS
+WHERE RESULT_ID = #{resultId}
+    </delete>
 </mapper>

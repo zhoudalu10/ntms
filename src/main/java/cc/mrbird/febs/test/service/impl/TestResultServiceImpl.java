@@ -132,6 +132,9 @@ public class TestResultServiceImpl extends ServiceImpl<TestResultMapper, TestRes
     public void deleteTestResults(String[] ids) {
         List<String> list = Arrays.asList(ids);
         this.removeByIds(list);
+        list.forEach(resultId -> {
+            testResultAnalysisService.deleteByResultId(resultId);
+        });
     }
 
     @Override
