@@ -32,9 +32,6 @@
             testResult = [[${testResult}]],
             resultAnalysis = testResult.resultAnalysis,
             testResultAnalysisList = testResult.testResultAnalysisList;
-        console.log(testResult);
-
-
         var amountAllData = [resultAnalysis.COUNTALL, resultAnalysis.COUNTSINGLE, resultAnalysis.COUNTJUDGEMENT, resultAnalysis.COUNTMULTIPLE];
         var amountAvgData = [];
         if (resultAnalysis.COUNTCORRECTALL !== 0 && resultAnalysis.COUNTANSWER !== 0) {
@@ -122,25 +119,33 @@
             scoreAvgData.push(0.00);
         }
         if (resultAnalysis.SUMSINGLE !== 0 && resultAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((resultAnalysis.SUMCORRECTSINGLE / resultAnalysis.SUMSINGLE * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
+            scoreAvgData.push((resultAnalysis.SUMCORRECTSINGLE / resultAnalysis.SUMALL * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
         } else {
             scoreAvgData.push(0.00);
         }
         if (resultAnalysis.SUMJUDGEMENT !== 0 && resultAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((resultAnalysis.SUMCORRECTJUDGEMENT / resultAnalysis.SUMJUDGEMENT * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
+            scoreAvgData.push((resultAnalysis.SUMCORRECTJUDGEMENT / resultAnalysis.SUMALL * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
         } else {
             scoreAvgData.push(0.00);
         }
         if (resultAnalysis.SUMMULTIPLE !== 0 && resultAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((resultAnalysis.SUMCORRECTMULTIPLE / resultAnalysis.SUMMULTIPLE * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
+            scoreAvgData.push((resultAnalysis.SUMCORRECTMULTIPLE / resultAnalysis.SUMALL * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
         } else {
             scoreAvgData.push(0.00);
         }
         var scoreDataUser = [];
-        scoreDataUser.push(resultAnalysis.SUMCORRECTALLUSER);
-        scoreDataUser.push(resultAnalysis.SUMCORRECTSINGLEUSER);
-        scoreDataUser.push(resultAnalysis.SUMCORRECTJUDGEMENTUSER);
-        scoreDataUser.push(resultAnalysis.SUMCORRECTMULTIPLEUSER);
+        if (resultAnalysis.SUMALL !== 0) {
+            scoreDataUser.push((resultAnalysis.SUMCORRECTALLUSER / resultAnalysis.SUMALL * 100).toFixed(2));
+            scoreDataUser.push((resultAnalysis.SUMCORRECTSINGLEUSER / resultAnalysis.SUMALL * 100).toFixed(2));
+            scoreDataUser.push((resultAnalysis.SUMCORRECTJUDGEMENTUSER / resultAnalysis.SUMALL * 100).toFixed(2));
+            scoreDataUser.push((resultAnalysis.SUMCORRECTMULTIPLEUSER / resultAnalysis.SUMALL * 100).toFixed(2));
+        } else {
+            scoreDataUser.push(0.00);
+            scoreDataUser.push(0.00);
+            scoreDataUser.push(0.00);
+            scoreDataUser.push(0.00);
+        }
+
 
         var xaxis = ['总计', '单选', '判断', '多选'];
         var amountOption = {
@@ -188,13 +193,11 @@
                         show: true,
                     },
                     labels: {
-                        style: {
-                        }
+                        style: {}
                     },
                     title: {
                         text: "试题数量",
-                        style: {
-                        }
+                        style: {}
                     },
                     tooltip: {
                         enabled: true
@@ -263,13 +266,11 @@
                         show: true,
                     },
                     labels: {
-                        style: {
-                        }
+                        style: {}
                     },
                     title: {
                         text: "正确率",
-                        style: {
-                        }
+                        style: {}
                     },
                     tooltip: {
                         enabled: true
@@ -342,13 +343,11 @@
                         show: true,
                     },
                     labels: {
-                        style: {
-                        }
+                        style: {}
                     },
                     title: {
                         text: "分数",
-                        style: {
-                        }
+                        style: {}
                     },
                     tooltip: {
                         enabled: true

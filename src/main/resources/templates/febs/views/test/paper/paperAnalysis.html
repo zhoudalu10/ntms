@@ -75,30 +75,36 @@
             accuracyRate.push(0.00);
         }
 
-        var scoreAllData = [
-            100.00,
-            (paperAnalysis.SUMSINGLE / paperAnalysis.SUMALL * 100).toFixed(2),
-            (paperAnalysis.SUMJUDGEMENT / paperAnalysis.SUMALL * 100).toFixed(2),
-            (paperAnalysis.SUMMULTIPLE / paperAnalysis.SUMALL * 100).toFixed(2)
-        ];
+        var scoreAllData = [];
+        scoreAllData.push(100.00);
+        if (paperAnalysis.SUMALL !== 0) {
+            scoreAllData.push((paperAnalysis.SUMSINGLE / paperAnalysis.SUMALL * 100).toFixed(2));
+            scoreAllData.push((paperAnalysis.SUMJUDGEMENT / paperAnalysis.SUMALL * 100).toFixed(2));
+            scoreAllData.push((paperAnalysis.SUMMULTIPLE / paperAnalysis.SUMALL * 100).toFixed(2));
+        } else {
+            scoreAllData.push(0.00);
+            scoreAllData.push(0.00);
+            scoreAllData.push(0.00);
+        }
+
         var scoreAvgData = [];
         if (paperAnalysis.SUMALL !== 0 && paperAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((paperAnalysis.SUMCORRECTALL / paperAnalysis.SUMALL * 100 / paperAnalysis.COUNTANSWER).toFixed(2))
+            scoreAvgData.push((paperAnalysis.SUMCORRECTALL / paperAnalysis.COUNTANSWER / paperAnalysis.SUMALL * 100).toFixed(2))
         } else {
             scoreAvgData.push(0.00);
         }
         if (paperAnalysis.SUMSINGLE !== 0 && paperAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((paperAnalysis.SUMCORRECTSINGLE / paperAnalysis.SUMSINGLE * 100 / paperAnalysis.COUNTANSWER).toFixed(2))
+            scoreAvgData.push((paperAnalysis.SUMCORRECTSINGLE / paperAnalysis.COUNTANSWER / paperAnalysis.SUMALL * 100).toFixed(2))
         } else {
             scoreAvgData.push(0.00);
         }
         if (paperAnalysis.SUMJUDGEMENT !== 0 && paperAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((paperAnalysis.SUMCORRECTJUDGEMENT / paperAnalysis.SUMJUDGEMENT * 100 / paperAnalysis.COUNTANSWER).toFixed(2))
+            scoreAvgData.push((paperAnalysis.SUMCORRECTJUDGEMENT / paperAnalysis.COUNTANSWER / paperAnalysis.SUMALL * 100).toFixed(2))
         } else {
             scoreAvgData.push(0.00);
         }
         if (paperAnalysis.SUMMULTIPLE !== 0 && paperAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((paperAnalysis.SUMCORRECTMULTIPLE / paperAnalysis.SUMMULTIPLE * 100 / paperAnalysis.COUNTANSWER).toFixed(2))
+            scoreAvgData.push((paperAnalysis.SUMCORRECTMULTIPLE / paperAnalysis.COUNTANSWER / paperAnalysis.SUMALL * 100).toFixed(2))
         } else {
             scoreAvgData.push(0.00);
         }
@@ -272,13 +278,11 @@
                         show: true,
                     },
                     labels: {
-                        style: {
-                        }
+                        style: {}
                     },
                     title: {
                         text: "分数",
-                        style: {
-                        }
+                        style: {}
                     },
                     tooltip: {
                         enabled: true
