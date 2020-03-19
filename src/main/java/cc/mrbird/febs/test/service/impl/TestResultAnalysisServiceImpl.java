@@ -5,15 +5,19 @@ import cc.mrbird.febs.test.mapper.TestResultAnalysisMapper;
 import cc.mrbird.febs.test.service.TestResultAnalysisService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class TestResultAnalysisServiceImpl extends ServiceImpl<TestResultAnalysisMapper, TestResultAnalysis> implements TestResultAnalysisService {
 
 
     @Override
+    @Transactional
     public void saveTestResultAnalysis(TestResultAnalysis testResultAnalysis) {
         this.baseMapper.saveTestResultAnalysis(testResultAnalysis);
     }
@@ -44,6 +48,7 @@ public class TestResultAnalysisServiceImpl extends ServiceImpl<TestResultAnalysi
     }
 
     @Override
+    @Transactional
     public void deleteByResultId(String resultId) {
         this.baseMapper.deleteByResultId(resultId);
     }
