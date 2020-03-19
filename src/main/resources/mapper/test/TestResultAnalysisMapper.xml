@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cc.mrbird.febs.test.mapper.TestResultAnalysisMapper">
+    <insert id="saveTestResultAnalysis" parameterType="testResultAnalysis">
+        INSERT INTO T_TEST_RESULT_ANALYSIS
+(PAPER_ID,
+ QUESTION_TYPE,
+ QUESTION_ID,
+ QUESTION_SCORE,
+ QUESTION_CONTENT,
+ RESULT_USER_ID,
+ RESULT_IS_CORRECT,
+ RESULT_ID)
+VALUES (#{testResultAnalysis.paperId},
+        (SELECT QUESTION_TYPE FROM T_QUESTION WHERE QUESTION_ID = #{testResultAnalysis.questionId}),
+        #{testResultAnalysis.questionId},
+        (SELECT QUESTION_SCORE FROM T_QUESTION WHERE QUESTION_ID = #{testResultAnalysis.questionId}),
+        (SELECT QUESTION_CONTENT FROM T_QUESTION WHERE QUESTION_ID = #{testResultAnalysis.questionId}),
+        #{testResultAnalysis.resultUserId},
+        #{testResultAnalysis.resultIsCorrect},
+        #{testResultAnalysis.resultId})
+    </insert>
+</mapper>

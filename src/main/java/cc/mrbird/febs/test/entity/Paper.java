@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @TableName("T_PAPER")
@@ -81,4 +82,7 @@ public class Paper implements Serializable {
 
     @TableField(exist = false)
     private List<Question> paperQuestionList;
+
+    @TableField(exist = false)
+    private Map<String, Object> paperAnalysis;
 }

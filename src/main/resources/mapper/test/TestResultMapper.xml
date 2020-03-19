@@ -9,13 +9,6 @@ WHERE TR.RESULT_USER_ID = #{testResult.resultUserId}
   AND TR.RESULT_PAPER_ID = #{testResult.resultPaperId}
     </select>
 
-    <update id="updateResult" parameterType="testResult">
-        UPDATE T_TEST_RESULT TR
-SET TR.RESULT_SCORE = #{testResult.resultScore}
-WHERE TR.RESULT_USER_ID = #{testResult.resultUserId}
-  AND TR.RESULT_PAPER_ID = #{testResult.resultPaperId}
-    </update>
-
     <select id="findTestResultList" parameterType="testResult" resultType="testResult">
         SELECT TR.RESULT_ID resultId,
         TR.RESULT_USER_ID resultUserId,
@@ -62,5 +55,24 @@ WHERE TR.RESULT_USER_ID = #{testResult.resultUserId}
         <if test="testResult.resultScoreTo != null and testResult.resultScoreTo != ''">
             AND TR.RESULT_SCORE &lt;= #{testResult.resultScoreTo}
         </if>
+    </select>
+
+    <select id="findByUserAndPaperId" parameterType="testResult" resultType="testResult">
+        SELECT TR.RESULT_ID resultId,
+        TR.RESULT_USER_ID resultUserId,
+        TR.RESULT_PAPER_ID resultPaperId,
+        U.USERNAME resultUserName,
+        P.PAPER_NAME resultPaperName,
+        C.COURSE_NAME resultCourseName,
+        U2.USERNAME resultCourseTeacherName,
+        TR.RESULT_SCORE resultScore,
+        TR.CREATE_TIME createTime
+        FROM T_TEST_RESULT TR
+        LEFT JOIN T_USER U ON TR.RESULT_USER_ID = U.USER_ID
+        LEFT JOIN T_PAPER P ON TR.RESULT_PAPER_ID = P.PAPER_ID
+        LEFT JOIN T_COURSE C ON P.PAPER_COURSE_ID = C.COURSE_ID
+        LEFT JOIN T_USER U2 ON C.COURSE_TEACHER_ID = U2.USER_ID
+        WHERE TR.RESULT_PAPER_ID = #{testResult.resultPaperId}
+        AND TR.RESULT_USER_ID = #{testResult.resultUserId}
     </select>
 </mapper>

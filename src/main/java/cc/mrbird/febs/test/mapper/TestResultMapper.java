@@ -10,7 +10,7 @@ public interface TestResultMapper extends BaseMapper<TestResult> {
 
     Integer judgePaper(@Param("testResult") TestResult testResult);
 
-    void updateResult(@Param("testResult") TestResult testResult);
-
     IPage<TestResult> findTestResultList(Page<TestResult> page, @Param("testResult") TestResult testResult);
+
+    TestResult findByUserAndPaperId(@Param("testResult") TestResult testResult);
 }
