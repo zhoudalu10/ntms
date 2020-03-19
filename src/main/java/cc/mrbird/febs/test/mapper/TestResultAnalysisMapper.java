@@ -16,4 +16,8 @@ public interface TestResultAnalysisMapper extends BaseMapper<TestResultAnalysis>
     Map<String, Object> findPaperResultAnalysisByPaperId(@Param("paperId") Long paperId);
 
     List<TestResultAnalysis> findMostWrongQuestion(@Param("paperId") Long paperId);
+
+    Map<String, Object> findAnalysisByResultId(@Param("resultId") String resultId);
+
+    List<TestResultAnalysis> findAllWrongQuestionByResultId(@Param("resultId") String resultId);
 }

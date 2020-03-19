@@ -14,8 +14,9 @@
     <div id="testResult-info-wrapper">
         <div class="testResult-info">
             <div id="chart-testResult-analysis-amount" style="width: 80%"></div>
+            <div id="chart-testResult-analysis-accuracyRate" style="width: 80%"></div>
             <div id="chart-testResult-analysis-score" style="width: 80%"></div>
-            <div><span class="layui-icon layui-icon-refresh"></span> 错题Top3：
+            <div><span class="layui-icon layui-icon-refresh"></span> 错题集：
             </div>
             <div id="febs-testResult-analysis-wrong">
 
@@ -29,30 +30,40 @@
             febs = layui.febs,
             $view = $('#febs-testResult-analysis'),
             testResult = [[${testResult}]],
-            testResultAnalysis = testResult.testResultAnalysis,
+            resultAnalysis = testResult.resultAnalysis,
             testResultAnalysisList = testResult.testResultAnalysisList;
-        var amountAllData = [testResultAnalysis.COUNTALL, testResultAnalysis.COUNTSINGLE, testResultAnalysis.COUNTJUDGEMENT, testResultAnalysis.COUNTMULTIPLE];
+        console.log(testResult);
+
+
+        var amountAllData = [resultAnalysis.COUNTALL, resultAnalysis.COUNTSINGLE, resultAnalysis.COUNTJUDGEMENT, resultAnalysis.COUNTMULTIPLE];
         var amountAvgData = [];
-        if (testResultAnalysis.COUNTCORRECTALL !== 0 && testResultAnalysis.COUNTANSWER !== 0) {
-            amountAvgData.push((testResultAnalysis.COUNTCORRECTALL / testResultAnalysis.COUNTANSWER).toFixed(2));
+        if (resultAnalysis.COUNTCORRECTALL !== 0 && resultAnalysis.COUNTANSWER !== 0) {
+            amountAvgData.push((resultAnalysis.COUNTCORRECTALL / resultAnalysis.COUNTANSWER).toFixed(2));
         } else {
             amountAvgData.push(0.00);
         }
-        if (testResultAnalysis.COUNTCORRECTSINGLE !== 0 && testResultAnalysis.COUNTANSWER !== 0) {
-            amountAvgData.push((testResultAnalysis.COUNTCORRECTSINGLE / testResultAnalysis.COUNTANSWER).toFixed(2));
+        if (resultAnalysis.COUNTCORRECTSINGLE !== 0 && resultAnalysis.COUNTANSWER !== 0) {
+            amountAvgData.push((resultAnalysis.COUNTCORRECTSINGLE / resultAnalysis.COUNTANSWER).toFixed(2));
         } else {
             amountAvgData.push(0.00);
         }
-        if (testResultAnalysis.COUNTCORRECTJUDGEMENT !== 0 && testResultAnalysis.COUNTANSWER !== 0) {
-            amountAvgData.push((testResultAnalysis.COUNTCORRECTJUDGEMENT / testResultAnalysis.COUNTANSWER).toFixed(2));
+        if (resultAnalysis.COUNTCORRECTJUDGEMENT !== 0 && resultAnalysis.COUNTANSWER !== 0) {
+            amountAvgData.push((resultAnalysis.COUNTCORRECTJUDGEMENT / resultAnalysis.COUNTANSWER).toFixed(2));
         } else {
             amountAvgData.push(0.00);
         }
-        if (testResultAnalysis.COUNTCORRECTMULTIPLE !== 0 && testResultAnalysis.COUNTANSWER !== 0) {
-            amountAvgData.push((testResultAnalysis.COUNTCORRECTMULTIPLE / testResultAnalysis.COUNTANSWER).toFixed(2));
+        if (resultAnalysis.COUNTCORRECTMULTIPLE !== 0 && resultAnalysis.COUNTANSWER !== 0) {
+            amountAvgData.push((resultAnalysis.COUNTCORRECTMULTIPLE / resultAnalysis.COUNTANSWER).toFixed(2));
         } else {
             amountAvgData.push(0.00);
         }
+        var amountUserData = [];
+        amountUserData.push(resultAnalysis.COUNTCORRECTALLUSER);
+        amountUserData.push(resultAnalysis.COUNTCORRECTSINGLEUSER);
+        amountUserData.push(resultAnalysis.COUNTCORRECTJUDGEMENTUSER);
+        amountUserData.push(resultAnalysis.COUNTCORRECTMULTIPLEUSER);
+
+
         var accuracyRate = [];
         if (amountAvgData[0] !== 0 && amountAllData[0] !== 0) {
             accuracyRate.push((amountAvgData[0] / amountAllData[0] * 100).toFixed(2))
@@ -75,37 +86,143 @@
             accuracyRate.push(0.00);
         }
 
-        var scoreAllData = [
-            100.00,
-            (testResultAnalysis.SUMSINGLE / testResultAnalysis.SUMALL * 100).toFixed(2),
-            (testResultAnalysis.SUMJUDGEMENT / testResultAnalysis.SUMALL * 100).toFixed(2),
-            (testResultAnalysis.SUMMULTIPLE / testResultAnalysis.SUMALL * 100).toFixed(2)
-        ];
-        var scoreAvgData = [];
-        if (testResultAnalysis.SUMALL !== 0 && testResultAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((testResultAnalysis.SUMCORRECTALL / testResultAnalysis.SUMALL * 100 / testResultAnalysis.COUNTANSWER).toFixed(2))
+        var accuracyRateUser = [];
+        if (amountUserData[0] !== 0 && amountAllData[0] !== 0) {
+            accuracyRateUser.push((amountUserData[0] / amountAllData[0] * 100).toFixed(2))
         } else {
-            scoreAvgData.push(0.00);
+            accuracyRateUser.push(0.00);
         }
-        if (testResultAnalysis.SUMSINGLE !== 0 && testResultAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((testResultAnalysis.SUMCORRECTSINGLE / testResultAnalysis.SUMSINGLE * 100 / testResultAnalysis.COUNTANSWER).toFixed(2))
+        if (amountUserData[1] !== 0 && amountAllData[1] !== 0) {
+            accuracyRateUser.push((amountUserData[1] / amountAllData[1] * 100).toFixed(2))
         } else {
-            scoreAvgData.push(0.00);
+            accuracyRateUser.push(0.00);
         }
-        if (testResultAnalysis.SUMJUDGEMENT !== 0 && testResultAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((testResultAnalysis.SUMCORRECTJUDGEMENT / testResultAnalysis.SUMJUDGEMENT * 100 / testResultAnalysis.COUNTANSWER).toFixed(2))
+        if (amountUserData[2] !== 0 && amountAllData[2] !== 0) {
+            accuracyRateUser.push((amountUserData[2] / amountAllData[2] * 100).toFixed(2))
         } else {
-            scoreAvgData.push(0.00);
+            accuracyRateUser.push(0.00);
         }
-        if (testResultAnalysis.SUMMULTIPLE !== 0 && testResultAnalysis.COUNTANSWER !== 0) {
-            scoreAvgData.push((testResultAnalysis.SUMCORRECTMULTIPLE / testResultAnalysis.SUMMULTIPLE * 100 / testResultAnalysis.COUNTANSWER).toFixed(2))
+        if (amountUserData[3] !== 0 && amountAllData[3] !== 0) {
+            accuracyRateUser.push((amountUserData[3] / amountAllData[3] * 100).toFixed(2))
         } else {
-            scoreAvgData.push(0.00);
+            accuracyRateUser.push(0.00);
         }
 
+
+        var scoreAllData = [
+            100.00,
+            (resultAnalysis.SUMSINGLE / resultAnalysis.SUMALL * 100).toFixed(2),
+            (resultAnalysis.SUMJUDGEMENT / resultAnalysis.SUMALL * 100).toFixed(2),
+            (resultAnalysis.SUMMULTIPLE / resultAnalysis.SUMALL * 100).toFixed(2)
+        ];
+        var scoreAvgData = [];
+        if (resultAnalysis.SUMALL !== 0 && resultAnalysis.COUNTANSWER !== 0) {
+            scoreAvgData.push((resultAnalysis.SUMCORRECTALL / resultAnalysis.SUMALL * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
+        } else {
+            scoreAvgData.push(0.00);
+        }
+        if (resultAnalysis.SUMSINGLE !== 0 && resultAnalysis.COUNTANSWER !== 0) {
+            scoreAvgData.push((resultAnalysis.SUMCORRECTSINGLE / resultAnalysis.SUMSINGLE * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
+        } else {
+            scoreAvgData.push(0.00);
+        }
+        if (resultAnalysis.SUMJUDGEMENT !== 0 && resultAnalysis.COUNTANSWER !== 0) {
+            scoreAvgData.push((resultAnalysis.SUMCORRECTJUDGEMENT / resultAnalysis.SUMJUDGEMENT * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
+        } else {
+            scoreAvgData.push(0.00);
+        }
+        if (resultAnalysis.SUMMULTIPLE !== 0 && resultAnalysis.COUNTANSWER !== 0) {
+            scoreAvgData.push((resultAnalysis.SUMCORRECTMULTIPLE / resultAnalysis.SUMMULTIPLE * 100 / resultAnalysis.COUNTANSWER).toFixed(2))
+        } else {
+            scoreAvgData.push(0.00);
+        }
+        var scoreDataUser = [];
+        scoreDataUser.push(resultAnalysis.SUMCORRECTALLUSER);
+        scoreDataUser.push(resultAnalysis.SUMCORRECTSINGLEUSER);
+        scoreDataUser.push(resultAnalysis.SUMCORRECTJUDGEMENTUSER);
+        scoreDataUser.push(resultAnalysis.SUMCORRECTMULTIPLEUSER);
 
         var xaxis = ['总计', '单选', '判断', '多选'];
         var amountOption = {
+            chart: {
+                height: 320,
+                type: 'bar',
+                stacked: false,
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            series: [{
+                name: '总计',
+                type: 'column',
+                data: amountAllData
+            }, {
+                name: '平均',
+                type: 'column',
+                data: amountAvgData
+            }, {
+                name: '此测验结果',
+                type: 'column',
+                data: amountUserData
+            }],
+            stroke: {
+                width: [1, 1, 4]
+            },
+            title: {
+                text: '正确题数统计',
+                align: 'left',
+                offsetX: 110
+            },
+            xaxis: {
+                categories: xaxis,
+            },
+            yaxis: [
+                {
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                    },
+                    labels: {
+                        style: {
+                        }
+                    },
+                    title: {
+                        text: "试题数量",
+                        style: {
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            ],
+            tooltip: {
+                fixed: {
+                    enabled: false,
+                    position: 'topLeft',
+                    offsetY: 30,
+                    offsetX: 60
+                }
+            },
+            legend: {
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            grid: {
+                row: {
+                    colors: ['transparent', 'transparent'],
+                    opacity: 0.2
+                },
+                borderColor: '#f1f3fa'
+            }
+        };
+
+        var accuracyRateOption = {
             chart: {
                 height: 320,
                 type: 'line',
@@ -118,17 +235,13 @@
                 enabled: false
             },
             series: [{
-                name: '试题数量',
-                type: 'column',
-                data: amountAllData
-            }, {
-                name: '平均正确题数',
-                type: 'column',
-                data: amountAvgData
-            }, {
-                name: '平均正确率',
+                name: '平均',
                 type: 'line',
                 data: accuracyRate
+            }, {
+                name: '此测验结果',
+                type: 'line',
+                data: accuracyRateUser
             }],
             stroke: {
                 width: [1, 1, 4]
@@ -148,65 +261,18 @@
                     },
                     axisBorder: {
                         show: true,
-                        color: '#008FFB'
                     },
                     labels: {
                         style: {
-                            color: '#008FFB'
                         }
                     },
                     title: {
-                        text: "试题数量",
+                        text: "正确率",
                         style: {
-                            color: '#008FFB'
                         }
                     },
                     tooltip: {
                         enabled: true
-                    }
-                },
-                {
-                    seriesName: '平均正确题数',
-                    opposite: true,
-                    axisTicks: {
-                        show: true
-                    },
-                    axisBorder: {
-                        show: true,
-                        color: '#00E396'
-                    },
-                    labels: {
-                        style: {
-                            color: '#00E396'
-                        }
-                    },
-                    title: {
-                        text: "平均正确题数",
-                        style: {
-                            color: '#00E396'
-                        }
-                    }
-                },
-                {
-                    seriesName: '平均正确率',
-                    opposite: true,
-                    axisTicks: {
-                        show: true
-                    },
-                    axisBorder: {
-                        show: true,
-                        color: '#FEB019'
-                    },
-                    labels: {
-                        style: {
-                            color: '#FEB019'
-                        }
-                    },
-                    title: {
-                        text: "平均正确率",
-                        style: {
-                            color: '#FEB019'
-                        }
                     }
                 }
             ],
@@ -251,12 +317,16 @@
                 name: '平均分',
                 type: 'column',
                 data: scoreAvgData
+            }, {
+                name: '此测验结果',
+                type: 'column',
+                data: scoreDataUser
             }],
             stroke: {
                 width: [1, 1, 4]
             },
             title: {
-                text: '平均分统计',
+                text: '分数统计',
                 align: 'left',
                 offsetX: 110
             },
@@ -270,17 +340,14 @@
                     },
                     axisBorder: {
                         show: true,
-                        color: '#008FFB'
                     },
                     labels: {
                         style: {
-                            color: '#008FFB'
                         }
                     },
                     title: {
                         text: "分数",
                         style: {
-                            color: '#008FFB'
                         }
                     },
                     tooltip: {
@@ -311,6 +378,11 @@
         new ApexCharts(
             document.querySelector("#chart-testResult-analysis-amount"),
             amountOption
+        ).render();
+
+        new ApexCharts(
+            document.querySelector("#chart-testResult-analysis-accuracyRate"),
+            accuracyRateOption
         ).render();
 
         new ApexCharts(

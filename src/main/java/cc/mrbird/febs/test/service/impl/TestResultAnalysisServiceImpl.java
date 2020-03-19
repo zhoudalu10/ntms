@@ -32,4 +32,14 @@ public class TestResultAnalysisServiceImpl extends ServiceImpl<TestResultAnalysi
     public List<TestResultAnalysis> findMostWrongQuestion(Long paperId) {
         return this.baseMapper.findMostWrongQuestion(paperId);
     }
+
+    @Override
+    public Map<String, Object> findAnalysisByResultId(String resultId) {
+        return this.baseMapper.findAnalysisByResultId(resultId);
+    }
+
+    @Override
+    public List<TestResultAnalysis> findAllWrongQuestionByResultId(String resultId) {
+        return this.baseMapper.findAllWrongQuestionByResultId(resultId);
+    }
 }

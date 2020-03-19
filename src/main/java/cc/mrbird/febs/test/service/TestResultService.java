@@ -17,4 +17,6 @@ public interface TestResultService {
     IPage<TestResult> findTestResultList(TestResult testResult, QueryRequest request);
 
     void deleteTestResults(String[] ids);
+
+    TestResult findAnalysisById(String resultId);
 }

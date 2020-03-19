@@ -267,10 +267,10 @@
                 });
             }
             if (layEvent === 'analysis') {
-                // if (data.paperState !== '3') {
-                //     febs.alert.warn('测验未结束');
-                //     return false;
-                // }
+                if (data.paperState === '1') {
+                    febs.alert.warn('测验还未开始');
+                    return false;
+                }
                 febs.modal.view('试卷分析', 'test/paper/analysis/' + data.paperId, {
                     area: $(window).width() <= 750 ? '95%' : '660px'
                 });

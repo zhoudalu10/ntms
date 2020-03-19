@@ -75,4 +75,10 @@ WHERE TR.RESULT_USER_ID = #{testResult.resultUserId}
         WHERE TR.RESULT_PAPER_ID = #{testResult.resultPaperId}
         AND TR.RESULT_USER_ID = #{testResult.resultUserId}
     </select>
+
+    <select id="findPaperIdByResultId" parameterType="String" resultType="Long">
+        SELECT RESULT_PAPER_ID
+FROM T_TEST_RESULT
+WHERE RESULT_ID = #{resultId}
+    </select>
 </mapper>

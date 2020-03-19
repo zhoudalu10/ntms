@@ -10,6 +10,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @TableName("T_TEST_RESULT")
@@ -71,4 +73,11 @@ public class TestResult implements Serializable {
 
     @TableField(exist = false)
     private String resultScoreTo;
+
+    @TableField(exist = false)
+    private Map<String, Object> resultAnalysis;
+
+    @TableField(exist = false)
+    private List<TestResultAnalysis> testResultAnalysisList;
+
 }

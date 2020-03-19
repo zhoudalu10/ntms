@@ -82,11 +82,13 @@
     hasViewAllTestResultPerm = true;
 </script>
 <script type="text/html" id="testResult-option">
-    <span shiro:lacksPermission="testResult:delete">
+    <span shiro:lacksPermission="testResult:delete,testResult:analysis">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
     <a lay-event="del" shiro:hasPermission="testResult:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+    <a lay-event="analysis" shiro:hasPermission="testResult:analysis"><i
+            class="layui-icon febs-edit-area febs-orange">&#xe7a3;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
@@ -160,6 +162,11 @@
             if (layEvent === 'del') {
                 febs.modal.confirm('删除测验记录', '确定删除该测验记录？', function () {
                     deleteTestResults(data.resultId);
+                });
+            }
+            if (layEvent === 'analysis') {
+                febs.modal.view('测验结果分析', 'test/testResult/analysis/' + data.resultId, {
+                    area: $(window).width() <= 750 ? ['95%', '90%'] : ['660px', '90%']
                 });
             }
         });

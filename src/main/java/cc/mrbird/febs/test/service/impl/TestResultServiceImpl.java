@@ -133,4 +133,16 @@ public class TestResultServiceImpl extends ServiceImpl<TestResultMapper, TestRes
         List<String> list = Arrays.asList(ids);
         this.removeByIds(list);
     }
+
+    @Override
+    public TestResult findAnalysisById(String resultId) {
+        Long paperId = this.baseMapper.findPaperIdByResultId(resultId);
+        Map<String, Object> analysisMap = testResultAnalysisService.findPaperAnalysisByPaperId(paperId);
+        analysisMap.putAll(testResultAnalysisService.findPaperResultAnalysisByPaperId(paperId));
+        analysisMap.putAll(testResultAnalysisService.findAnalysisByResultId(resultId));
+        TestResult testResult = new TestResult();
+        testResult.setResultAnalysis(analysisMap);
+        testResult.setTestResultAnalysisList(testResultAnalysisService.findAllWrongQuestionByResultId(resultId));
+        return testResult;
+    }
 }

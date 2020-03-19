@@ -13,4 +13,6 @@ public interface TestResultMapper extends BaseMapper<TestResult> {
     IPage<TestResult> findTestResultList(Page<TestResult> page, @Param("testResult") TestResult testResult);
 
     TestResult findByUserAndPaperId(@Param("testResult") TestResult testResult);
+
+    Long findPaperIdByResultId(@Param("resultId") String resultId);
 }

@@ -139,4 +139,12 @@ public class ViewController extends BaseController {
     public String testResult() {
         return FebsUtil.view("test/testResult/testResult");
     }
+
+    @GetMapping("testResult/analysis/{resultId}")
+    @RequiresPermissions("testResult:analysis")
+    public String testResultAnalysis(@PathVariable String resultId, Model model) {
+        TestResult testResult = testResultService.findAnalysisById(resultId);
+        model.addAttribute("testResult", testResult);
+        return FebsUtil.view("test/testResult/testResultAnalysis");
+    }
 }

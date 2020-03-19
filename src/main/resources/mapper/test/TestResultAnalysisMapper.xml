@@ -125,4 +125,60 @@ FROM DUAL
         GROUP BY TTRA.QUESTION_CONTENT
         ORDER BY COUNT(*) DESC
     </select>
+
+    <select id="findAnalysisByResultId" parameterType="String" resultType="Map">
+SELECT (SELECT COUNT(*)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.RESULT_ID = #{resultId}
+          AND TTRA.RESULT_IS_CORRECT = '1') countCorrectAllUser,
+
+       (SELECT COUNT(*)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.RESULT_ID = #{resultId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '1')     countCorrectSingleUser,
+
+       (SELECT COUNT(*)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.RESULT_ID = #{resultId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '2')     countCorrectJudgementUser,
+
+       (SELECT COUNT(*)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.RESULT_ID = #{resultId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '3')     countCorrectMultipleUser,
+
+       (SELECT SUM(TTRA.QUESTION_SCORE)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.RESULT_ID = #{resultId}
+          AND TTRA.RESULT_IS_CORRECT = '1') sumCorrectAllUser,
+
+       (SELECT SUM(TTRA.QUESTION_SCORE)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.RESULT_ID = #{resultId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '1')     sumCorrectSingleUser,
+
+       (SELECT SUM(TTRA.QUESTION_SCORE)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.RESULT_ID = #{resultId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '2')     sumCorrectJudgementUser,
+
+       (SELECT SUM(TTRA.QUESTION_SCORE)
+        FROM T_TEST_RESULT_ANALYSIS TTRA
+        WHERE TTRA.RESULT_ID = #{resultId}
+          AND TTRA.RESULT_IS_CORRECT = '1'
+          AND TTRA.QUESTION_TYPE = '3')     sumCorrectMultipleUser
+FROM DUAL;
+    </select>
+
+    <select id="findAllWrongQuestionByResultId" parameterType="String" resultType="testResultAnalysis">
+SELECT TTRA.QUESTION_CONTENT questionContent
+FROM T_TEST_RESULT_ANALYSIS TTRA
+WHERE TTRA.RESULT_ID = #{resultId}
+  AND TTRA.RESULT_IS_CORRECT = '0'
+    </select>
 </mapper>

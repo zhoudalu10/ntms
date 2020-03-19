@@ -1,6 +1,5 @@
 package cc.mrbird.febs.test.service;
 
-import cc.mrbird.febs.test.entity.Question;
 import cc.mrbird.febs.test.entity.TestResultAnalysis;
 
 import java.util.List;
@@ -15,4 +14,8 @@ public interface TestResultAnalysisService {
     Map<String, Object> findPaperResultAnalysisByPaperId(Long paperId);
 
     List<TestResultAnalysis> findMostWrongQuestion(Long paperId);
+
+    Map<String, Object> findAnalysisByResultId(String resultId);
+
+    List<TestResultAnalysis> findAllWrongQuestionByResultId(String resultId);
 }
