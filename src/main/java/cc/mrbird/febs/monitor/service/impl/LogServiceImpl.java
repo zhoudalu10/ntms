@@ -4,6 +4,7 @@ package cc.mrbird.febs.monitor.service.impl;
 import cc.mrbird.febs.common.entity.FebsConstant;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.utils.AddressUtil;
+import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.monitor.entity.SystemLog;
 import cc.mrbird.febs.monitor.mapper.LogMapper;
@@ -15,7 +16,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -69,14 +68,15 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SystemLog> implements
     }
 
     @Override
-    public void saveLog(ProceedingJoinPoint point, Method method, String ip , String operation, long start) {
+    public void saveLog(ProceedingJoinPoint point, Method method, String ip, String operation, long start) {
         SystemLog systemLog = new SystemLog();
         // 设置 IP地址
         systemLog.setIp(ip);
         // 设置操作用户
-        User user = (User) SecurityUtils.getSubject().getPrincipal();
-        if (user != null)
+        User user = FebsUtil.getCurrentUser();
+        if (user != null) {
             systemLog.setUsername(user.getUsername());
+        }
         // 设置耗时
         systemLog.setTime(System.currentTimeMillis() - start);
         // 设置操作描述

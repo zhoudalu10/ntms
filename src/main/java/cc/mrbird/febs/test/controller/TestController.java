@@ -1,5 +1,6 @@
 package cc.mrbird.febs.test.controller;
 
+import cc.mrbird.febs.common.annotation.ControllerEndpoint;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.test.service.PaperService;
@@ -29,12 +30,14 @@ public class TestController extends BaseController {
 
     @RequestMapping("testPaper")
     @RequiresPermissions("test:testStart")
+    @ControllerEndpoint(operation = "获取试卷信息", exceptionMessage = "获取试卷信息失败")
     public FebsResponse testPaper(String userId) {
         return new FebsResponse().success().data(paperService.findUserPaper(userId));
     }
 
     @RequestMapping("submitPaper")
     @RequiresPermissions("test:testStart")
+    @ControllerEndpoint(operation = "提交试卷", exceptionMessage = "提交试卷失败")
     public FebsResponse testSubmit(@RequestBody @Valid Map<String, Object> map) {
         testResultService.calculationResults(map);
         return new FebsResponse().success();
