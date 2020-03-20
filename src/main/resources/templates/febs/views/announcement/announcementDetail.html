@@ -15,6 +15,10 @@
     #announcement-info-wrapper {
         width: 80%;
     }
+
+    #febs-announcement-detail p {
+        text-align: left;
+    }
 </style>
 <div class="layui-fluid" id="febs-announcement-detail" lay-title="公告信息">
     <div id="announcement-info-wrapper">
@@ -26,9 +30,22 @@
             <div>[[${announcement.createUserName}]] | [[${createTime}]]
             </div>
             <hr>
-            <div style="text-align: left">
-                [[${announcement.announcementContent}]]
+            <div id="announcement-detail-content">
+
             </div>
         </div>
     </div>
 </div>
+<script data-th-inline="javascript">
+    layui.use(['febs'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            $view = $('#febs-announcement-detail'),
+            $content = $view.find('#announcement-detail-content'),
+            announcement = [[${announcement}]],
+            announcementContent = announcement.announcementContent.split('\n');
+        for (var i = 0; i < announcementContent.length; i++) {
+            $content.append('<p>' + announcementContent[i] + '</p>');
+        }
+    })
+</script>
