@@ -25,27 +25,31 @@ FEBS-Shiro是一款简单高效的后台权限管理系统，使用Spring Boot�
 │  ├─请求追踪
 │  └─系统信息
 │     ├─JVM信息
-│     ├─TOMCAT信息
 │     └─服务器信息
 ├─任务调度
 │  ├─定时任务
 │  └─调度日志
-├─课堂签到
-│  ├─教师签到
-│  ├─学生签到
-│  └─签到记录
 ├─随堂测验
-│  ├─
-│  ├─
-│  └─
+│  ├─试题管理
+│  ├─试卷管理
+│  ├─开始测验
+│  └─测验记录
 ├─课堂笔记
-│  ├─
-│  ├─
-│  └─
 └─在线课表
    ├─课程安排管理
    └─我的课表
 ```
+
+### 亮点功能
+
+1. 自定义的首页公告管理
+
+2. 试卷分析图表及个人测验记录分析图表
+
+3. 以班级为单位的课表安排及展示
+
+4. 自定义附件上传及下载的笔记模块
+
 ### 系统特点
 
 1. 前后端请求参数校验
@@ -79,6 +83,20 @@ FEBS-Shiro是一款简单高效的后台权限管理系统，使用Spring Boot�
 - [eleTree 树组件](https://layuiextend.hsianglee.cn/eletree/)
 - [formSelect.js树形下拉](https://wujiawei0926.gitee.io/treeselect/docs/doc.html)
 - [Apexcharts图表](https://apexcharts.com/)
+
+### 系统预览
+
+![1585810539421.jpg](http://github.com/zhoudalu10/ntms/screenshot/1585810539421.jpg)
+
+![1585810581326.jpg](http://github.com/zhoudalu10/ntms/screenshot/1585810581326.jpg)
+
+![1585810609800.jpg](http://github.com/zhoudalu10/ntms/screenshot/1585810609800.jpg)
+
+![1585810686661.jpg](http://github.com/zhoudalu10/ntms/screenshot/1585810686661.jpg)
+
+![1585810726559.jpg](http://github.com/zhoudalu10/ntms/screenshot/1585810726559.jpg)
+
+![1585810775143.jpg](http://github.com/zhoudalu10/ntms/screenshot/1585810775143.jpg)
 
 ### 浏览器兼容
 |[<img src="https://raw.github.com/alrra/browser-logos/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png" alt="Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |[<img src="https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera
