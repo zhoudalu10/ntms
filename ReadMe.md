@@ -71,7 +71,7 @@ FEBS-Shiro是一款简单高效的后台权限管理系统，使用Spring Boot�
 ### 技术选型
 
 #### 后端
-- [Spring Boot 2.2.1](http://spring.io/projects/spring-boot/)
+- [Spring Boot 2.2.5](http://spring.io/projects/spring-boot/)
 - [Mybatis-Plus](https://mp.baomidou.com/guide/)
 - [Oracle 11g](https://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html),[Hikari](https://brettwooldridge.github.io/HikariCP/),[Redis](https://redis.io/)
 - [Shiro 1.4.2](http://shiro.apache.org/)

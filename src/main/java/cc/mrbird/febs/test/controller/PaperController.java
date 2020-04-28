@@ -5,7 +5,6 @@ import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.entity.FebsResponse;
 import cc.mrbird.febs.common.entity.QueryRequest;
 import cc.mrbird.febs.common.exception.FebsException;
-import cc.mrbird.febs.course.entity.Course;
 import cc.mrbird.febs.test.entity.Paper;
 import cc.mrbird.febs.test.service.PaperService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
