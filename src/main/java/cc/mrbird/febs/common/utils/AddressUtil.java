@@ -19,10 +19,13 @@ public class AddressUtil {
         DbSearcher searcher = null;
         try {
             String dbPath = AddressUtil.class.getResource("/ip2region/ip2region.db").getPath();
+            if (dbPath.startsWith("file:")) {
+                dbPath = dbPath.replaceAll("file:", "");
+            }
             File file = new File(dbPath);
             if (!file.exists()) {
                 String tmpDir = System.getProperties().getProperty("java.io.tmpdir");
-                dbPath = tmpDir + "ip.db";
+                dbPath = tmpDir + "/ip.db";
                 file = new File(dbPath);
                 FileUtils.copyInputStreamToFile(AddressUtil.class.getClassLoader().getResourceAsStream("classpath:ip2region/ip2region.db"), file);
             }
